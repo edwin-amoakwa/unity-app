@@ -2,8 +2,8 @@
 import {Component, inject} from '@angular/core';
 import {Router, RouterModule} from '@angular/router';
 import {UntypedFormBuilder, Validators, ReactiveFormsModule, FormGroup} from '@angular/forms';
-import {AuthService, LoginPayload} from '../../../../auth.service';
-import {UserSession} from '../../../../core/user-session';
+import {AuthService, LoginPayload} from '../../auth.service';
+import {UserSession} from '../../core/user-session';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -40,6 +40,10 @@ export class LoginComponent {
           this.isLoading = false;
           // Handle successful login - could store token, redirect, etc.
           console.log('Login successful:', response);
+          if(response.success)
+          {
+            UserSession.login(response.data);
+          }
           this.router.navigate(['/dashboard']); // Adjust route as needed
         },
         error: (error) => {

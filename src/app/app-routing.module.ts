@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { PlainComponent } from './theme/layout/plain/plain.component';
 import {SenderIdComponent} from './sender-id/sender-id.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -39,7 +41,7 @@ const routes: Routes = [
     children: [
       {
         path: 'login',
-        loadComponent: () => import('./demo/pages/authentication/login/login.component').then((c) => c.LoginComponent)
+        loadComponent: () => import('./auth/login/login.component').then((c) => c.LoginComponent)
       },
       {
         path: 'register',

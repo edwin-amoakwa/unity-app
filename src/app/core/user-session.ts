@@ -1,8 +1,5 @@
 export interface LoginResponse {
-  success: boolean;
-  statusCode: number;
-  message: string;
-  data: {
+    sessionId: string;
     user: {
       accountName: string;
       emailAddress: string;
@@ -12,7 +9,6 @@ export interface LoginResponse {
       merchantId: string;
       id: string;
     };
-  };
 }
 
 export class UserSession {
@@ -21,19 +17,20 @@ export class UserSession {
    * Save the complete data to localStorage and also save merchantId and userId directly
    */
   static login(loginResponse: LoginResponse): void {
-    if (!loginResponse.success || !loginResponse.data) {
-      throw new Error('Invalid login response');
-    }
+    // if (!loginResponse.success || !loginResponse.data) {
+    //   throw new Error('Invalid login response');
+    // }
 
-    const { data } = loginResponse;
-    const { user } = data;
+    // const { data } = loginResponse;
+    const { user } = loginResponse;
 
     // Save the complete data object to localStorage
-    localStorage.setItem('userData', JSON.stringify(data));
+    localStorage.setItem('user', JSON.stringify(user));
 
     // Save merchantId and userId directly to localStorage
     localStorage.setItem('merchantId', user.merchantId);
     localStorage.setItem('userId', user.id);
+    localStorage.setItem(this.SessionId, loginResponse.sessionId);
   }
 
   /**
@@ -62,9 +59,7 @@ export class UserSession {
    * Clear all session data
    */
   static logout(): void {
-    localStorage.removeItem('userData');
-    localStorage.removeItem('merchantId');
-    localStorage.removeItem('userId');
+    localStorage.clear();
   }
 
   /**
@@ -73,4 +68,8 @@ export class UserSession {
   static isLoggedIn(): boolean {
     return this.getUserData() !== null;
   }
+
+  public static readonly SessionId: string = "sessionId";
+  public static readonly UserID: string = "userId";
+  public static readonly MerchantId: string = "merchantId";
 }

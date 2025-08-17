@@ -4,8 +4,13 @@ import { environment } from './environments/environment';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { AppRoutingModule } from './app/app-routing.module';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AppComponent } from './app/app.component';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
+import {providePrimeNG} from 'primeng/config';
+import Aura from '@primeng/themes/aura';
+import {CoreModule} from './app/core/core.module';
+import { RequestInterceptor } from './app/core/requestInterceptor';
 
 if (environment.production) {
   enableProdMode();
@@ -13,8 +18,14 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(BrowserModule, AppRoutingModule),
+    importProvidersFrom(BrowserModule, AppRoutingModule, CoreModule),
     provideAnimations(),
-    provideHttpClient()
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptors([RequestInterceptor])),
+    providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    })
   ]
 }).catch((err) => console.error(err));
