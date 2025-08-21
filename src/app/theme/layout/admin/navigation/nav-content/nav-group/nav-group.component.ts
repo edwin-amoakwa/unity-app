@@ -3,7 +3,7 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 
 // project import
-import { NavigationItem } from '../../navigation';
+import { NavigationItem } from '../../../../../../navigation';
 
 import { NavCollapseComponent } from '../nav-collapse/nav-collapse.component';
 import { NavItemComponent } from '../nav-item/nav-item.component';

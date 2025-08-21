@@ -4,7 +4,7 @@ import { CommonModule, Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // project import
-import { NavigationItem } from '../../navigation';
+import { NavigationItem } from '../../../../../../navigation';
 
 import { NavItemComponent } from '../nav-item/nav-item.component';
 

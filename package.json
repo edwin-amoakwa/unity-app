@@ -27,7 +27,6 @@
     "@angular/router": "20.0.5",
     "@ng-bootstrap/ng-bootstrap": "19.0.0",
     "@popperjs/core": "2.11.8",
-
     "@primeng/themes": "^19.0.4",
     "apexcharts": "4.7.0",
     "ngx-toastr": "^19.0.0",

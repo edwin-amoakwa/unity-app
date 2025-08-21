@@ -1,25 +1,6 @@
 <form [formGroup]="smsForm" (ngSubmit)="onSubmit()" class="p-fluid">
   <div class="grid">
 
-    <!-- Application ID Dropdown -->
-    <div class="col-12 md:col-6">
-      <label for="applicationId" class="block text-900 font-medium mb-2">
-        Application ID <span class="text-red-500">*</span>
-      </label>
-      <p-dropdown
-        id="applicationId"
-        formControlName="applicationId"
-        [options]="applications"
-        optionLabel="name"
-        optionValue="id"
-        placeholder="Select Application"
-        [loading]="isLoading"
-        [class.ng-invalid]="isFieldInvalid('applicationId')">
-      </p-dropdown>
-      <small *ngIf="isFieldInvalid('applicationId')" class="p-error block">
-        {{ getFieldError('applicationId') }}
-      </small>
-    </div>
 
     <!-- Sender ID Dropdown -->
     <div class="col-12 md:col-6">

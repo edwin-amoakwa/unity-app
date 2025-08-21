@@ -2,20 +2,30 @@
   <!-- Create Sender ID Form -->
   <div class="col-sm-12 mb-4">
     <app-card cardTitle="Create Sender ID">
-      <form (ngSubmit)="onSubmit()" #senderForm="ngForm">
+      <form [formGroup]="senderIdForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="application" class="form-label">Application</label>
+          <p-dropdown
+            id="application"
+            formControlName="applicationId"
+            [options]="applications"
+            optionLabel="appName"
+            optionValue="id"
+            placeholder="Select an application"
+            styleClass="w-full">
+          </p-dropdown>
+        </div>
         <div class="mb-3">
           <label for="senderId" class="form-label">Sender ID</label>
           <input
             type="text"
             class="form-control"
             id="senderId"
-            name="senderId"
-            [(ngModel)]="senderId"
-            required
+            formControlName="senderId"
             maxlength="11"
             placeholder="Enter Sender ID (max 11 characters)">
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="!senderForm.form.valid">
+        <button type="submit" class="btn btn-primary" [disabled]="!senderIdForm.valid">
           Create Sender ID
         </button>
       </form>
@@ -30,6 +40,7 @@
                [tableStyle]="{'min-width': '50rem'}" styleClass="p-datatable-gridlines">
         <ng-template pTemplate="header">
           <tr>
+            <th>App</th>
             <th>Sender ID</th>
             <th>Status</th>
             <th>Actions</th>
@@ -37,6 +48,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-sender>
           <tr>
+            <td>{{ sender.appName }}</td>
             <td>{{ sender.senderId }}</td>
             <td>
               <p-tag
@@ -45,12 +57,6 @@
               </p-tag>
             </td>
             <td>
-              <p-button
-                icon="pi pi-trash"
-                (click)="deleteSenderId(sender)"
-                [text]="true"
-                pTooltip="Delete">
-              </p-button>
               <p-button icon="pi pi-trash" severity="danger" pTooltip="Delete" (click)="deleteSenderId(sender)"/>
             </td>
           </tr>

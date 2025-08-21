@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Project import
-import { NavigationItem } from '../../navigation';
+import { NavigationItem } from '../../../../../../navigation';
 
 @Component({
   selector: 'app-nav-item',

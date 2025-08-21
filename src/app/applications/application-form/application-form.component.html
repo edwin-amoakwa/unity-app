@@ -1,0 +1,64 @@
+<form [formGroup]="applicationForm" (ngSubmit)="onSubmit()" class="application-form">
+  <div class="container-fluid">
+    <!-- Application Name -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <label for="appName" class="form-label">Application Name *</label>
+        <input
+          pInputText
+          id="appName"
+          formControlName="appName"
+          [class.ng-invalid]="isFieldInvalid('appName')"
+          class="form-control" />
+        <small
+          class="p-error block mt-1"
+          *ngIf="isFieldInvalid('appName')">
+          {{ getFieldError('appName') }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Application Type -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="applicationType" class="form-label">Application Type *</label>
+        <p-dropdown
+          inputId="applicationType"
+          formControlName="applicationType"
+          [options]="applicationTypes"
+          optionLabel="label"
+          optionValue="value"
+          [class.ng-invalid]="isFieldInvalid('applicationType')"
+          styleClass="w-full"
+          placeholder="Select application type">
+        </p-dropdown>
+        <small
+          class="p-error block mt-1"
+          *ngIf="isFieldInvalid('applicationType')">
+          {{ getFieldError('applicationType') }}
+        </small>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex justify-content-end gap-2 mt-4">
+    <button
+      pButton
+      type="button"
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text p-button-secondary"
+      (click)="onCancel()">
+    </button>
+    <button
+      pButton
+      type="submit"
+      [label]="application?.id ? 'Update' : 'Create'"
+      [icon]="application?.id ? 'pi pi-check' : 'pi pi-plus'"
+      class="p-button-primary"
+      [disabled]="applicationForm.invalid">
+    </button>
+  </div>
+</form>

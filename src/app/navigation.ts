@@ -40,6 +40,14 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
+        id: 'applications',
+        title: 'Applications',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/applications',
+        icon: 'ti ti-typography'
+      },
+      {
         id: 'sender-id',
         title: 'Sender IDs',
         type: 'item',

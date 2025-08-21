@@ -22,6 +22,10 @@ const routes: Routes = [
       },
       {path: "sender-id", component: SenderIdComponent},
       {
+        path: 'applications',
+        loadComponent: () => import('./applications/applications.component').then((c) => c.ApplicationsComponent)
+      },
+      {
         path: 'send-sms',
         loadComponent: () => import('./sms/sms.component').then((c) => c.SmsComponent)
       },

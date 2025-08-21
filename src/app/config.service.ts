@@ -4,23 +4,14 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 import { ApiResponse } from './core/ApiResponse';
 
-export interface CreateSenderIdPayload {
-  senderId: string;
-}
 
-export interface SenderIdResponse {
-  senderId: string;
-  idStatus: string;
-  idStatusName: string;
-  merchantId: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
   private http = inject(HttpClient);
 
-  createSenderId(payload: CreateSenderIdPayload): Observable<ApiResponse<SenderIdResponse>> {
-    return this.http.post<ApiResponse<SenderIdResponse>>(`${environment.baseUrl}/sms-sender-ids`, payload).pipe(
+  createSenderId(payload: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${environment.baseUrl}/sms-sender-ids`, payload).pipe(
       catchError((err) => {
         const message = err?.error?.message || 'Failed to create sender ID. Please try again.';
         return throwError(() => new Error(message));
@@ -37,8 +28,8 @@ export class ConfigService {
     );
   }
 
-  getSenderIds(): Observable<ApiResponse<SenderIdResponse[]>> {
-    return this.http.get<ApiResponse<SenderIdResponse[]>>(`${environment.baseUrl}/sms-sender-ids`).pipe(
+  getSenderIds(): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/sms-sender-ids`).pipe(
       catchError((err) => {
         const message = err?.error?.message || 'Failed to fetch sender IDs. Please try again.';
         return throwError(() => new Error(message));

@@ -1,6 +1,6 @@
 // angular import
 import { Component, OnInit, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {CardComponent} from '../theme/shared/components/card/card.component';
 
@@ -9,10 +9,13 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
+import { DropdownModule } from 'primeng/dropdown';
 
 // project import
 import { ConfigService } from '../config.service';
 import { NotificationService } from '../core/notification.service';
+import { ApplicationService } from '../applications/application.service';
+import { ApplicationModel } from '../applications/application.model';
 
 export enum SenderIdStatus {
   ACTIVE = 'ACTIVE',
@@ -24,25 +27,39 @@ export interface SenderIdModel {
   senderId: string;
   idStatus: SenderIdStatus;
   idStatusName: string;
+  appName: string;
   merchantId: string;
 }
 
 @Component({
   selector: 'sender-id',
-  imports: [CardComponent, FormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule],
+  imports: [CardComponent, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule, DropdownModule],
   templateUrl: './sender-id.component.html',
   styleUrls: ['./sender-id.component.scss']
 })
 export class SenderIdComponent implements OnInit {
   private configService = inject(ConfigService);
   private notificationService = inject(NotificationService);
+  private applicationService = inject(ApplicationService);
+  private formBuilder = inject(FormBuilder);
 
-  senderId: string = '';
-  senderIds: SenderIdModel[] = [];
+  senderIdForm: FormGroup;
+  senderIds: any[] = [];
   isLoading: boolean = false;
+
+  // Application dropdown properties
+  applications: ApplicationModel[] = [];
+
+  constructor() {
+    this.senderIdForm = this.formBuilder.group({
+      senderId: ['', [Validators.required, Validators.maxLength(11)]],
+      applicationId: ['', Validators.required]
+    });
+  }
 
   ngOnInit() {
     this.loadSenderIds();
+    this.loadApplications();
   }
 
   loadSenderIds() {
@@ -67,20 +84,40 @@ export class SenderIdComponent implements OnInit {
     });
   }
 
+  loadApplications() {
+    this.applicationService.getApplications().subscribe({
+      next: (response) => {
+        this.applications = response.data || [];
+      },
+      error: (error) => {
+        console.error('Error loading applications:', error);
+        this.notificationService.error('Failed to load applications');
+        this.applications = [];
+      }
+    });
+  }
+
   onSubmit() {
-    if (this.senderId.trim()) {
+    if (this.senderIdForm.valid) {
       this.isLoading = true;
-      this.configService.createSenderId({ senderId: this.senderId }).subscribe({
+      const formValues = this.senderIdForm.value;
+      const payload = {
+        senderId: formValues.senderId,
+        applicationId: formValues.applicationId
+      };
+
+      this.configService.createSenderId(payload).subscribe({
         next: (response) => {
-          const newSenderId: SenderIdModel = {
+          const newSenderId: any = {
             senderId: response.data.senderId,
             idStatus: response.data.idStatus as SenderIdStatus,
             idStatusName: response.data.idStatusName,
+            appName: response.data.appName,
             merchantId: response.data.merchantId
           };
 
           this.senderIds.push(newSenderId);
-          this.senderId = '';
+          this.senderIdForm.reset();
           this.isLoading = false;
           this.notificationService.success('Sender ID created successfully');
         },
