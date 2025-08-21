@@ -1,0 +1,146 @@
+<app-card cardTitle="SMS Management" >
+  <div class="card-body">
+    <!-- Header with Create Button -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <p-button
+          label="Create SMS"
+          icon="pi pi-plus"
+          (onClick)="openCreateDialog()"
+          class="p-button-sm">
+        </p-button>
+      </div>
+    </div>
+
+    <!-- SMS Messages Table -->
+    <p-table
+      [value]="smsMessages"
+      [loading]="isLoading"
+      [paginator]="true"
+      [rows]="10"
+      [responsive]="true"
+      styleClass="p-datatable-sm"
+      [globalFilterFields]="['senderId', 'applicationId', 'messageText', 'smsNatureName']">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 120px;">Sender ID</th>
+          <th style="min-width: 200px;">Message</th>
+          <th style="width: 140px;">Phone Numbers</th>
+          <th style="width: 100px;">Recipients</th>
+          <th style="width: 80px;">Pages</th>
+          <th style="width: 80px;">Cost</th>
+          <th style="width: 100px;">Status</th>
+          <th style="width: 110px;">Nature</th>
+          <th style="width: 100px;">Flags</th>
+          <th style="width: 140px;">Scheduled</th>
+          <th style="width: 120px;">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-sms>
+        <tr>
+          <td>{{ sms.senderId }}</td>
+          <td>
+            <div class="text-truncate" style="max-width: 200px;" [pTooltip]="sms.messageText">
+              {{ sms.messageText }}
+            </div>
+          </td>
+          <td>
+            <div [pTooltip]="sms.phoneNos">
+              {{ formatPhoneNumbers(sms.phoneNos) }}
+            </div>
+          </td>
+          <td>{{ sms.totalReceipient }}</td>
+          <td>{{ sms.pagesCount }}</td>
+          <td>${{ sms.actualCost.toFixed(3) }}</td>
+          <td>
+            <p-tag
+              [value]="sms.dispatched ? 'Dispatched' : 'Pending'"
+              [severity]="getStatusSeverity(sms.dispatched)">
+            </p-tag>
+          </td>
+          <td>
+            <p-tag
+              [value]="sms.smsNatureName"
+              [severity]="getSmsNatureSeverity(sms.smsNature)">
+            </p-tag>
+          </td>
+          <td>
+            <div class="flex gap-1">
+              <p-tag
+                *ngIf="sms.flashSms"
+                value="Flash"
+                severity="danger"
+                class="text-xs">
+              </p-tag>
+              <p-tag
+                *ngIf="sms.scheduleSms"
+                value="Scheduled"
+                severity="info"
+                class="text-xs">
+              </p-tag>
+              <p-tag
+                *ngIf="sms.templateSms"
+                value="Template"
+                severity="warning"
+                class="text-xs">
+              </p-tag>
+            </div>
+          </td>
+          <td>{{ formatScheduledTime(sms.scheduledTime) }}</td>
+          <td>
+            <div class="flex gap-1">
+              <p-button
+                icon="pi pi-pencil"
+                size="small"
+                severity="info"
+                [text]="true"
+                pTooltip="Edit"
+                (onClick)="openEditDialog(sms)">
+              </p-button>
+              <p-button
+                icon="pi pi-trash"
+                size="small"
+                severity="danger"
+                [text]="true"
+                pTooltip="Delete"
+                (onClick)="deleteSms(sms)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="12" class="text-center p-4">
+            <div class="flex flex-column align-items-center gap-2">
+              <i class="pi pi-inbox text-4xl text-muted"></i>
+              <p class="text-muted mb-0">No SMS messages found</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</app-card>
+
+<!-- SMS Form Dialog -->
+<p-dialog
+  [header]="selectedSms ? 'Edit SMS Message' : 'Create SMS Message'"
+  [(visible)]="showDialog"
+  [style]="{ width: '600px' }"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false">
+
+  <app-sms-form
+    [smsData]="selectedSms"
+    (smsSubmitted)="onSmsSubmitted($event)"
+    (cancelled)="closeDialog()">
+  </app-sms-form>
+</p-dialog>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

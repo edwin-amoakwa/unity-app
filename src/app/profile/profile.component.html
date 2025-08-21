@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="Account Profile">
+      <div *ngIf="user; else noData">
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>Account Name:</strong>
+          </div>
+          <div class="col-md-9">
+            {{ user.accountName }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>Email Address:</strong>
+          </div>
+          <div class="col-md-9">
+            {{ user.emailAddress }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>Phone Number:</strong>
+          </div>
+          <div class="col-md-9">
+            {{ user.phoneNo || 'Not provided' }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>Account Category:</strong>
+          </div>
+          <div class="col-md-9">
+            <span class="badge bg-primary">{{ user.accountCategory }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>Merchant Name:</strong>
+          </div>
+          <div class="col-md-9">
+            {{ user.merchantName }}
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noData>
+        <div class="alert alert-warning" role="alert">
+          <i class="ti ti-alert-triangle me-2"></i>
+          No user data found in localStorage. Please log in to view your profile.
+        </div>
+      </ng-template>
+    </app-card>
+  </div>
+</div>

@@ -36,8 +36,8 @@ export class UserSession {
   /**
    * Get user data from localStorage
    */
-  static getUserData(): any | null {
-    const userData = localStorage.getItem('userData');
+  static getUser(): any | null {
+    const userData = localStorage.getItem(UserSession.User);
     return userData ? JSON.parse(userData) : null;
   }
 
@@ -66,10 +66,11 @@ export class UserSession {
    * Check if user is logged in
    */
   static isLoggedIn(): boolean {
-    return this.getUserData() !== null;
+    return this.getUser() !== null;
   }
 
   public static readonly SessionId: string = "sessionId";
   public static readonly UserID: string = "userId";
   public static readonly MerchantId: string = "merchantId";
+  public static readonly User: string = "user";
 }

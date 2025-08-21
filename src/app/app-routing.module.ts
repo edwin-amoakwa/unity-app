@@ -22,6 +22,10 @@ const routes: Routes = [
       },
       {path: "sender-id", component: SenderIdComponent},
       {
+        path: 'send-sms',
+        loadComponent: () => import('./sms/sms.component').then((c) => c.SmsComponent)
+      },
+      {
         path: 'typography',
         loadComponent: () => import('./demo/elements/typography/typography.component').then((c) => c.TypographyComponent)
       },
@@ -32,6 +36,10 @@ const routes: Routes = [
       {
         path: 'sample-page',
         loadComponent: () => import('./demo/other/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./profile/profile.component').then((c) => c.ProfileComponent)
       }
     ]
   },
