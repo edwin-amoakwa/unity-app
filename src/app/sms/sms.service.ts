@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
 import { SmsModel, ApplicationModel, SenderIdModel, SmsNature } from './sms.model';
 
 @Injectable({
@@ -11,7 +10,7 @@ export class SmsService {
 
   constructor(private http: HttpClient) {}
 
-  getSmsMessages(): Observable<{ data: SmsModel[] }> {
+  async getSmsMessages(): Promise<{ data: SmsModel[] }> {
     // Mock data for now - replace with actual API call
     const mockData: SmsModel[] = [
       {
@@ -50,10 +49,10 @@ export class SmsService {
         createdAt: new Date('2025-01-16T09:15:00')
       }
     ];
-    return of({ data: mockData });
+    return Promise.resolve({ data: mockData });
   }
 
-  createSmsMessage(sms: Partial<SmsModel>): Observable<{ data: SmsModel }> {
+  async createSmsMessage(sms: Partial<SmsModel>): Promise<{ data: SmsModel }> {
     // Calculate pages count based on message text length
     const pagesCount = Math.ceil(sms.messageText ? sms.messageText.length / 160 : 1);
 
@@ -77,10 +76,10 @@ export class SmsService {
     };
 
     // Mock API response - replace with actual API call
-    return of({ data: newSms });
+    return Promise.resolve({ data: newSms });
   }
 
-  updateSmsMessage(id: string, sms: Partial<SmsModel>): Observable<{ data: SmsModel }> {
+  async updateSmsMessage(id: string, sms: Partial<SmsModel>): Promise<{ data: SmsModel }> {
     // Calculate pages count if message text is updated
     if (sms.messageText) {
       sms.pagesCount = Math.ceil(sms.messageText.length / 160);
@@ -88,15 +87,15 @@ export class SmsService {
 
     // Mock API response - replace with actual API call
     const updatedSms = { ...sms, id, updatedAt: new Date() } as SmsModel;
-    return of({ data: updatedSms });
+    return Promise.resolve({ data: updatedSms });
   }
 
-  deleteSmsMessage(id: string): Observable<{ success: boolean }> {
+  async deleteSmsMessage(id: string): Promise<{ success: boolean }> {
     // Mock API response - replace with actual API call
-    return of({ success: true });
+    return Promise.resolve({ success: true });
   }
 
-  getApplications(): Observable<{ data: ApplicationModel[] }> {
+  async getApplications(): Promise<{ data: ApplicationModel[] }> {
     // Mock data - replace with actual API call
     const mockApplications: ApplicationModel[] = [
       { id: 'APP001', name: 'Main Application' },
@@ -104,10 +103,10 @@ export class SmsService {
       { id: 'APP003', name: 'Customer Service' },
       { id: 'APP004', name: 'E-commerce Platform' }
     ];
-    return of({ data: mockApplications });
+    return Promise.resolve({ data: mockApplications });
   }
 
-  getSenderIds(): Observable<{ data: SenderIdModel[] }> {
+  async getSenderIds(): Promise<{ data: SenderIdModel[] }> {
     // Mock data - replace with actual API call
     const mockSenderIds: SenderIdModel[] = [
       { senderId: 'SENDER001', idStatus: 'ACTIVE', idStatusName: 'Active', merchantId: 'MERCHANT001' },
@@ -115,7 +114,7 @@ export class SmsService {
       { senderId: 'SENDER003', idStatus: 'PENDING', idStatusName: 'Pending', merchantId: 'MERCHANT003' },
       { senderId: 'SENDER004', idStatus: 'ACTIVE', idStatusName: 'Active', merchantId: 'MERCHANT004' }
     ];
-    return of({ data: mockSenderIds });
+    return Promise.resolve({ data: mockSenderIds });
   }
 
   calculatePagesCount(messageText: string): number {

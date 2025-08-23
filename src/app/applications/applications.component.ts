@@ -15,8 +15,8 @@ import { ConfirmationService } from 'primeng/api';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { NotificationService } from '../core/notification.service';
 import { ApplicationService } from './application.service';
-import { ApplicationModel, ApplicationType } from './application.model';
 import { ApplicationFormComponent } from './application-form/application-form.component';
+import {ApplicationType} from '../unity.model';
 
 @Component({
   selector: 'app-applications',
@@ -42,29 +42,27 @@ export class ApplicationsComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
 
-  applications: ApplicationModel[] = [];
+  applications: any = [];
   isLoading: boolean = false;
   showDialog: boolean = false;
-  selectedApplication: ApplicationModel | null = null;
+  selectedApplication: any | null = null;
 
   ngOnInit() {
     this.loadApplications();
   }
 
-  loadApplications() {
+  async loadApplications() {
     this.isLoading = true;
-    this.applicationService.getApplications().subscribe({
-      next: (response) => {
-        this.applications = response.data;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading applications:', error);
-        this.notificationService.error('Failed to load applications');
-        this.isLoading = false;
-        this.applications = [];
-      }
-    });
+    try {
+      const response = await this.applicationService.getApplications();
+      this.applications = response.data;
+      this.isLoading = false;
+    } catch (error) {
+      console.error('Error loading applications:', error);
+      this.notificationService.error('Failed to load applications');
+      this.isLoading = false;
+      this.applications = [];
+    }
   }
 
   openCreateDialog() {
@@ -72,7 +70,7 @@ export class ApplicationsComponent implements OnInit {
     this.showDialog = true;
   }
 
-  openEditDialog(application: ApplicationModel) {
+  openEditDialog(application: any) {
     this.selectedApplication = { ...application };
     this.showDialog = true;
   }
@@ -82,59 +80,49 @@ export class ApplicationsComponent implements OnInit {
     this.selectedApplication = null;
   }
 
-  onApplicationSubmitted(application: ApplicationModel) {
-    if (this.selectedApplication && this.selectedApplication.id) {
-      // Update existing application
-      this.applicationService.updateApplication(this.selectedApplication.id, application).subscribe({
-        next: (response) => {
-          const index = this.applications.findIndex(a => a.id === this.selectedApplication!.id);
-          if (index > -1) {
-            this.applications[index] = response.data;
-          }
-          this.notificationService.success('Application updated successfully');
-          this.closeDialog();
-        },
-        error: (error) => {
-          console.error('Error updating application:', error);
-          this.notificationService.error('Failed to update application');
+  async onApplicationSubmitted(application: any) {
+    try {
+      if (this.selectedApplication && this.selectedApplication.id) {
+        // Update existing application
+        const response = await this.applicationService.updateApplication(this.selectedApplication.id, application);
+        const index = this.applications.findIndex(a => a.id === this.selectedApplication!.id);
+        if (index > -1) {
+          this.applications[index] = response.data;
         }
-      });
-    } else {
-      // Create new application
-      this.applicationService.createApplication(application).subscribe({
-        next: (response) => {
-          this.applications.push(response.data);
-          this.notificationService.success('Application created successfully');
-          this.closeDialog();
-        },
-        error: (error) => {
-          console.error('Error creating application:', error);
-          this.notificationService.error('Failed to create application');
-        }
-      });
+        this.notificationService.success('Application updated successfully');
+        this.closeDialog();
+      } else {
+        // Create new application
+        const response = await this.applicationService.createApplication(application);
+        this.applications.push(response.data);
+        this.notificationService.success('Application created successfully');
+        this.closeDialog();
+      }
+    } catch (error) {
+      console.error('Error with application:', error);
+      const errorMessage = this.selectedApplication ? 'Failed to update application' : 'Failed to create application';
+      this.notificationService.error(errorMessage);
     }
   }
 
-  deleteApplication(application: ApplicationModel) {
+  deleteApplication(application: any) {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete the application "${application.appName}"?`,
       header: 'Confirm Delete',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
+      accept: async () => {
         if (application.id) {
-          this.applicationService.deleteApplication(application.id).subscribe({
-            next: () => {
-              const index = this.applications.findIndex(a => a.id === application.id);
-              if (index > -1) {
-                this.applications.splice(index, 1);
-              }
-              this.notificationService.success('Application deleted successfully');
-            },
-            error: (error) => {
-              console.error('Error deleting application:', error);
-              this.notificationService.error('Failed to delete application');
+          try {
+            await this.applicationService.deleteApplication(application.id);
+            const index = this.applications.findIndex(a => a.id === application.id);
+            if (index > -1) {
+              this.applications.splice(index, 1);
             }
-          });
+            this.notificationService.success('Application deleted successfully');
+          } catch (error) {
+            console.error('Error deleting application:', error);
+            this.notificationService.error('Failed to delete application');
+          }
         }
       }
     });

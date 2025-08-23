@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 import {ApiResponse} from './core/ApiResponse';
 
@@ -16,12 +16,7 @@ export class AuthService {
   private http = inject(HttpClient);
 
 
-  login(payload: LoginPayload): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${environment.baseUrl}/auth/login`, payload).pipe(
-      catchError((err) => {
-        const message = err?.error?.message || 'Login failed. Please try again.';
-        return throwError(() => new Error(message));
-      })
-    );
+  async login(payload: LoginPayload): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/auth/login`, payload));
   }
 }

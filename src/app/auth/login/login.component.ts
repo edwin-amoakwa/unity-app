@@ -28,30 +28,28 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
 
       const payload: LoginPayload = this.loginForm.value;
 
-      this.authService.login(payload).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          // Handle successful login - could store token, redirect, etc.
-          console.log('Login successful:', response);
-          if(response.success)
-          {
-            UserSession.login(response.data);
-          }
-          this.router.navigate(['/dashboard']); // Adjust route as needed
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.errorMessage = error.message || 'Login failed. Please try again.';
-          console.error('Login error:', error);
+      try {
+        const response = await this.authService.login(payload);
+        this.isLoading = false;
+        // Handle successful login - could store token, redirect, etc.
+        console.log('Login successful:', response);
+        if(response.success)
+        {
+          UserSession.login(response.data);
         }
-      });
+        this.router.navigate(['/dashboard']); // Adjust route as needed
+      } catch (error: any) {
+        this.isLoading = false;
+        this.errorMessage = error.message || 'Login failed. Please try again.';
+        console.error('Login error:', error);
+      }
     } else {
       this.markFormGroupTouched();
     }

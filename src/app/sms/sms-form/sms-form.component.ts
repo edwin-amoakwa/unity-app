@@ -132,32 +132,23 @@ export class SmsFormComponent implements OnInit, OnChanges {
     });
   }
 
-  loadDropdownData() {
+  async loadDropdownData() {
     this.isLoading = true;
 
-    // Load applications
-    this.smsService.getApplications().subscribe({
-      next: (response) => {
-        this.applications = response.data;
-      },
-      error: (error) => {
-        console.error('Error loading applications:', error);
-        this.notificationService.error('Failed to load applications');
-      }
-    });
+    try {
+      // Load applications
+      const applicationsResponse = await this.smsService.getApplications();
+      this.applications = applicationsResponse.data;
 
-    // Load sender IDs
-    this.smsService.getSenderIds().subscribe({
-      next: (response) => {
-        this.senderIds = response.data;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading sender IDs:', error);
-        this.notificationService.error('Failed to load sender IDs');
-        this.isLoading = false;
-      }
-    });
+      // Load sender IDs
+      const senderIdsResponse = await this.smsService.getSenderIds();
+      this.senderIds = senderIdsResponse.data;
+      this.isLoading = false;
+    } catch (error) {
+      console.error('Error loading dropdown data:', error);
+      this.notificationService.error('Failed to load dropdown data');
+      this.isLoading = false;
+    }
   }
 
   populateForm() {

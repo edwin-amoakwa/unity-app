@@ -8,7 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { ApplicationModel, ApplicationType } from '../application.model';
+import { ApplicationType } from '../../unity.model';
 
 @Component({
   selector: 'app-application-form',
@@ -27,8 +27,8 @@ import { ApplicationModel, ApplicationType } from '../application.model';
 export class ApplicationFormComponent implements OnInit {
   private fb = inject(FormBuilder);
 
-  @Input() application: ApplicationModel | null = null;
-  @Output() applicationSubmitted = new EventEmitter<ApplicationModel>();
+  @Input() application: any | null = null;
+  @Output() applicationSubmitted = new EventEmitter<any>();
   @Output() cancelled = new EventEmitter<void>();
 
   applicationForm!: FormGroup;
@@ -77,7 +77,7 @@ export class ApplicationFormComponent implements OnInit {
   onSubmit() {
     if (this.applicationForm.valid) {
       const formValue = this.applicationForm.value;
-      const applicationData: ApplicationModel = {
+      const applicationData: any = {
         ...formValue,
         id: this.application?.id,
         createdAt: this.application?.createdAt,
@@ -97,15 +97,7 @@ export class ApplicationFormComponent implements OnInit {
     this.cancelled.emit();
   }
 
-  generateApiKey() {
-    const prefix = 'sk_test_';
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let result = prefix;
-    for (let i = 0; i < 24; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    this.applicationForm.patchValue({ apiKey: result });
-  }
+
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.applicationForm.get(fieldName);

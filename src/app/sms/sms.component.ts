@@ -51,20 +51,18 @@ export class SmsComponent implements OnInit {
     this.loadSmsMessages();
   }
 
-  loadSmsMessages() {
+  async loadSmsMessages() {
     this.isLoading = true;
-    this.smsService.getSmsMessages().subscribe({
-      next: (response) => {
-        this.smsMessages = response.data;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading SMS messages:', error);
-        this.notificationService.error('Failed to load SMS messages');
-        this.isLoading = false;
-        this.smsMessages = [];
-      }
-    });
+    try {
+      const response = await this.smsService.getSmsMessages();
+      this.smsMessages = response.data;
+      this.isLoading = false;
+    } catch (error) {
+      console.error('Error loading SMS messages:', error);
+      this.notificationService.error('Failed to load SMS messages');
+      this.isLoading = false;
+      this.smsMessages = [];
+    }
   }
 
   openCreateDialog() {
@@ -82,36 +80,28 @@ export class SmsComponent implements OnInit {
     this.selectedSms = null;
   }
 
-  onSmsSubmitted(sms: SmsModel) {
-    if (this.selectedSms && this.selectedSms.id) {
-      // Update existing SMS
-      this.smsService.updateSmsMessage(this.selectedSms.id, sms).subscribe({
-        next: (response) => {
-          const index = this.smsMessages.findIndex(s => s.id === this.selectedSms!.id);
-          if (index > -1) {
-            this.smsMessages[index] = response.data;
-          }
-          this.notificationService.success('SMS message updated successfully');
-          this.closeDialog();
-        },
-        error: (error) => {
-          console.error('Error updating SMS message:', error);
-          this.notificationService.error('Failed to update SMS message');
+  async onSmsSubmitted(sms: SmsModel) {
+    try {
+      if (this.selectedSms && this.selectedSms.id) {
+        // Update existing SMS
+        const response = await this.smsService.updateSmsMessage(this.selectedSms.id, sms);
+        const index = this.smsMessages.findIndex(s => s.id === this.selectedSms!.id);
+        if (index > -1) {
+          this.smsMessages[index] = response.data;
         }
-      });
-    } else {
-      // Create new SMS
-      this.smsService.createSmsMessage(sms).subscribe({
-        next: (response) => {
-          this.smsMessages.push(response.data);
-          this.notificationService.success('SMS message created successfully');
-          this.closeDialog();
-        },
-        error: (error) => {
-          console.error('Error creating SMS message:', error);
-          this.notificationService.error('Failed to create SMS message');
-        }
-      });
+        this.notificationService.success('SMS message updated successfully');
+        this.closeDialog();
+      } else {
+        // Create new SMS
+        const response = await this.smsService.createSmsMessage(sms);
+        this.smsMessages.push(response.data);
+        this.notificationService.success('SMS message created successfully');
+        this.closeDialog();
+      }
+    } catch (error) {
+      console.error('Error with SMS message:', error);
+      const errorMessage = this.selectedSms ? 'Failed to update SMS message' : 'Failed to create SMS message';
+      this.notificationService.error(errorMessage);
     }
   }
 
@@ -120,21 +110,19 @@ export class SmsComponent implements OnInit {
       message: `Are you sure you want to delete this SMS message?`,
       header: 'Confirm Delete',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
+      accept: async () => {
         if (sms.id) {
-          this.smsService.deleteSmsMessage(sms.id).subscribe({
-            next: () => {
-              const index = this.smsMessages.findIndex(s => s.id === sms.id);
-              if (index > -1) {
-                this.smsMessages.splice(index, 1);
-              }
-              this.notificationService.success('SMS message deleted successfully');
-            },
-            error: (error) => {
-              console.error('Error deleting SMS message:', error);
-              this.notificationService.error('Failed to delete SMS message');
+          try {
+            await this.smsService.deleteSmsMessage(sms.id);
+            const index = this.smsMessages.findIndex(s => s.id === sms.id);
+            if (index > -1) {
+              this.smsMessages.splice(index, 1);
             }
-          });
+            this.notificationService.success('SMS message deleted successfully');
+          } catch (error) {
+            console.error('Error deleting SMS message:', error);
+            this.notificationService.error('Failed to delete SMS message');
+          }
         }
       }
     });
