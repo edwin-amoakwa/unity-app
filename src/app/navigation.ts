@@ -64,15 +64,22 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ti ti-brush'
       },
       {
-        id: 'contact-manager',
-        title: 'Contact Manager',
+        id: 'add-funds',
+        title: 'Add Funds',
         type: 'item',
         classes: 'nav-item',
-        url: '/contact-manager',
-        icon: 'ti ti-plant-2',
-        target: true,
-        external: true
+        url: '/add-funds',
+        icon: 'ti ti-currency-dollar',
+      },
+      {
+        id: 'users',
+        title: 'User Management',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/users',
+        icon: 'ti ti-brush',
       }
+
     ]
   },
 

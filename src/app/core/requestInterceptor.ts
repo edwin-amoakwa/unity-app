@@ -11,11 +11,16 @@ export const RequestInterceptor: HttpInterceptorFn = (req, next) => {
   const notificationService = inject(NotificationService);
 
   let merchantId = localStorage.getItem(UserSession.MerchantId);
+  let userId = localStorage.getItem(UserSession.UserID);
 
   let headers: any = {};
 
   if (merchantId) {
     headers.merchantId = merchantId;
+  }
+
+  if (userId) {
+    headers.userId = userId;
   }
 
   // console.log(" http heaers",headers);

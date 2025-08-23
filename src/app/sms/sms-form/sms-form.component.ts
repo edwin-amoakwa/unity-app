@@ -15,6 +15,7 @@ import { DividerModule } from 'primeng/divider';
 import { SmsService } from '../sms.service';
 import { SmsModel, SmsNature, ApplicationModel, SenderIdModel } from '../sms.model';
 import { NotificationService } from '../../core/notification.service';
+import { ConfigService } from '../../config.service';
 import {Textarea} from 'primeng/inputtextarea';
 import {TextareaModule} from 'primeng/textarea';
 
@@ -44,6 +45,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
   private fb = inject(FormBuilder);
   private smsService = inject(SmsService);
   private notificationService = inject(NotificationService);
+  private configService = inject(ConfigService);
 
   smsForm!: FormGroup;
   applications: ApplicationModel[] = [];
@@ -136,17 +138,18 @@ export class SmsFormComponent implements OnInit, OnChanges {
     this.isLoading = true;
 
     try {
-      // Load applications
-      const applicationsResponse = await this.smsService.getApplications();
-      this.applications = applicationsResponse.data;
-
-      // Load sender IDs
-      const senderIdsResponse = await this.smsService.getSenderIds();
-      this.senderIds = senderIdsResponse.data;
-      this.isLoading = false;
+      // Load sender IDs using config service
+      const response = await this.configService.getSenderIds();
+      if (response.success) {
+        this.senderIds = response.data;
+      } else {
+        console.error('Error loading sender IDs:', response);
+        this.notificationService.error('Failed to load sender IDs');
+      }
     } catch (error) {
-      console.error('Error loading dropdown data:', error);
-      this.notificationService.error('Failed to load dropdown data');
+      console.error('Error loading sender IDs:', error);
+      this.notificationService.error('Failed to load sender IDs');
+    } finally {
       this.isLoading = false;
     }
   }

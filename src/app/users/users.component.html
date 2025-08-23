@@ -1,0 +1,215 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card">
+      <div class="flex justify-content-between align-items-center mb-3">
+        <p-button
+          label="New User"
+          icon="pi pi-plus"
+          (onClick)="openNewUserDialog()"
+          styleClass="p-button-primary">
+        </p-button>
+      </div>
+
+      <p-table
+        [value]="users"
+        [loading]="loading"
+        [paginator]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        styleClass="p-datatable-gridlines">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Account Name</th>
+            <th>Email Address</th>
+            <th>Phone No</th>
+            <th>Account Category</th>
+            <th>Account Status</th>
+            <th>User Category</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-user>
+          <tr>
+            <td>{{ user.accountName }}</td>
+            <td>{{ user.emailAddress }}</td>
+            <td>{{ user.phoneNo }}</td>
+            <td>
+              <span *ngFor="let option of accountCategoryOptions">
+                {{ option.id === user.accountCategory ? option.itemName : '' }}
+              </span>
+            </td>
+            <td>
+              <span [class]="user.accountStatus === 'ACTIVE' ? 'text-green-500' : 'text-red-500'">
+                <span *ngFor="let option of accountStatusOptions">
+                  {{ option.id === user.accountStatus ? option.itemName : '' }}
+                </span>
+              </span>
+            </td>
+            <td>
+              <span *ngFor="let option of userCategoryOptions">
+                {{ option.id === user.userCategory ? option.itemName : '' }}
+              </span>
+            </td>
+            <td>
+              <p-button
+                icon="pi pi-pencil"
+                (onClick)="editUser(user)"
+                styleClass="p-button-rounded p-button-text p-button-info mr-1"
+                pTooltip="Edit">
+              </p-button>
+
+              <p-button
+                icon="pi pi-trash"
+                (onClick)="deleteUser(user)"
+                styleClass="p-button-rounded p-button-text p-button-danger"
+                pTooltip="Delete">
+              </p-button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="9" class="text-center">No users found</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<!-- User Form Dialog -->
+<p-dialog
+  [(visible)]="showUserDialog"
+  [header]="editingUser ? 'Edit User' : 'Create User'"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="p-fluid"
+  [style]="{width: '70vw'}"
+  [breakpoints]="{'960px': '85vw', '640px': '95vw'}"
+  (onHide)="closeUserDialog()">
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <!-- Account Name -->
+      <div class="col-12 col-md-6 mb-3">
+        <label for="accountName">Account Name *</label>
+        <input
+          pInputText
+          id="accountName"
+          formControlName="accountName"
+          [class.ng-invalid]="isFieldInvalid('accountName')"
+          class="w-full" />
+        <small class="p-error" *ngIf="isFieldInvalid('accountName')">
+          {{ getFieldError('accountName') }}
+        </small>
+      </div>
+
+      <!-- Email Address -->
+      <div class="col-12 col-md-6 mb-3">
+        <label for="emailAddress">Email Address *</label>
+        <input
+          pInputText
+          id="emailAddress"
+          formControlName="emailAddress"
+          [class.ng-invalid]="isFieldInvalid('emailAddress')"
+          class="w-full" />
+        <small class="p-error" *ngIf="isFieldInvalid('emailAddress')">
+          {{ getFieldError('emailAddress') }}
+        </small>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="col-12 col-md-6 mb-3">
+        <label for="phoneNo">Phone Number *</label>
+        <input
+          pInputText
+          id="phoneNo"
+          formControlName="phoneNo"
+          [class.ng-invalid]="isFieldInvalid('phoneNo')"
+          class="w-full" />
+        <small class="p-error" *ngIf="isFieldInvalid('phoneNo')">
+          {{ getFieldError('phoneNo') }}
+        </small>
+      </div>
+
+      <!-- Account Category -->
+      <div class="col-12 col-md-6 mb-3">
+        <label for="accountCategory">Account Category *</label>
+        <p-dropdown
+          id="accountCategory"
+          optionValue="id"
+          optionLabel="itemName"
+          formControlName="accountCategory"
+          [options]="accountCategoryOptions"
+          [class.ng-invalid]="isFieldInvalid('accountCategory')"
+          styleClass="w-full">
+        </p-dropdown>
+        <small class="p-error" *ngIf="isFieldInvalid('accountCategory')">
+          {{ getFieldError('accountCategory') }}
+        </small>
+      </div>
+
+
+      <!-- Account Status -->
+      <div class="col-12 col-md-6 mb-3">
+        <label for="accountStatus">Account Status *</label>
+        <p-dropdown
+          id="accountStatus"
+          optionValue="id"
+          optionLabel="itemName"
+          formControlName="accountStatus"
+          [options]="accountStatusOptions"
+          [class.ng-invalid]="isFieldInvalid('accountStatus')"
+          styleClass="w-full">
+        </p-dropdown>
+        <small class="p-error" *ngIf="isFieldInvalid('accountStatus')">
+          {{ getFieldError('accountStatus') }}
+        </small>
+      </div>
+
+      <!-- User Category -->
+      <div class="col-12 col-md-6 mb-3">
+        <label for="userCategory">User Category *</label>
+        <p-dropdown
+          id="userCategory"
+          optionValue="id"
+          optionLabel="itemName"
+          formControlName="userCategory"
+          [options]="userCategoryOptions"
+          [class.ng-invalid]="isFieldInvalid('userCategory')"
+          styleClass="w-full">
+        </p-dropdown>
+        <small class="p-error" *ngIf="isFieldInvalid('userCategory')">
+          {{ getFieldError('userCategory') }}
+        </small>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      type="button"
+      label="Cancel"
+      icon="pi pi-times"
+      (onClick)="closeUserDialog()"
+      styleClass="p-button-text">
+    </p-button>
+    <p-button
+      type="button"
+      [label]="editingUser ? 'Update User' : 'Create User'"
+      icon="pi pi-check"
+      (onClick)="onSubmit()"
+      [loading]="loading"
+      styleClass="p-button-primary">
+    </p-button>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>

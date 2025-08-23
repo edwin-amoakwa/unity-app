@@ -13,7 +13,6 @@
         [options]="senderIds"
         optionLabel="senderId"
         optionValue="senderId"
-        placeholder="Select Sender ID"
         [loading]="isLoading"
         [class.ng-invalid]="isFieldInvalid('senderId')">
       </p-dropdown>
@@ -32,7 +31,6 @@
         pInputTextarea
         formControlName="messageText"
         rows="4"
-        placeholder="Enter SMS message text..."
         [class.ng-invalid]="isFieldInvalid('messageText')">
       </textarea>
       <div class="flex justify-content-between mt-1">
@@ -55,7 +53,6 @@
         type="text"
         pInputText
         formControlName="phoneNos"
-        placeholder="e.g., +1234567890,+0987654321"
         [class.ng-invalid]="isFieldInvalid('phoneNos')" />
       <small class="block text-500 mt-1">Enter phone numbers separated by commas</small>
       <small *ngIf="isFieldInvalid('phoneNos')" class="p-error block">
@@ -86,7 +83,7 @@
         id="actualCost"
         formControlName="actualCost"
         mode="currency"
-        currency="USD"
+        currency="GHS"
         locale="en-US"
         [minFractionDigits]="3"
         [class.ng-invalid]="isFieldInvalid('actualCost')">
@@ -121,7 +118,6 @@
         [options]="smsNatures"
         optionLabel="label"
         optionValue="value"
-        placeholder="Select SMS Nature"
         [class.ng-invalid]="isFieldInvalid('smsNature')">
       </p-dropdown>
       <small *ngIf="isFieldInvalid('smsNature')" class="p-error block">
@@ -188,7 +184,6 @@
         [showTime]="true"
         [showSeconds]="false"
         dateFormat="mm/dd/yy"
-        placeholder="Select date and time"
         [class.ng-invalid]="isFieldInvalid('scheduledTime')">
       </p-calendar>
       <small *ngIf="isFieldInvalid('scheduledTime')" class="p-error block">

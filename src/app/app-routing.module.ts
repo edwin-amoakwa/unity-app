@@ -4,6 +4,7 @@ import { AdminComponent } from './theme/layout/admin/admin.component';
 import { PlainComponent } from './theme/layout/plain/plain.component';
 import {SenderIdComponent} from './sender-id/sender-id.component';
 import { AuthGuard } from './guards/auth.guard';
+import {PaymentsComponent} from './payments/payments.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,11 @@ const routes: Routes = [
         loadComponent: () => import('./demo/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
       {path: "sender-id", component: SenderIdComponent},
+      {path: "add-funds", component: PaymentsComponent},
+      {
+        path: 'users',
+        loadComponent: () => import('./users/users.component').then((c) => c.UsersComponent)
+      },
       {
         path: 'applications',
         loadComponent: () => import('./applications/applications.component').then((c) => c.ApplicationsComponent)

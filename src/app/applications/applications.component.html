@@ -114,7 +114,7 @@
 
   <app-application-form
     [application]="selectedApplication"
-    (applicationSubmitted)="onApplicationSubmitted($event)"
+    (applicationSubmitted)="saveApplication($event)"
     (cancelled)="closeDialog()">
   </app-application-form>
 </p-dialog>

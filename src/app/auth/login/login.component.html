@@ -30,7 +30,6 @@
               formControlName="username"
               class="form-input"
               [class.error]="username?.invalid && username?.touched"
-              placeholder="Enter your username"
             />
           </div>
           <div *ngIf="username?.invalid && username?.touched" class="field-error">
@@ -49,7 +48,6 @@
               formControlName="userPassword"
               class="form-input"
               [class.error]="userPassword?.invalid && userPassword?.touched"
-              placeholder="Enter your password"
             />
           </div>
           <div *ngIf="userPassword?.invalid && userPassword?.touched" class="field-error">

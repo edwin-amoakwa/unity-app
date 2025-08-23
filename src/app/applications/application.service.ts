@@ -15,13 +15,14 @@ export class ApplicationService {
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl));
   }
 
-  async createApplication(application: Partial<any>): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.post<ApiResponse<any>>(this.apiUrl, application));
+  async saveApplication(application: any): Promise<ApiResponse<any>> {
+    if(!application.id)
+    {
+      return await firstValueFrom(this.http.post<ApiResponse<any>>(this.apiUrl, application));
+    }
+    return await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.apiUrl}`, application));
   }
 
-  async updateApplication(id: string, application: Partial<any>): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.apiUrl}/${id}`, application));
-  }
 
   async deleteApplication(id: string): Promise<ApiResponse<any>> {
     return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`));

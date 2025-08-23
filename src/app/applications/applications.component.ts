@@ -17,6 +17,7 @@ import { NotificationService } from '../core/notification.service';
 import { ApplicationService } from './application.service';
 import { ApplicationFormComponent } from './application-form/application-form.component';
 import {ApplicationType} from '../unity.model';
+import {CollectionUtil} from '../core/system.utils';
 
 @Component({
   selector: 'app-applications',
@@ -80,24 +81,16 @@ export class ApplicationsComponent implements OnInit {
     this.selectedApplication = null;
   }
 
-  async onApplicationSubmitted(application: any) {
+  async saveApplication(application: any) {
     try {
-      if (this.selectedApplication && this.selectedApplication.id) {
-        // Update existing application
-        const response = await this.applicationService.updateApplication(this.selectedApplication.id, application);
-        const index = this.applications.findIndex(a => a.id === this.selectedApplication!.id);
-        if (index > -1) {
-          this.applications[index] = response.data;
-        }
-        this.notificationService.success('Application updated successfully');
-        this.closeDialog();
-      } else {
-        // Create new application
-        const response = await this.applicationService.createApplication(application);
-        this.applications.push(response.data);
-        this.notificationService.success('Application created successfully');
+
+      const response = await this.applicationService.saveApplication(application);
+      if (response.success) {
+        CollectionUtil.add(this.applications, response.data);
         this.closeDialog();
       }
+
+
     } catch (error) {
       console.error('Error with application:', error);
       const errorMessage = this.selectedApplication ? 'Failed to update application' : 'Failed to create application';
@@ -142,7 +135,7 @@ export class ApplicationsComponent implements OnInit {
   formatPrice(price: number): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'GHS'
     }).format(price);
   }
 
