@@ -45,7 +45,7 @@ export class UpdatePasswordComponent implements OnInit {
   initializeForm() {
     this.updatePasswordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]]
     });
   }
@@ -68,19 +68,12 @@ export class UpdatePasswordComponent implements OnInit {
 
     try {
       this.loading = true;
-      const response = await this.userService.updatePasswordWithCurrent(currentPassword, newPassword);
+      const response = await this.userService.updatePasswordWithCurrent(formValue);
 
       if (response.success) {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Password updated successfully'
-        });
+        this.notificationService.success('Password updated successfully');
         this.updatePasswordForm.reset();
-        // Optionally redirect to another page
-        // this.router.navigate(['/profile']);
-      } else {
-        this.notificationService.error(response.message || 'Failed to update password');
+
       }
     } catch (error: any) {
       this.notificationService.error('Failed to update password');
@@ -101,7 +94,7 @@ export class UpdatePasswordComponent implements OnInit {
         return `${this.getFieldLabel(fieldName)} is required`;
       }
       if (field.errors['minlength']) {
-        return `${this.getFieldLabel(fieldName)} must be at least 6 characters`;
+        return `${this.getFieldLabel(fieldName)} must be at least 8 characters`;
       }
     }
     return '';

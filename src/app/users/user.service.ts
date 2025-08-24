@@ -39,8 +39,8 @@ export class UserService {
     return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/update-password`, payload));
   }
 
-  async updatePasswordWithCurrent(currentPassword: string, newPassword: string): Promise<ApiResponse<any>> {
-    const payload = { currentPassword, newPassword };
-    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/change-password`, payload));
+  async updatePasswordWithCurrent(data): Promise<ApiResponse<any>> {
+
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/users/change-password`, data));
   }
 }
