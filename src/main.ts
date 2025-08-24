@@ -11,13 +11,20 @@ import {providePrimeNG} from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import {CoreModule} from './app/core/core.module';
 import { RequestInterceptor } from './app/core/requestInterceptor';
+import {MessageService} from 'primeng/api';
+import { registerLocaleData } from '@angular/common';
+import localeEnGh from '@angular/common/locales/en-GH';
+import { LOCALE_ID,DEFAULT_CURRENCY_CODE } from '@angular/core';
 
 if (environment.production) {
   enableProdMode();
 }
 
+registerLocaleData(localeEnGh);
+
 bootstrapApplication(AppComponent, {
   providers: [
+    MessageService,
     importProvidersFrom(BrowserModule, AppRoutingModule, CoreModule),
     provideAnimations(),
     provideAnimationsAsync(),
@@ -26,6 +33,8 @@ bootstrapApplication(AppComponent, {
       theme: {
         preset: Aura
       }
-    })
+    }),
+    { provide: LOCALE_ID, useValue: 'en-GH' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'GHS' }
   ]
 }).catch((err) => console.error(err));

@@ -5,6 +5,7 @@ import { PlainComponent } from './theme/layout/plain/plain.component';
 import {SenderIdComponent} from './sender-id/sender-id.component';
 import { AuthGuard } from './guards/auth.guard';
 import {PaymentsComponent} from './payments/payments.component';
+import {UpdatePasswordComponent} from './update-password/update-password.component';
 
 const routes: Routes = [
   {
@@ -19,10 +20,11 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadComponent: () => import('./demo/dashboard/dashboard.component').then((c) => c.DashboardComponent)
+        loadComponent: () => import('./dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
       {path: "sender-id", component: SenderIdComponent},
       {path: "add-funds", component: PaymentsComponent},
+      {path: "update-password", component: UpdatePasswordComponent},
       {
         path: 'users',
         loadComponent: () => import('./users/users.component').then((c) => c.UsersComponent)
@@ -50,6 +52,10 @@ const routes: Routes = [
       {
         path: 'profile',
         loadComponent: () => import('./profile/profile.component').then((c) => c.ProfileComponent)
+      },
+      {
+        path: 'update-password',
+        loadComponent: () => import('./update-password/update-password.component').then((c) => c.UpdatePasswordComponent)
       }
     ]
   },

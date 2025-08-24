@@ -17,6 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import { Payment} from '../unity.model';
 import { PaymentService } from './payment.service';
 import {StaticDataService} from '../static-data.service';
+import {NotificationService} from '../core/notification.service';
 
 @Component({
   selector: 'app-payments',
@@ -42,6 +43,7 @@ export class PaymentsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private paymentService = inject(PaymentService);
   private messageService = inject(MessageService);
+  private notificationService = inject(NotificationService);
 
   paymentForm!: FormGroup;
   payments: Payment[] = [];
@@ -75,11 +77,7 @@ export class PaymentsComponent implements OnInit {
         this.payments = response.data || [];
       }
     } catch (error) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to load payments'
-      });
+      this.notificationService.error('Failed to load payments');
     } finally {
       this.loading = false;
     }
@@ -113,11 +111,7 @@ export class PaymentsComponent implements OnInit {
           await this.loadPayments();
         }
       } catch (error) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: `Failed to ${this.editingPayment ? 'update' : 'create'} payment`
-        });
+        this.notificationService.error(`Failed to ${this.editingPayment ? 'update' : 'create'} payment`);
       } finally {
         this.loading = false;
       }
@@ -154,11 +148,7 @@ export class PaymentsComponent implements OnInit {
           await this.loadPayments();
         }
       } catch (error) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to delete payment'
-        });
+        this.notificationService.error('Failed to delete payment');
       } finally {
         this.loading = false;
       }

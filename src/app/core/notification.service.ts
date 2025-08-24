@@ -1,12 +1,14 @@
-import { Injectable } from "@angular/core";
+import {inject, Injectable} from "@angular/core";
 import { ToastrService } from "ngx-toastr";
+import {MessageService} from 'primeng/api';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NotificationService
 {
-    constructor(private toastr: ToastrService) { }
+  // messageService =  inject(MessageService)
+    constructor(private toastr: ToastrService, private messageService: MessageService) { }
 
     public successMessage(message: string, title: string)
     {
@@ -35,8 +37,16 @@ export class NotificationService
 
     public error(message: string, title?:string)
     {
-        this.toastr.error(message,title);
+        // this.toastr.error(message,title);
+
+      this.messageService.add({
+        severity: 'error',
+        summary: title || 'Error',
+        detail: message
+      });
     }
+
+
 
     public warning(message: string)
     {

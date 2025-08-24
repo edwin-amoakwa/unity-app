@@ -4,12 +4,14 @@ import { RouterOutlet } from '@angular/router';
 
 // project import
 import { SpinnerComponent } from './theme/shared/components/spinner/spinner.component';
+import {MessageService} from 'primeng/api';
+import {Toast} from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, SpinnerComponent]
+  imports: [RouterOutlet, SpinnerComponent, Toast],
 })
 export class AppComponent {
   title = 'Berry Angular Free Version';

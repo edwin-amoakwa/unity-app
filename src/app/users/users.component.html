@@ -25,9 +25,8 @@
             <th>Account Name</th>
             <th>Email Address</th>
             <th>Phone No</th>
-            <th>Account Category</th>
-            <th>Account Status</th>
-            <th>User Category</th>
+            <th> Category</th>
+            <th> Status</th>
             <th>Actions</th>
           </tr>
         </ng-template>
@@ -50,11 +49,6 @@
               </span>
             </td>
             <td>
-              <span *ngFor="let option of userCategoryOptions">
-                {{ option.id === user.userCategory ? option.itemName : '' }}
-              </span>
-            </td>
-            <td>
               <p-button
                 icon="pi pi-pencil"
                 (onClick)="editUser(user)"
@@ -63,6 +57,13 @@
               </p-button>
 
               <p-button
+                icon="pi pi-key"
+                (onClick)="openPasswordDialog(user)"
+                styleClass="p-button-rounded p-button-text p-button-warning mr-1"
+                pTooltip="Change Password">
+              </p-button>
+
+              <p-button *ngIf="false"
                 icon="pi pi-trash"
                 (onClick)="deleteUser(user)"
                 styleClass="p-button-rounded p-button-text p-button-danger"
@@ -174,22 +175,6 @@
         </small>
       </div>
 
-      <!-- User Category -->
-      <div class="col-12 col-md-6 mb-3">
-        <label for="userCategory">User Category *</label>
-        <p-dropdown
-          id="userCategory"
-          optionValue="id"
-          optionLabel="itemName"
-          formControlName="userCategory"
-          [options]="userCategoryOptions"
-          [class.ng-invalid]="isFieldInvalid('userCategory')"
-          styleClass="w-full">
-        </p-dropdown>
-        <small class="p-error" *ngIf="isFieldInvalid('userCategory')">
-          {{ getFieldError('userCategory') }}
-        </small>
-      </div>
     </div>
   </form>
 
@@ -212,4 +197,74 @@
   </ng-template>
 </p-dialog>
 
-<p-toast></p-toast>
+<!-- Password Update Dialog -->
+<p-dialog
+  [(visible)]="showPasswordDialog"
+  header="Change Password"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="p-fluid"
+  [style]="{width: '30vw'}"
+  [breakpoints]="{'960px': '50vw', '640px': '95vw'}"
+  (onHide)="closePasswordDialog()">
+
+  <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+    <div class="row mb-3">
+      <div class="col-4">
+        <label for="newPassword">New Password *</label>
+      </div>
+      <div class="col-8">
+        <input
+          pInputText
+          type="password"
+          id="newPassword"
+          formControlName="newPassword"
+          [class.ng-invalid]="isPasswordFieldInvalid('newPassword')"
+          class="w-full" />
+        <small class="p-error" *ngIf="isPasswordFieldInvalid('newPassword')">
+          {{ getPasswordFieldError('newPassword') }}
+        </small>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-4">
+        <label for="confirmPassword">Confirm Password *</label>
+      </div>
+      <div class="col-8">
+        <input
+          pInputText
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          [class.ng-invalid]="isPasswordFieldInvalid('confirmPassword')"
+          class="w-full" />
+        <small class="p-error" *ngIf="isPasswordFieldInvalid('confirmPassword')">
+          {{ getPasswordFieldError('confirmPassword') }}
+        </small>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      type="button"
+      label="Cancel"
+      icon="pi pi-times"
+      (onClick)="closePasswordDialog()"
+      styleClass="p-button-text">
+    </p-button>
+    <p-button
+      type="button"
+      label="Update Password"
+      icon="pi pi-check"
+      (onClick)="updatePassword()"
+      [loading]="passwordLoading"
+      styleClass="p-button-primary">
+    </p-button>
+  </ng-template>
+</p-dialog>
+
+

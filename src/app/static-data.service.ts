@@ -23,9 +23,8 @@ export class StaticDataService {
       { id: 'CARD_PAYMENT', itemName: 'Card Payment' },
       { id: 'CASH', itemName: 'Cash' },
       { id: 'MTN_MOBILE_MONEY', itemName: 'MTN Mobile Money' },
-      { id: 'TIGO_CASH', itemName: 'Tigo Cash' },
+      { id: 'AT_CASH', itemName: 'AT Cash' },
       { id: 'VODAFON_CASH', itemName: 'Vodafon Cash' },
-      { id: 'AIRTEL_MONEY', itemName: 'Airtel Money' },
       { id: 'BANK_TRANSFER', itemName: 'Bank Transfer' }
     ];
 
@@ -35,8 +34,8 @@ export class StaticDataService {
   public static accountCategories():any[]
   {
     let data = [
-      { id: 'INDIVIDUAL', itemName: 'Individual' },
-      { id: 'BUSINESS', itemName: 'Business' },
+      { id: 'ADMIN', itemName: 'Administrator' },
+      { id: 'VIEWER', itemName: 'Viewer' },
       { id: 'ENTERPRISE', itemName: 'Enterprise' }
     ];
 
@@ -48,16 +47,6 @@ export class StaticDataService {
     let data = [
       { id: 'ACTIVE', itemName: 'Active' },
       { id: 'INACTIVE', itemName: 'Inactive' }
-    ];
-
-    return data;
-  }
-
-  public static userCategories():any[]
-  {
-    let data = [
-      { id: 'ADMIN', itemName: 'Admin' },
-      { id: 'USER', itemName: 'User' }
     ];
 
     return data;

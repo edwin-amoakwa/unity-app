@@ -32,20 +32,6 @@ export enum UserCategory {
   MERCHANT = 'MERCHANT'
 }
 
-export interface User {
-  id?: string;
-  accountName: string;
-  emailAddress: string;
-  phoneNo: string;
-  accountCategory: UserAccountCategory;
-  merchantName: string;
-  merchantId: string;
-  accountStatus: ActiveInactiveStatus;
-  userCategory: UserCategory;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 export interface Payment {
   id?: string;
   amount: number;

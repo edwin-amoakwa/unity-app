@@ -1,11 +1,12 @@
 // Angular Import
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { BajajChartComponent } from 'src/app/theme/shared/components/apexchart/bajaj-chart/bajaj-chart.component';
 import { BarChartComponent } from 'src/app/theme/shared/components/apexchart/bar-chart/bar-chart.component';
 import { ChartDataMonthComponent } from 'src/app/theme/shared/components/apexchart/chart-data-month/chart-data-month.component';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashoard',
@@ -13,7 +14,21 @@ import { ChartDataMonthComponent } from 'src/app/theme/shared/components/apexcha
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  private dashboardService = inject(DashboardService);
+
+  // Summary data from API
+  summary: any = {};
+
+  async ngOnInit() {
+    try {
+      const response = await this.dashboardService.getSummary();
+      this.summary = response.data;
+    } catch (error) {
+      console.error('Error fetching dashboard summary:', error);
+    }
+  }
+
   // public method
   ListGroup = [
     {

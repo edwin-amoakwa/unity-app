@@ -12,10 +12,10 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-import { User, UserAccountCategory, ActiveInactiveStatus, UserCategory } from '../unity.model';
 import { UserService } from './user.service';
 import { StaticDataService } from '../static-data.service';
 import { CollectionUtil } from '../core/system.utils';
+import {NotificationService} from '../core/notification.service';
 
 @Component({
   selector: 'app-users',
@@ -39,17 +39,23 @@ export class UsersComponent implements OnInit {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private messageService = inject(MessageService);
+  private notificationService = inject(NotificationService);
 
-  users: User[] = [];
+  users: any[] = [];
   userForm!: FormGroup;
   showUserDialog = false;
-  editingUser: User | null = null;
+  editingUser: any | null = null;
   loading = false;
+
+  // Password dialog properties
+  passwordForm!: FormGroup;
+  showPasswordDialog = false;
+  currentUser: any | null = null;
+  passwordLoading = false;
 
   // Dropdown options
   accountCategoryOptions: any[] = StaticDataService.accountCategories();
   accountStatusOptions: any[] = StaticDataService.accountStatuses();
-  userCategoryOptions: any[] = StaticDataService.userCategories();
 
   ngOnInit() {
     this.initializeForm();
@@ -63,8 +69,12 @@ export class UsersComponent implements OnInit {
       emailAddress: ['', [Validators.required, Validators.email]],
       phoneNo: ['', [Validators.required]],
       accountCategory: ['', [Validators.required]],
-      accountStatus: ['', [Validators.required]],
-      userCategory: ['', [Validators.required]]
+      accountStatus: ['', [Validators.required]]
+    });
+
+    this.passwordForm = this.fb.group({
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
     });
   }
 
@@ -77,18 +87,20 @@ export class UsersComponent implements OnInit {
       if (response.success) {
         this.users = response.data;
       } else {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: response.message || 'Failed to load users'
-        });
+        this.notificationService.error(response.message|| 'Failed to load users');
+        // this.messageService.add({
+        //   severity: 'error',
+        //   summary: 'Error',
+        //   detail: response.message || 'Failed to load users'
+        // });
       }
     } catch (error: any) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to load users'
-      });
+      this.notificationService.error( 'Failed to load users');
+      // this.messageService.add({
+      //   severity: 'error',
+      //   summary: 'Error',
+      //   detail: 'Failed to load users'
+      // });
     } finally {
       this.loading = false;
     }
@@ -106,19 +118,11 @@ export class UsersComponent implements OnInit {
           detail: this.editingUser ? 'User updated successfully' : 'User created successfully'
         });
       } else {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: response.message || (this.editingUser ? 'Failed to update user' : 'Failed to create user')
-        });
+        this.notificationService.error(response.message || (this.editingUser ? 'Failed to update user' : 'Failed to create user'));
       }
     } catch (error: any) {
       const errorMessage = this.editingUser ? 'Failed to update user' : 'Failed to create user';
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: errorMessage
-      });
+      this.notificationService.error(errorMessage);
     }
   }
 
@@ -138,22 +142,19 @@ export class UsersComponent implements OnInit {
     await this.saveUser(userData);
   }
 
-  editUser(user: User) {
+  editUser(user: any) {
     this.editingUser = user;
     this.userForm.patchValue({
       accountName: user.accountName,
       emailAddress: user.emailAddress,
       phoneNo: user.phoneNo,
       accountCategory: user.accountCategory,
-      merchantName: user.merchantName,
-      merchantId: user.merchantId,
       accountStatus: user.accountStatus,
-      userCategory: user.userCategory
     });
     this.showUserDialog = true;
   }
 
-  async deleteUser(user: User) {
+  async deleteUser(user: any) {
     if (confirm(`Are you sure you want to delete user "${user.accountName}"?`)) {
       try {
         this.loading = true;
@@ -167,18 +168,10 @@ export class UsersComponent implements OnInit {
           });
           await this.loadUsers();
         } else {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: response.message || 'Failed to delete user'
-          });
+          this.notificationService.error(response.message || 'Failed to delete user');
         }
       } catch (error: any) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to delete user'
-        });
+        this.notificationService.error('Failed to delete user');
       } finally {
         this.loading = false;
       }
@@ -228,6 +221,87 @@ export class UsersComponent implements OnInit {
       'merchantId': 'Merchant ID',
       'accountStatus': 'Account Status',
       'userCategory': 'User Category'
+    };
+    return labels[fieldName] || fieldName;
+  }
+
+  // Password dialog methods
+  openPasswordDialog(user: any) {
+    this.currentUser = user;
+    this.resetPasswordForm();
+    this.showPasswordDialog = true;
+  }
+
+  closePasswordDialog() {
+    this.showPasswordDialog = false;
+    this.resetPasswordForm();
+    this.currentUser = null;
+  }
+
+  resetPasswordForm() {
+    this.passwordForm.reset();
+  }
+
+  async updatePassword() {
+    console.log(this.passwordForm.invalid);
+    if (this.passwordForm.invalid) {
+      Object.keys(this.passwordForm.controls).forEach(key => {
+        this.passwordForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
+
+    const newPassword = this.passwordForm.value.newPassword;
+    const confirmPassword = this.passwordForm.value.confirmPassword;
+
+    if (newPassword !== confirmPassword) {
+      this.notificationService.error('Passwords do not match');
+      return;
+    }
+
+    try {
+      this.passwordLoading = true;
+      const response = await this.userService.updatePassword(this.currentUser.id, newPassword);
+
+      if (response.success) {
+        this.closePasswordDialog();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Password updated successfully'
+        });
+      } else {
+        this.notificationService.error(response.message || 'Failed to update password');
+      }
+    } catch (error: any) {
+      this.notificationService.error('Failed to update password');
+    } finally {
+      this.passwordLoading = false;
+    }
+  }
+
+  isPasswordFieldInvalid(fieldName: string): boolean {
+    const field = this.passwordForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  getPasswordFieldError(fieldName: string): string {
+    const field = this.passwordForm.get(fieldName);
+    if (field?.errors) {
+      if (field.errors['required']) {
+        return `${this.getPasswordFieldLabel(fieldName)} is required`;
+      }
+      if (field.errors['minlength']) {
+        return `${this.getPasswordFieldLabel(fieldName)} must be at least 6 characters`;
+      }
+    }
+    return '';
+  }
+
+  getPasswordFieldLabel(fieldName: string): string {
+    const labels: { [key: string]: string } = {
+      'newPassword': 'New Password',
+      'confirmPassword': 'Confirm Password'
     };
     return labels[fieldName] || fieldName;
   }
