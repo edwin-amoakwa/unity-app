@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { PlainComponent } from './theme/layout/plain/plain.component';
 import {SenderIdComponent} from './sender-id/sender-id.component';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './core/auth.guard';
 import {PaymentsComponent} from './payments/payments.component';
 import {UpdatePasswordComponent} from './update-password/update-password.component';
+import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
       {path: "sender-id", component: SenderIdComponent},
       {path: "add-funds", component: PaymentsComponent},
       {path: "update-password", component: UpdatePasswordComponent},
+
       {
         path: 'users',
         loadComponent: () => import('./users/users.component').then((c) => c.UsersComponent)
@@ -63,6 +65,7 @@ const routes: Routes = [
     path: '',
     component: PlainComponent,
     children: [
+      {path: "password-reset", component: PasswordResetComponent},
       {
         path: 'login',
         loadComponent: () => import('./auth/login/login.component').then((c) => c.LoginComponent)

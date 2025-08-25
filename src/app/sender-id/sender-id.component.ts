@@ -15,20 +15,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfigService } from '../config.service';
 import { NotificationService } from '../core/notification.service';
 import { ApplicationService } from '../applications/application.service';
+import {CollectionUtil} from '../core/system.utils';
 
-export enum SenderIdStatus {
-  ACTIVE = 'ACTIVE',
-  PENDING = 'PENDING',
-  INACTIVE = 'INACTIVE'
-}
-
-export interface SenderIdModel {
-  senderId: string;
-  idStatus: SenderIdStatus;
-  idStatusName: string;
-  appName: string;
-  merchantId: string;
-}
 
 @Component({
   selector: 'sender-id',
@@ -65,12 +53,7 @@ export class SenderIdComponent implements OnInit {
     this.isLoading = true;
     try {
       const response = await this.configService.getSenderIds();
-      this.senderIds = response.data.map(item => ({
-        senderId: item.senderId,
-        idStatus: item.idStatus as SenderIdStatus,
-        idStatusName: item.idStatusName,
-        merchantId: item.merchantId
-      }));
+      this.senderIds = response.data;
       this.isLoading = false;
     } catch (error) {
       console.error('Error loading sender IDs:', error);
@@ -105,7 +88,7 @@ export class SenderIdComponent implements OnInit {
         const response = await this.configService.createSenderId(payload);
         const newSenderId: any = {
           senderId: response.data.senderId,
-          idStatus: response.data.idStatus as SenderIdStatus,
+          idStatus: response.data.idStatus,
           idStatusName: response.data.idStatusName,
           appName: response.data.appName,
           merchantId: response.data.merchantId
@@ -123,14 +106,15 @@ export class SenderIdComponent implements OnInit {
     }
   }
 
-  async deleteSenderId(sender: SenderIdModel) {
+  async deleteSenderId(sender: any) {
     this.isLoading = true;
     try {
-      await this.configService.deleteSenderId(sender.senderId);
-      const index = this.senderIds.findIndex(s => s.senderId === sender.senderId);
-      if (index > -1) {
-        this.senderIds.splice(index, 1);
-      }
+      await this.configService.deleteSenderId(sender.id);
+      CollectionUtil.remove(this.senderIds, sender.id);
+      // const index = this.senderIds.findIndex(s => s.senderId === sender.senderId);
+      // if (index > -1) {
+      //   this.senderIds.splice(index, 1);
+      // }
       this.isLoading = false;
       this.notificationService.success('Sender ID deleted successfully');
     } catch (error: any) {

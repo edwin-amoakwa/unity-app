@@ -9,6 +9,10 @@ export interface LoginPayload {
   userPassword: string;
 }
 
+export interface RequestPasswordPayload {
+  username: string;
+}
+
 
 
 @Injectable({ providedIn: 'root' })
@@ -18,5 +22,9 @@ export class AuthService {
 
   async login(payload: LoginPayload): Promise<ApiResponse<any>> {
     return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/auth/login`, payload));
+  }
+
+  async requestPassword(payload: RequestPasswordPayload): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/auth/request-password`, payload));
   }
 }
