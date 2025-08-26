@@ -1,128 +1,102 @@
 <form [formGroup]="smsForm" (ngSubmit)="onSubmit()" class="p-fluid">
-  <div class="grid">
+  <div class="container-fluid">
 
 
     <!-- Sender ID Dropdown -->
-    <div class="col-12 md:col-6">
-      <label for="senderId" class="block text-900 font-medium mb-2">
-        Sender ID <span class="text-red-500">*</span>
-      </label>
-      <p-dropdown
-        id="senderId"
-        formControlName="senderId"
-        [options]="senderIds"
-        optionLabel="senderId"
-        optionValue="senderId"
-        [loading]="isLoading"
-        [class.ng-invalid]="isFieldInvalid('senderId')">
-      </p-dropdown>
-      <small *ngIf="isFieldInvalid('senderId')" class="p-error block">
-        {{ getFieldError('senderId') }}
-      </small>
-    </div>
-
-    <!-- Message Text -->
-    <div class="col-12">
-      <label for="messageText" class="block text-900 font-medium mb-2">
-        Message Text <span class="text-red-500">*</span>
-      </label>
-      <textarea
-        id="messageText"
-        pInputTextarea
-        formControlName="messageText"
-        rows="4"
-        [class.ng-invalid]="isFieldInvalid('messageText')">
-      </textarea>
-      <div class="flex justify-content-between mt-1">
-        <small *ngIf="isFieldInvalid('messageText')" class="p-error">
-          {{ getFieldError('messageText') }}
-        </small>
-        <small class="text-500">
-          Characters: {{ smsForm.get('messageText')?.value?.length || 0 }}/1000
+    <div class="row mb-3">
+      <div class="col-sm-3">
+        <label for="senderId" class="col-form-label">
+          Sender ID <span class="text-danger">*</span>
+        </label>
+      </div>
+      <div class="col-sm-9">
+        <p-dropdown
+          id="senderId"
+          formControlName="senderId"
+          [options]="senderIds"
+          optionLabel="senderId"
+          optionValue="senderId"
+          [loading]="isLoading"
+          [class.ng-invalid]="isFieldInvalid('senderId')">
+        </p-dropdown>
+        <small *ngIf="isFieldInvalid('senderId')" class="text-danger d-block">
+          {{ getFieldError('senderId') }}
         </small>
       </div>
     </div>
 
+    <!-- Message Text -->
+    <div class="row mb-3">
+      <div class="col-sm-3">
+        <label for="messageText" class="col-form-label">
+          Message Text <span class="text-danger">*</span>
+        </label>
+      </div>
+      <div class="col-sm-9">
+        <textarea
+          id="messageText"
+          pInputTextarea
+          formControlName="messageText"
+          rows="4"
+          [class.ng-invalid]="isFieldInvalid('messageText')">
+        </textarea>
+        <div class="d-flex justify-content-between mt-1">
+          <small *ngIf="isFieldInvalid('messageText')" class="text-danger">
+            {{ getFieldError('messageText') }}
+          </small>
+          <small class="text-muted">
+            Characters: {{ smsForm.get('messageText')?.value?.length || 0 }}/1000
+          </small>
+        </div>
+      </div>
+    </div>
+
     <!-- Phone Numbers -->
-    <div class="col-12 md:col-8">
-      <label for="phoneNos" class="block text-900 font-medium mb-2">
-        Phone Numbers <span class="text-red-500">*</span>
-      </label>
-      <input
-        id="phoneNos"
-        type="text"
-        pInputText
-        formControlName="phoneNos"
-        [class.ng-invalid]="isFieldInvalid('phoneNos')" />
-      <small class="block text-500 mt-1">Enter phone numbers separated by commas</small>
-      <small *ngIf="isFieldInvalid('phoneNos')" class="p-error block">
-        {{ getFieldError('phoneNos') }}
-      </small>
+    <div class="row mb-3">
+      <div class="col-sm-3">
+        <label for="phoneNos" class="col-form-label">
+          Phone Numbers <span class="text-danger">*</span>
+        </label>
+      </div>
+      <div class="col-sm-9">
+        <input
+          id="phoneNos"
+          type="text"
+          pInputText
+          formControlName="phoneNos"
+          [class.ng-invalid]="isFieldInvalid('phoneNos')" />
+        <small class="d-block text-muted mt-1">Enter phone numbers separated by commas</small>
+        <small *ngIf="isFieldInvalid('phoneNos')" class="text-danger d-block">
+          {{ getFieldError('phoneNos') }}
+        </small>
+      </div>
     </div>
 
-    <!-- Total Recipients (Auto-calculated) -->
-    <div class="col-12 md:col-4">
-      <label for="totalReceipient" class="block text-900 font-medium mb-2">
-        Total Recipients
-      </label>
-      <p-inputNumber
-        id="totalReceipient"
-        formControlName="totalReceipient"
-        [disabled]="true"
-        [showButtons]="false">
-      </p-inputNumber>
-      <small class="block text-500 mt-1">Auto-calculated from phone numbers</small>
-    </div>
 
-    <!-- Actual Cost -->
-    <div class="col-12 md:col-4">
-      <label for="actualCost" class="block text-900 font-medium mb-2">
-        Actual Cost <span class="text-red-500">*</span>
-      </label>
-      <p-inputNumber
-        id="actualCost"
-        formControlName="actualCost"
-        mode="currency"
-        currency="GHS"
-        locale="en-US"
-        [minFractionDigits]="3"
-        [class.ng-invalid]="isFieldInvalid('actualCost')">
-      </p-inputNumber>
-      <small *ngIf="isFieldInvalid('actualCost')" class="p-error block">
-        {{ getFieldError('actualCost') }}
-      </small>
-    </div>
 
-    <!-- Pages Count (Read-only, Auto-calculated) -->
-    <div class="col-12 md:col-4">
-      <label for="pagesCount" class="block text-900 font-medium mb-2">
-        Pages Count
-      </label>
-      <p-inputNumber
-        id="pagesCount"
-        formControlName="pagesCount"
-        [disabled]="true"
-        [showButtons]="false">
-      </p-inputNumber>
-      <small class="block text-500 mt-1">Auto-calculated (message length ÷ 160)</small>
-    </div>
+
+
 
     <!-- SMS Nature -->
-    <div class="col-12 md:col-4">
-      <label for="smsNature" class="block text-900 font-medium mb-2">
-        SMS Nature <span class="text-red-500">*</span>
-      </label>
-      <p-dropdown
-        id="smsNature"
-        formControlName="smsNature"
-        [options]="smsNatures"
-        optionLabel="label"
-        optionValue="value"
-        [class.ng-invalid]="isFieldInvalid('smsNature')">
-      </p-dropdown>
-      <small *ngIf="isFieldInvalid('smsNature')" class="p-error block">
-        {{ getFieldError('smsNature') }}
-      </small>
+    <div class="row mb-3">
+      <div class="col-sm-3">
+        <label for="smsNature" class="col-form-label">
+          SMS Nature <span class="text-danger">*</span>
+        </label>
+      </div>
+      <div class="col-sm-9">
+        <p-dropdown
+          id="smsNature"
+          formControlName="smsNature"
+          [options]="smsNatures"
+          optionLabel="itemName"
+          optionValue="id"
+          [class.ng-invalid]="isFieldInvalid('smsNature')">
+        </p-dropdown>
+        <small *ngIf="isFieldInvalid('smsNature')" class="text-danger d-block">
+          {{ getFieldError('smsNature') }}
+        </small>
+      </div>
     </div>
 
   </div>
@@ -130,54 +104,67 @@
   <p-divider></p-divider>
 
   <!-- SMS Options -->
-  <div class="grid">
-    <div class="col-12">
-      <label class="block text-900 font-medium mb-2">SMS Options</label>
+  <div class="row mb-3">
+    <div class="col-sm-3">
+      <label class="col-form-label">SMS Options</label>
     </div>
+    <div class="col-sm-9">
+      <div class="row">
+        <div class="col-sm-3 mb-2">
+          <div class="form-check">
+            <p-checkbox
+              formControlName="dispatched"
+              inputId="dispatched"
+              [binary]="true">
+            </p-checkbox>
+            <label for="dispatched" class="form-check-label ms-2">Dispatched</label>
+          </div>
+        </div>
 
-    <div class="col-12 md:col-3">
-      <p-checkbox
-        formControlName="dispatched"
-        inputId="dispatched"
-        [binary]="true">
-      </p-checkbox>
-      <label for="dispatched" class="ml-2">Dispatched</label>
-    </div>
+        <div class="col-sm-3 mb-2">
+          <div class="form-check">
+            <p-checkbox
+              formControlName="flashSms"
+              inputId="flashSms"
+              [binary]="true">
+            </p-checkbox>
+            <label for="flashSms" class="form-check-label ms-2">Flash SMS</label>
+          </div>
+        </div>
 
-    <div class="col-12 md:col-3">
-      <p-checkbox
-        formControlName="flashSms"
-        inputId="flashSms"
-        [binary]="true">
-      </p-checkbox>
-      <label for="flashSms" class="ml-2">Flash SMS</label>
-    </div>
+        <div class="col-sm-3 mb-2">
+          <div class="form-check">
+            <p-checkbox
+              formControlName="scheduleSms"
+              inputId="scheduleSms"
+              [binary]="true">
+            </p-checkbox>
+            <label for="scheduleSms" class="form-check-label ms-2">Schedule SMS</label>
+          </div>
+        </div>
 
-    <div class="col-12 md:col-3">
-      <p-checkbox
-        formControlName="scheduleSms"
-        inputId="scheduleSms"
-        [binary]="true">
-      </p-checkbox>
-      <label for="scheduleSms" class="ml-2">Schedule SMS</label>
-    </div>
-
-    <div class="col-12 md:col-3">
-      <p-checkbox
-        formControlName="templateSms"
-        inputId="templateSms"
-        [binary]="true">
-      </p-checkbox>
-      <label for="templateSms" class="ml-2">Template SMS</label>
+        <div class="col-sm-3 mb-2">
+          <div class="form-check">
+            <p-checkbox
+              formControlName="templateSms"
+              inputId="templateSms"
+              [binary]="true">
+            </p-checkbox>
+            <label for="templateSms" class="form-check-label ms-2">Template SMS</label>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Scheduled Time (Conditional) -->
-  <div class="grid" *ngIf="smsForm.get('scheduleSms')?.value">
-    <div class="col-12 md:col-6">
-      <label for="scheduledTime" class="block text-900 font-medium mb-2">
-        Scheduled Time <span class="text-red-500">*</span>
+  <div class="row mb-3" *ngIf="smsForm.get('scheduleSms')?.value">
+    <div class="col-sm-3">
+      <label for="scheduledTime" class="col-form-label">
+        Scheduled Time <span class="text-danger">*</span>
       </label>
+    </div>
+    <div class="col-sm-9">
       <p-calendar
         id="scheduledTime"
         formControlName="scheduledTime"
@@ -186,7 +173,7 @@
         dateFormat="mm/dd/yy"
         [class.ng-invalid]="isFieldInvalid('scheduledTime')">
       </p-calendar>
-      <small *ngIf="isFieldInvalid('scheduledTime')" class="p-error block">
+      <small *ngIf="isFieldInvalid('scheduledTime')" class="text-danger d-block">
         {{ getFieldError('scheduledTime') }}
       </small>
     </div>
@@ -194,8 +181,45 @@
 
   <p-divider></p-divider>
 
+  <!-- Pages Count (Read-only, Auto-calculated) -->
+  <div class="row mb-3">
+    <div class="col-sm-3">
+      <label for="pagesCount" class="col-form-label">
+        Pages Count
+      </label>
+    </div>
+    <div class="col-sm-9">
+      <p-inputNumber
+        id="pagesCount"
+        [disabled]="true"
+        [showButtons]="false">
+      </p-inputNumber>
+    </div>
+  </div>
+
+  <!-- Total Recipients -->
+  <div class="row mb-3">
+    <div class="col-sm-3">
+      <label for="totalRecipient" class="col-form-label">
+        Total Recipients
+      </label>
+    </div>
+    <div class="col-sm-9">
+      <p-inputNumber
+        id="totalRecipient"
+        [disabled]="true"
+        [showButtons]="false">
+      </p-inputNumber>
+    </div>
+  </div>
+
+
+
+
+  <p-divider></p-divider>
+
   <!-- Form Actions -->
-  <div class="flex justify-content-end gap-2">
+  <div class="d-flex justify-content-end gap-2">
     <p-button
       label="Cancel"
       icon="pi pi-times"

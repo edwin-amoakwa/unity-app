@@ -13,11 +13,11 @@ import { DividerModule } from 'primeng/divider';
 
 // Project imports
 import { SmsService } from '../sms.service';
-import { SmsModel, SmsNature, ApplicationModel, SenderIdModel } from '../sms.model';
 import { NotificationService } from '../../core/notification.service';
 import { ConfigService } from '../../config.service';
 import {Textarea} from 'primeng/inputtextarea';
 import {TextareaModule} from 'primeng/textarea';
+import {StaticDataService} from '../../static-data.service';
 
 @Component({
   selector: 'app-sms-form',
@@ -38,8 +38,8 @@ import {TextareaModule} from 'primeng/textarea';
   styleUrls: ['./sms-form.component.scss']
 })
 export class SmsFormComponent implements OnInit, OnChanges {
-  @Input() smsData: SmsModel | null = null;
-  @Output() smsSubmitted = new EventEmitter<SmsModel>();
+  @Input() smsData: any | null = null;
+  @Output() smsSubmitted = new EventEmitter<any>();
   @Output() cancelled = new EventEmitter<void>();
 
   private fb = inject(FormBuilder);
@@ -48,9 +48,9 @@ export class SmsFormComponent implements OnInit, OnChanges {
   private configService = inject(ConfigService);
 
   smsForm!: FormGroup;
-  applications: ApplicationModel[] = [];
-  senderIds: SenderIdModel[] = [];
-  smsNatures: { label: string; value: SmsNature }[] = [];
+  applications: any[] = [];
+  senderIds: any[] = [];
+  smsNatures:any[] =StaticDataService.smsNature();
   isLoading = false;
 
   ngOnInit() {
@@ -67,34 +67,21 @@ export class SmsFormComponent implements OnInit, OnChanges {
 
   initializeForm() {
     this.smsForm = this.fb.group({
-      applicationId: ['', Validators.required],
+      id:"",
       senderId: ['', Validators.required],
       messageText: ['', [Validators.required, Validators.maxLength(1000)]],
       phoneNos: ['', [Validators.required, Validators.pattern(/^[\+]?[0-9,\s-]+$/)]],
-      totalReceipient: [0, [Validators.required, Validators.min(1)]],
-      actualCost: [0, [Validators.required, Validators.min(0)]],
-      pagesCount: [{ value: 1, disabled: true }], // Read-only field
       dispatched: [false],
       flashSms: [false],
       scheduleSms: [false],
       templateSms: [false],
-      smsNature: [SmsNature.TRANSACTIONAL, Validators.required],
-      smsNatureName: ['Transactional'],
+      smsNature: ['ONE_TIME', Validators.required],
       scheduledTime: [null]
     });
 
-    this.initializeSmsNatures();
     this.populateForm();
   }
 
-  initializeSmsNatures() {
-    this.smsNatures = [
-      { label: 'Transactional', value: SmsNature.TRANSACTIONAL },
-      { label: 'Promotional', value: SmsNature.PROMOTIONAL },
-      { label: 'Service Explicit', value: SmsNature.SERVICE_EXPLICIT },
-      { label: 'Service Implicit', value: SmsNature.SERVICE_IMPLICIT }
-    ];
-  }
 
   setupFormSubscriptions() {
     // Auto-calculate pages count when message text changes
@@ -105,13 +92,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
       }
     });
 
-    // Update SMS nature name when SMS nature changes
-    this.smsForm.get('smsNature')?.valueChanges.subscribe((value: SmsNature) => {
-      const selectedNature = this.smsNatures.find(n => n.value === value);
-      if (selectedNature) {
-        this.smsForm.patchValue({ smsNatureName: selectedNature.label }, { emitEvent: false });
-      }
-    });
+
 
     // Auto-calculate total recipients from phone numbers
     this.smsForm.get('phoneNos')?.valueChanges.subscribe((value: string) => {
@@ -178,7 +159,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.smsForm.valid) {
       const formValue = this.smsForm.getRawValue();
-      const smsData: SmsModel = {
+      const smsData: any = {
         ...formValue,
         id: this.smsData?.id,
         createdAt: this.smsData?.createdAt,

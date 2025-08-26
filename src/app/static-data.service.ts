@@ -60,7 +60,14 @@ export class StaticDataService {
       { id: 'FREE_FORM', itemName: 'Free Form' },
       { id: 'CONTACT_BASED', itemName: 'Contact Based' },
     ];
+  }
 
+  public static smsNature():any[]
+  {
+   return [
+      { id: 'ONE_TIME', itemName: 'Onetime' },
+      { id: 'RECURRING', itemName: 'Recurring' },
+    ];
   }
 
 }

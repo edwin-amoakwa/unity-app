@@ -128,7 +128,7 @@ export class DistributionGroupsComponent implements OnInit {
       if (response.success) {
         CollectionUtil.add(this.groups, response.data);
         this.selectedGroup = response.data;
-      } 
+      }
     } catch (error) {
       this.notificationService.error('An error occurred while updating the contact');
     }

@@ -15,7 +15,6 @@ import { ConfirmationService } from 'primeng/api';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { NotificationService } from '../core/notification.service';
 import { SmsService } from './sms.service';
-import { SmsModel, SmsNature } from './sms.model';
 import { SmsFormComponent } from './sms-form/sms-form.component';
 
 @Component({
@@ -42,10 +41,10 @@ export class SmsComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
 
-  smsMessages: SmsModel[] = [];
+  smsMessages: any[] = [];
   isLoading: boolean = false;
   showDialog: boolean = false;
-  selectedSms: SmsModel | null = null;
+  selectedSms: any | null = null;
 
   ngOnInit() {
     this.loadSmsMessages();
@@ -70,8 +69,8 @@ export class SmsComponent implements OnInit {
     this.showDialog = true;
   }
 
-  openEditDialog(sms: SmsModel) {
-    this.selectedSms = { ...sms };
+  openEditDialog(sms: any) {
+    this.selectedSms = sms;
     this.showDialog = true;
   }
 
@@ -80,7 +79,7 @@ export class SmsComponent implements OnInit {
     this.selectedSms = null;
   }
 
-  async onSmsSubmitted(sms: SmsModel) {
+  async onSmsSubmitted(sms: any) {
     try {
       if (this.selectedSms && this.selectedSms.id) {
         // Update existing SMS
@@ -105,7 +104,7 @@ export class SmsComponent implements OnInit {
     }
   }
 
-  deleteSms(sms: SmsModel) {
+  deleteSms(sms: any) {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete this SMS message?`,
       header: 'Confirm Delete',
@@ -132,16 +131,12 @@ export class SmsComponent implements OnInit {
     return dispatched ? 'success' : 'warning';
   }
 
-  getSmsNatureSeverity(nature: SmsNature): 'success' | 'warning' | 'danger' | 'info' {
+  getSmsNatureSeverity(nature: any): 'success' | 'warning' | 'danger' | 'info' {
     switch (nature) {
-      case SmsNature.TRANSACTIONAL:
-        return 'success';
-      case SmsNature.PROMOTIONAL:
-        return 'info';
-      case SmsNature.SERVICE_EXPLICIT:
+      case 'ONE_TIME':
         return 'warning';
-      case SmsNature.SERVICE_IMPLICIT:
-        return 'danger';
+      case 'RECURRING':
+        return 'info';
       default:
         return 'info';
     }

@@ -1,120 +1,40 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SmsModel, ApplicationModel, SenderIdModel, SmsNature } from './sms.model';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { ApiResponse } from '../core/ApiResponse';
+import {  } from './sms.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SmsService {
-  private apiUrl = '/api/sms';
+  private apiUrl = `${environment.baseUrl}/group-sms`;
 
   constructor(private http: HttpClient) {}
 
-  async getSmsMessages(): Promise<{ data: SmsModel[] }> {
-    // Mock data for now - replace with actual API call
-    const mockData: SmsModel[] = [
-      {
-        id: '1',
-        applicationId: 'APP001',
-        senderId: 'SENDER001',
-        messageText: 'Welcome to our service! Your account has been created successfully.',
-        phoneNos: '+1234567890,+0987654321',
-        totalReceipient: 2,
-        actualCost: 0.05,
-        pagesCount: 1,
-        dispatched: true,
-        flashSms: false,
-        scheduleSms: false,
-        templateSms: false,
-        smsNature: SmsNature.TRANSACTIONAL,
-        smsNatureName: 'Transactional',
-        createdAt: new Date('2025-01-15T10:30:00')
-      },
-      {
-        id: '2',
-        applicationId: 'APP002',
-        senderId: 'SENDER002',
-        messageText: 'Special offer! Get 50% off on all products. Visit our store now and grab amazing deals on electronics, clothing, and home appliances.',
-        phoneNos: '+1111111111,+2222222222,+3333333333',
-        totalReceipient: 3,
-        actualCost: 0.15,
-        pagesCount: 2,
-        dispatched: false,
-        flashSms: true,
-        scheduleSms: true,
-        templateSms: true,
-        smsNature: SmsNature.PROMOTIONAL,
-        smsNatureName: 'Promotional',
-        scheduledTime: new Date('2025-01-20T14:00:00'),
-        createdAt: new Date('2025-01-16T09:15:00')
-      }
-    ];
-    return Promise.resolve({ data: mockData });
+  async getSmsMessages(): Promise<ApiResponse<any[]>> {
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl));
   }
 
-  async createSmsMessage(sms: Partial<SmsModel>): Promise<{ data: SmsModel }> {
-    // Calculate pages count based on message text length
-    const pagesCount = Math.ceil(sms.messageText ? sms.messageText.length / 160 : 1);
-
-    const newSms: SmsModel = {
-      id: Date.now().toString(),
-      applicationId: sms.applicationId || '',
-      senderId: sms.senderId || '',
-      messageText: sms.messageText || '',
-      phoneNos: sms.phoneNos || '',
-      totalReceipient: sms.totalReceipient || 0,
-      actualCost: sms.actualCost || 0,
-      pagesCount: pagesCount,
-      dispatched: sms.dispatched || false,
-      flashSms: sms.flashSms || false,
-      scheduleSms: sms.scheduleSms || false,
-      templateSms: sms.templateSms || false,
-      smsNature: sms.smsNature || SmsNature.TRANSACTIONAL,
-      smsNatureName: sms.smsNatureName || 'Transactional',
-      scheduledTime: sms.scheduledTime,
-      createdAt: new Date()
-    };
-
-    // Mock API response - replace with actual API call
-    return Promise.resolve({ data: newSms });
+  async createSmsMessage(sms: Partial<any>): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(this.apiUrl, sms));
   }
 
-  async updateSmsMessage(id: string, sms: Partial<SmsModel>): Promise<{ data: SmsModel }> {
-    // Calculate pages count if message text is updated
-    if (sms.messageText) {
-      sms.pagesCount = Math.ceil(sms.messageText.length / 160);
-    }
-
-    // Mock API response - replace with actual API call
-    const updatedSms = { ...sms, id, updatedAt: new Date() } as SmsModel;
-    return Promise.resolve({ data: updatedSms });
+  async updateSmsMessage(id: string, sms: Partial<any>): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.apiUrl}/${id}`, sms));
   }
 
-  async deleteSmsMessage(id: string): Promise<{ success: boolean }> {
-    // Mock API response - replace with actual API call
-    return Promise.resolve({ success: true });
+  async deleteSmsMessage(id: string): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`));
   }
 
-  async getApplications(): Promise<{ data: ApplicationModel[] }> {
-    // Mock data - replace with actual API call
-    const mockApplications: ApplicationModel[] = [
-      { id: 'APP001', name: 'Main Application' },
-      { id: 'APP002', name: 'Marketing App' },
-      { id: 'APP003', name: 'Customer Service' },
-      { id: 'APP004', name: 'E-commerce Platform' }
-    ];
-    return Promise.resolve({ data: mockApplications });
+  async getApplications(): Promise<ApiResponse<any[]>> {
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/applications`));
   }
 
-  async getSenderIds(): Promise<{ data: SenderIdModel[] }> {
-    // Mock data - replace with actual API call
-    const mockSenderIds: SenderIdModel[] = [
-      { senderId: 'SENDER001', idStatus: 'ACTIVE', idStatusName: 'Active', merchantId: 'MERCHANT001' },
-      { senderId: 'SENDER002', idStatus: 'ACTIVE', idStatusName: 'Active', merchantId: 'MERCHANT002' },
-      { senderId: 'SENDER003', idStatus: 'PENDING', idStatusName: 'Pending', merchantId: 'MERCHANT003' },
-      { senderId: 'SENDER004', idStatus: 'ACTIVE', idStatusName: 'Active', merchantId: 'MERCHANT004' }
-    ];
-    return Promise.resolve({ data: mockSenderIds });
+  async getSenderIds(): Promise<ApiResponse<any[]>> {
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/sender-ids`));
   }
 
   calculatePagesCount(messageText: string): number {
