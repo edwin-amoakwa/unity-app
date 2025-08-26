@@ -30,9 +30,14 @@ export class NotificationService
         this.toastr.warning(message, title);
     }
 
-    public success(message: string)
+    public success(message: string, title?:string)
     {
-        this.toastr.success(message);
+      this.messageService.add({
+        severity: 'success',
+        summary: title || 'Success',
+        detail: message,
+        life: 5000
+      });
     }
 
     public error(message: string, title?:string)
@@ -42,7 +47,8 @@ export class NotificationService
       this.messageService.add({
         severity: 'error',
         summary: title || 'Error',
-        detail: message
+        detail: message,
+        life: 5000
       });
     }
 

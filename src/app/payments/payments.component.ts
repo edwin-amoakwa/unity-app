@@ -18,6 +18,7 @@ import { Payment} from '../unity.model';
 import { PaymentService } from './payment.service';
 import {StaticDataService} from '../static-data.service';
 import {NotificationService} from '../core/notification.service';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-payments',
@@ -33,7 +34,8 @@ import {NotificationService} from '../core/notification.service';
     CardModule,
     TextareaModule,
     DialogModule,
-    ToastModule
+    ToastModule,
+    Tooltip
   ],
   providers: [MessageService],
   templateUrl: './payments.component.html',
@@ -42,7 +44,6 @@ import {NotificationService} from '../core/notification.service';
 export class PaymentsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private paymentService = inject(PaymentService);
-  private messageService = inject(MessageService);
   private notificationService = inject(NotificationService);
 
   paymentForm!: FormGroup;
@@ -102,11 +103,6 @@ export class PaymentsComponent implements OnInit {
         }
 
         if (response.success) {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: `Payment ${this.editingPayment ? 'updated' : 'created'} successfully`
-          });
           this.closePaymentDialog();
           await this.loadPayments();
         }
@@ -140,11 +136,7 @@ export class PaymentsComponent implements OnInit {
         this.loading = true;
         const response = await this.paymentService.deletePayment(payment.id);
         if (response.success) {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Payment deleted successfully'
-          });
+
           await this.loadPayments();
         }
       } catch (error) {

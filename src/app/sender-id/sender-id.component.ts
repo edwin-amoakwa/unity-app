@@ -86,18 +86,10 @@ export class SenderIdComponent implements OnInit {
 
       try {
         const response = await this.configService.createSenderId(payload);
-        const newSenderId: any = {
-          senderId: response.data.senderId,
-          idStatus: response.data.idStatus,
-          idStatusName: response.data.idStatusName,
-          appName: response.data.appName,
-          merchantId: response.data.merchantId
-        };
 
-        this.senderIds.push(newSenderId);
+        this.senderIds.push(response.data);
         this.senderIdForm.reset();
         this.isLoading = false;
-        this.notificationService.success('Sender ID created successfully');
       } catch (error: any) {
         console.error('Error creating sender ID:', error);
         this.notificationService.error(error.message || 'Failed to create sender ID');
@@ -116,7 +108,6 @@ export class SenderIdComponent implements OnInit {
       //   this.senderIds.splice(index, 1);
       // }
       this.isLoading = false;
-      this.notificationService.success('Sender ID deleted successfully');
     } catch (error: any) {
       console.error('Error deleting sender ID:', error);
       this.notificationService.error(error.message || 'Failed to delete sender ID');

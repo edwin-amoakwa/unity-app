@@ -54,14 +54,18 @@
             <td>{{ payment.formOfPaymentName || payment.formOfPayment }}</td>
 
             <td>
-              <p-button
-                icon="pi pi-pencil"
-                (onClick)="editPayment(payment)"
-                styleClass="p-button-rounded p-button-text p-button-info mr-1"
-                pTooltip="Edit">
-              </p-button>
+
 
               @if (!payment.paid) {
+
+                <p-button
+                  icon="pi pi-pencil"
+                  (onClick)="editPayment(payment)"
+                  styleClass="p-button-rounded p-button-text p-button-info mr-1"
+                  pTooltip="Edit">
+                </p-button>
+
+
                 <p-button
                   icon="pi pi-trash"
                   (onClick)="deletePayment(payment)"

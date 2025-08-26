@@ -52,4 +52,15 @@ export class StaticDataService {
     return data;
   }
 
+
+
+  public static groupTypes():any[]
+  {
+   return [
+      { id: 'FREE_FORM', itemName: 'Free Form' },
+      { id: 'CONTACT_BASED', itemName: 'Contact Based' },
+    ];
+
+  }
+
 }

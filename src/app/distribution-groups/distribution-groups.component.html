@@ -1,0 +1,214 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card">
+      <!-- Groups List View -->
+      <div *ngIf="!showDetailsPanel">
+        <div class="flex justify-content-between align-items-center mb-3">
+          <p-button
+            label="New Group"
+            icon="pi pi-plus"
+            (onClick)="openNewGroupDialog()"
+            styleClass="p-button-primary">
+          </p-button>
+        </div>
+
+        <p-table
+          [value]="groups"
+          [loading]="loading"
+          [paginator]="true"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          styleClass="p-datatable-gridlines">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Group Name</th>
+              <th>Group Type</th>
+              <th># Contact</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-group>
+            <tr>
+              <td>{{ group.groupName }}</td>
+              <td>{{group.groupTypeName}}</td>
+              <td>{{ group.contactCount | number }}</td>
+              <td>
+                <p-button
+                  label="Manage"
+                  icon="pi pi-cog"
+                  (onClick)="manageGroup(group)"
+                  styleClass="p-button-rounded p-button-text p-button-info mr-1"
+                  pTooltip="Manage Group">
+                </p-button>
+
+                <p-button
+                  icon="pi pi-pencil"
+                  (onClick)="editGroup(group)"
+                  styleClass="p-button-rounded p-button-text p-button-warning mr-1"
+                  pTooltip="Edit">
+                </p-button>
+
+                <p-button
+                  icon="pi pi-trash"
+                  (onClick)="deleteGroup(group)"
+                  styleClass="p-button-rounded p-button-text p-button-danger"
+                  pTooltip="Delete">
+                </p-button>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" class="text-center">No groups found</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <!-- Group Details Panel -->
+      <div *ngIf="showDetailsPanel && selectedGroup">
+        <div class="flex justify-content-between align-items-center mb-3">
+          <h3>{{selectedGroup.groupName}}
+            <p-button
+            label="Back to List"
+            icon="pi pi-arrow-left"
+            (onClick)="backToList()"
+            styleClass="p-button-secondary">
+          </p-button></h3>
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-4 col-md-6">
+            <div class="field">
+              <label class="font-semibold">Group Type:</label>
+              <p class="ml-2">{{selectedGroup.groupTypeName }}</p>
+            </div>
+          </div>
+          <div class="col-4 col-md-6">
+            <div class="field">
+              <label class="font-semibold">Contact Count</label>
+              <p class="ml-2">{{ selectedGroup.contactCount | number }}</p>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="row" *ngIf="selectedGroup.groupType === 'FREE_FORM'">
+
+
+          <div class="row">
+
+            <textarea rows="5" cols="30" pTextarea [(ngModel)]="newFreeFormPhoneNos"></textarea>
+
+          </div>
+
+
+
+
+
+          <div class="flex justify-content-start mt-4">
+            <p-button
+              label="add contact nos"
+              icon="pi pi-pencil"
+              (onClick)="mangeFreeFormContacts('add')"
+              styleClass="p-button-warning mr-2">
+            </p-button>
+            <p-button
+              label="remove contact nos"
+              icon="pi pi-trash"
+              (onClick)="mangeFreeFormContacts('remove'); backToList()"
+              styleClass="p-button-danger">
+            </p-button>
+          </div>
+
+        </div>
+
+
+        <div class="row" *ngIf="selectedGroup.groupType === 'CONTACT_BASED'">
+          <app-group-contacts
+            [selectedGroup]="selectedGroup"
+            [loading]="loading">
+          </app-group-contacts>
+        </div>
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Group Form Dialog -->
+<p-dialog
+  [(visible)]="showGroupDialog"
+  [header]="editingGroup ? 'Edit Group' : 'Create Group'"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="p-fluid"
+  [style]="{width: '50vw'}"
+  [breakpoints]="{'960px': '70vw', '640px': '95vw'}"
+  (onHide)="closeGroupDialog()">
+
+  <form [formGroup]="groupForm" (ngSubmit)="onSubmit()">
+    <div class="grid">
+      <!-- Group Type -->
+      <div class="col-12 mb-3">
+        <label for="groupType">Group Type *</label>
+        <p-dropdown
+          id="groupType"
+          formControlName="groupType"
+          [options]="groupTypeList"
+          optionLabel="itemName"
+          optionValue="id"
+
+          [class.ng-invalid]="isFieldInvalid('groupType')"
+          class="w-full">
+        </p-dropdown>
+        <small class="p-error" *ngIf="isFieldInvalid('groupType')">
+          {{ getFieldError('groupType') }}
+        </small>
+      </div>
+
+      <!-- Group Name -->
+      <div class="col-12 mb-3">
+        <label for="groupName">Group Name *</label>
+        <input
+          pInputText
+          id="groupName"
+          formControlName="groupName"
+          [class.ng-invalid]="isFieldInvalid('groupName')"
+          class="w-full" />
+        <small class="p-error" *ngIf="isFieldInvalid('groupName')">
+          {{ getFieldError('groupName') }}
+        </small>
+      </div>
+    </div>
+
+    <div class="flex justify-content-end gap-2 mt-3">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        (onClick)="closeGroupDialog()"
+        styleClass="p-button-text">
+      </p-button>
+      <p-button
+        label="{{ editingGroup ? 'Update' : 'Create' }}"
+        icon="pi pi-check"
+        type="submit"
+        styleClass="p-button-primary">
+      </p-button>
+    </div>
+  </form>
+</p-dialog>
+

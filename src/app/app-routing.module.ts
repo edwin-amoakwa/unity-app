@@ -36,6 +36,10 @@ const routes: Routes = [
         loadComponent: () => import('./applications/applications.component').then((c) => c.ApplicationsComponent)
       },
       {
+        path: 'group-contacts',
+        loadComponent: () => import('./distribution-groups/distribution-groups.component').then((c) => c.DistributionGroupsComponent)
+      },
+      {
         path: 'send-sms',
         loadComponent: () => import('./sms/sms.component').then((c) => c.SmsComponent)
       },

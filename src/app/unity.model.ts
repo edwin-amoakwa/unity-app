@@ -26,12 +26,6 @@ export enum ActiveInactiveStatus {
   INACTIVE = 'INACTIVE'
 }
 
-export enum UserCategory {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-  MERCHANT = 'MERCHANT'
-}
-
 export interface Payment {
   id?: string;
   amount: number;

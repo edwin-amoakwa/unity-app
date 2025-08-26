@@ -1,4 +1,4 @@
-import {HttpInterceptorFn, HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpInterceptorFn, HttpErrorResponse, HttpResponse, HttpRequest} from '@angular/common/http';
 import {inject} from '@angular/core';
 import {catchError, throwError, tap} from 'rxjs';
 import {UserSession} from './user-session';
@@ -7,7 +7,7 @@ import {NotificationService} from './notification.service';
 /**
  * HTTP Interceptor that adds merchantId to all outgoing requests and handles errors centrally
  */
-export const RequestInterceptor: HttpInterceptorFn = (req, next) => {
+export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next) => {
   const notificationService = inject(NotificationService);
 
   let merchantId = localStorage.getItem(UserSession.MerchantId);
@@ -29,27 +29,31 @@ export const RequestInterceptor: HttpInterceptorFn = (req, next) => {
   });
 
   return next(modifiedReq).pipe(
-    tap(response => {
+    tap(httpEvent => {
       // Check if the response is an HTTP response
-      if (response instanceof HttpResponse) {
+      if (httpEvent instanceof HttpResponse) {
         // Log all successful HTTP responses
-        console.log(`[HTTP Response] ${req.method} ${req.url} - Status: ${response.status}`, response);
+        console.log(`[HTTP Response] ${req.method} ${req.url} - Status: ${httpEvent.status}`, httpEvent);
 
         // Log the request body
         console.log(`[Request Body] ${req.method} ${req.url}`, req.body);
+        console.log(`[Request response] ${req.method} ${req.url}`, req.body);
 
-        if (response.body && (response.body as any).success) {
-          let res: any = response.body;
-          if (res.status == 201) {
+        let response: any = httpEvent;
+
+        if (httpEvent.body && (httpEvent.body as any).success) {
+
+          console.log("response --> ",response)
+          if (response.status == 201) {
             notificationService.success("Data saved successfully");
-          } else if (res.status == 200) {
-            if (res.method === "PUT") {
+          } else if (response.status == 200) {
+            if (req.method === "PUT") {
               notificationService.success("Record updated successfully.")
-            } else if (res.method === "DELETE") {
+            } else if (req.method === "DELETE") {
               notificationService.success("Data deleted successfully.");
-            } else if (res.method === "POST") {
-              if (res.body.message) {
-                notificationService.success(res.body.message);
+            } else if (req.method === "POST") {
+              if (response.body.message) {
+                notificationService.success(response.body.message);
               }
             }
           }

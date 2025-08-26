@@ -72,6 +72,14 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ti ti-currency-dollar',
       },
       {
+        id: 'group-contacts',
+        title: 'Groups & Contacts',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/group-contacts',
+        icon: 'ti ti-users',
+      },
+      {
         id: 'users',
         title: 'User Management',
         type: 'item',
