@@ -1,237 +1,182 @@
+
 <form [formGroup]="smsForm" (ngSubmit)="onSubmit()" class="p-fluid">
-  <div class="container-fluid">
 
-
-    <!-- Sender ID Dropdown -->
-    <div class="row mb-3">
-      <div class="col-sm-3">
-        <label for="senderId" class="col-form-label">
-          Sender ID <span class="text-danger">*</span>
-        </label>
-      </div>
-      <div class="col-sm-9">
-        <p-dropdown
-          id="senderId"
-          formControlName="senderId"
-          [options]="senderIds"
-          optionLabel="senderId"
-          optionValue="senderId"
-          [loading]="isLoading"
-          [class.ng-invalid]="isFieldInvalid('senderId')">
-        </p-dropdown>
-        <small *ngIf="isFieldInvalid('senderId')" class="text-danger d-block">
-          {{ getFieldError('senderId') }}
-        </small>
-      </div>
-    </div>
-
-    <!-- Message Text -->
-    <div class="row mb-3">
-      <div class="col-sm-3">
-        <label for="messageText" class="col-form-label">
-          Message Text <span class="text-danger">*</span>
-        </label>
-      </div>
-      <div class="col-sm-9">
-        <textarea
-          id="messageText"
-          pInputTextarea
-          formControlName="messageText"
-          rows="4"
-          [class.ng-invalid]="isFieldInvalid('messageText')">
-        </textarea>
-        <div class="d-flex justify-content-between mt-1">
-          <small *ngIf="isFieldInvalid('messageText')" class="text-danger">
-            {{ getFieldError('messageText') }}
-          </small>
-          <small class="text-muted">
-            Characters: {{ smsForm.get('messageText')?.value?.length || 0 }}/1000
-          </small>
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="d-flex flex-row gap-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="smsType" id="smsType" formControlName="smsType" value="single">
+                    <label class="form-check-label" for="single">
+                        Single SMS
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="smsType" id="smsType" formControlName="smsType" value="bulk">
+                    <label class="form-check-label" for="bulk">
+                        Bulk SMS
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="smsType" id="smsType" formControlName="smsType" value="custom">
+                    <label class="form-check-label" for="custom">
+                        Custom SMS
+                    </label>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Phone Numbers -->
-    <div class="row mb-3">
-      <div class="col-sm-3">
-        <label for="phoneNos" class="col-form-label">
-          Phone Numbers <span class="text-danger">*</span>
-        </label>
-      </div>
-      <div class="col-sm-9">
-        <input
-          id="phoneNos"
-          type="text"
-          pInputText
-          formControlName="phoneNos"
-          [class.ng-invalid]="isFieldInvalid('phoneNos')" />
-        <small class="d-block text-muted mt-1">Enter phone numbers separated by commas</small>
-        <small *ngIf="isFieldInvalid('phoneNos')" class="text-danger d-block">
-          {{ getFieldError('phoneNos') }}
-        </small>
-      </div>
+    <div class="mb-4">
+        <label for="sender_id" class="form-label font-weight-bold">Sender ID *</label>
+        <select class="form-select" id="senderId" formControlName="senderId">
+            <option selected disabled>Select an ID</option>
+            <option value="1">ID 1</option>
+            <option value="2">ID 2</option>
+            <option value="3">ID 3</option>
+        </select>
     </div>
 
-
-
-
-
-
-    <!-- SMS Nature -->
-    <div class="row mb-3">
-      <div class="col-sm-3">
-        <label for="smsNature" class="col-form-label">
-          SMS Nature <span class="text-danger">*</span>
-        </label>
-      </div>
-      <div class="col-sm-9">
-        <p-dropdown
-          id="smsNature"
-          formControlName="smsNature"
-          [options]="smsNatures"
-          optionLabel="itemName"
-          optionValue="id"
-          [class.ng-invalid]="isFieldInvalid('smsNature')">
-        </p-dropdown>
-        <small *ngIf="isFieldInvalid('smsNature')" class="text-danger d-block">
-          {{ getFieldError('smsNature') }}
-        </small>
-      </div>
+    <div class="mb-4" *ngIf="smsForm?.value?.smsType === 'single'">
+        <label for="phoneNo" class="form-label font-weight-bold">Phone Numbers*</label>
+        <input type="tel" class="form-control" id="phoneNo" formControlName="phoneNo" placeholder="">
     </div>
 
-  </div>
-
-  <p-divider></p-divider>
-
-  <!-- SMS Options -->
-  <div class="row mb-3">
-    <div class="col-sm-3">
-      <label class="col-form-label">SMS Options</label>
-    </div>
-    <div class="col-sm-9">
-      <div class="row">
-        <div class="col-sm-3 mb-2">
-          <div class="form-check">
-            <p-checkbox
-              formControlName="dispatched"
-              inputId="dispatched"
-              [binary]="true">
-            </p-checkbox>
-            <label for="dispatched" class="form-check-label ms-2">Dispatched</label>
-          </div>
+    <div class="mb-4" *ngIf="smsForm?.value?.smsType === 'bulk'">
+        <label for="phone_numbers" class="form-label font-weight-bold">Phone Numbers *</label>
+        <div class="d-flex flex-row gap-3">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="phoneNumberSource" formControlName="phoneNumberSource" id="copy_paste" value="copyPaste">
+                <label class="form-check-label" for="copy_paste">
+                    Copy and Paste
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="phoneNumberSource" formControlName="phoneNumberSource" id="upload_file" value="uploadFile">
+                <label class="form-check-label" for="upload_file">
+                    Upload File
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="phoneNumberSource" formControlName="phoneNumberSource" id="groups" value="groups">
+                <label class="form-check-label" for="groups">
+                    Group
+                </label>
+            </div>
         </div>
+    </div>
 
-        <div class="col-sm-3 mb-2">
-          <div class="form-check">
-            <p-checkbox
-              formControlName="flashSms"
-              inputId="flashSms"
-              [binary]="true">
-            </p-checkbox>
-            <label for="flashSms" class="form-check-label ms-2">Flash SMS</label>
-          </div>
+    <div class="mb-4" *ngIf="smsForm?.value?.smsType === 'bulk' && smsForm?.value?.phoneNumberSource === 'copyPaste'">
+        <label for="phoneNo" class="form-label font-weight-bold">Phone No.s*</label>
+        <textarea class="form-control" id="phoneNo" formControlName="phoneNo" rows="5" placeholder="Paste your phone number list here"></textarea>
+    </div>
+
+    <div class="mb-4" *ngIf="smsForm?.value?.smsType === 'bulk' && smsForm?.value?.phoneNumberSource === 'uploadFile'">
+        <label for="uploadedFile" class="form-label font-weight-bold">Uplodaed File*</label>
+        <input type="file" class="form-control" id="uploadedFile" formControlName="uploadedFile">
+    </div>
+
+    <div class="mb-4" *ngIf="smsForm?.value?.smsType === 'bulk' && smsForm?.value?.phoneNumberSource === 'groups'">
+        <label for="group_select" class="form-label font-weight-bold">Group *</label>
+        <select class="form-select" id="group_select"  formControlName="groupId">
+            <option selected disabled>Select a group</option>
+            <option value="1">Group A</option>
+            <option value="2">Group B</option>
+            <option value="3">Group C</option>
+        </select>
+    </div>
+
+
+    <div class="mb-4">
+        <label for="message_text" class="form-label font-weight-bold">Message Text *</label>
+        <textarea class="form-control" id="message_text" formControlName="messageText" rows="5" placeholder="Type your message here..." required></textarea>
+        <div class="d-flex justify-content-between mt-2">
+            <small class="text-muted">Characters: <span id="char_count">0</span>/1000</small>
         </div>
+    </div>
 
-        <div class="col-sm-3 mb-2">
-          <div class="form-check">
-            <p-checkbox
-              formControlName="scheduleSms"
-              inputId="scheduleSms"
-              [binary]="true">
-            </p-checkbox>
-            <label for="scheduleSms" class="form-check-label ms-2">Schedule SMS</label>
-          </div>
+    <!-- <div class="mb-4">
+        <label for="sms_nature" class="form-label font-weight-bold">SMS Nature *</label>
+        <select class="form-select" id="sms_nature" formControlName="smsNature">
+            <option selected>Onetime</option>
+            <option>Recurring</option>
+        </select>
+    </div> -->
+
+    <div class="mb-4">
+        <label for="phone_numbers" class="form-label font-weight-bold">SMS Nature *</label>
+        <div class="d-flex flex-row gap-3">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="onetime" value="onetime">
+                <label class="form-check-label" for="onetime">
+                    Onetime
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="recurring" value="recurring">
+                <label class="form-check-label" for="recurring">
+                    Recurring
+                </label>
+            </div>
         </div>
+    </div>
 
-        <div class="col-sm-3 mb-2">
-          <div class="form-check">
-            <p-checkbox
-              formControlName="templateSms"
-              inputId="templateSms"
-              [binary]="true">
-            </p-checkbox>
-            <label for="templateSms" class="form-check-label ms-2">Template SMS</label>
-          </div>
+    <div class="mb-4">
+        <label class="form-label font-weight-bold">SMS Options</label>
+        <div class="d-flex flex-row gap-3 flex-wrap">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="dispatched" formControlName="dispatched">
+                <label class="form-check-label" for="dispatched">
+                    Dispatched
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="flash_sms" formControlName="flashSms">
+                <label class="form-check-label" for="flash_sms">
+                    Flash SMS
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="schedule_sms" formControlName="scheduleSms">
+                <label class="form-check-label" for="schedule_sms">
+                    Schedule SMS
+                </label>
+            </div>
+            <div class="form-check form-check-custom-success">
+                <input class="form-check-input" type="checkbox" id="template_sms" formControlName="templateSms">
+                <label class="form-check-label" for="template_sms">
+                    <i class="fa-solid fa-square-check"></i> Template SMS
+                </label>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-
-  <!-- Scheduled Time (Conditional) -->
-  <div class="row mb-3" *ngIf="smsForm.get('scheduleSms')?.value">
-    <div class="col-sm-3">
-      <label for="scheduledTime" class="col-form-label">
-        Scheduled Time <span class="text-danger">*</span>
-      </label>
+    <div class="mb-4" *ngIf="smsForm?.value?.scheduleSms">
+        <label for="phoneNo" class="form-label font-weight-bold w-100">Scheduled Time*</label>
+        <!-- <input type="datetime" class="form-control" id="phoneNo" formControlName="scheduledTime" placeholder=""> -->
+        <p-calendar
+          id="scheduledTime"
+          formControlName="scheduledTime"
+          [showTime]="true"
+          [showSeconds]="false"
+          dateFormat="mm/dd/yy">
+        </p-calendar>
     </div>
-    <div class="col-sm-9">
-      <p-calendar
-        id="scheduledTime"
-        formControlName="scheduledTime"
-        [showTime]="true"
-        [showSeconds]="false"
-        dateFormat="mm/dd/yy"
-        [class.ng-invalid]="isFieldInvalid('scheduledTime')">
-      </p-calendar>
-      <small *ngIf="isFieldInvalid('scheduledTime')" class="text-danger d-block">
-        {{ getFieldError('scheduledTime') }}
-      </small>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <label for="pages_count" class="form-label font-weight-bold">Pages Count</label>
+            <input type="text" class="form-control" id="pages_count" disabled>
+        </div>
+        <div class="col-md-6 mb-4">
+            <label for="total_recipients" class="form-label font-weight-bold">Total Recipients</label>
+            <input type="text" class="form-control" id="total_recipients" disabled>
+        </div>
     </div>
-  </div>
 
-  <p-divider></p-divider>
-
-  <!-- Pages Count (Read-only, Auto-calculated) -->
-  <div class="row mb-3">
-    <div class="col-sm-3">
-      <label for="pagesCount" class="col-form-label">
-        Pages Count
-      </label>
+    <div class="d-flex justify-content-end gap-3 mt-4">
+        <button type="button" class="btn btn-outline-secondary">Cancel</button>
+        <button type="submit" class="btn btn-success">
+            <i class="fa-solid fa-floppy-disk me-2"></i>Save SMS
+        </button>
     </div>
-    <div class="col-sm-9">
-      <p-inputNumber
-        id="pagesCount"
-        [disabled]="true"
-        [showButtons]="false">
-      </p-inputNumber>
-    </div>
-  </div>
 
-  <!-- Total Recipients -->
-  <div class="row mb-3">
-    <div class="col-sm-3">
-      <label for="totalRecipient" class="col-form-label">
-        Total Recipients
-      </label>
-    </div>
-    <div class="col-sm-9">
-      <p-inputNumber
-        id="totalRecipient"
-        [disabled]="true"
-        [showButtons]="false">
-      </p-inputNumber>
-    </div>
-  </div>
-
-
-
-
-  <p-divider></p-divider>
-
-  <!-- Form Actions -->
-  <div class="d-flex justify-content-end gap-2">
-    <p-button
-      label="Cancel"
-      icon="pi pi-times"
-      severity="secondary"
-      [text]="true"
-      (onClick)="onCancel()">
-    </p-button>
-    <p-button
-      label="Save SMS"
-      icon="pi pi-check"
-      type="submit"
-      [loading]="isLoading">
-    </p-button>
-  </div>
 </form>
