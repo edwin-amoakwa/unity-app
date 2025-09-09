@@ -1,21 +1,21 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 // PrimNG imports
-import { TableModule } from 'primeng/table';
+import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { DialogModule } from 'primeng/dialog';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
 
 // Project imports
-import { CardComponent } from '../theme/shared/components/card/card.component';
 import { NotificationService } from '../core/notification.service';
-import { SmsService } from './sms.service';
+import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsFormComponent } from './sms-form/sms-form.component';
+import { SmsService } from './sms.service';
 
 @Component({
   selector: 'app-sms',
@@ -65,7 +65,11 @@ export class SmsComponent implements OnInit {
   }
 
   openCreateDialog() {
-    this.selectedSms = null;
+    // this.selectedSms = null;
+    this.selectedSms = {};
+    this.selectedSms.smsMessageType = "SINGLE_SMS";
+    this.selectedSms.phoneNumbersSource = "COPY_PASTE";
+    this.selectedSms.smsNature = "ONE_TIME";
     this.showDialog = true;
   }
 
@@ -81,7 +85,8 @@ export class SmsComponent implements OnInit {
 
   async onSmsSubmitted(sms: any) {
     try {
-      if (this.selectedSms && this.selectedSms.id) {
+      if (this.selectedSms && this.selectedSms.id)
+      {
         // Update existing SMS
         const response = await this.smsService.updateSmsMessage(this.selectedSms.id, sms);
         const index = this.smsMessages.findIndex(s => s.id === this.selectedSms!.id);
@@ -90,7 +95,9 @@ export class SmsComponent implements OnInit {
         }
         this.notificationService.success('SMS message updated successfully');
         this.closeDialog();
-      } else {
+      }
+      else
+      {
         // Create new SMS
         const response = await this.smsService.createSmsMessage(sms);
         this.smsMessages.push(response.data);

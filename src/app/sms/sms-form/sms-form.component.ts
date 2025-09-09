@@ -12,6 +12,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
 // Project imports
+import { MessageService } from 'primeng/api';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfigService } from '../../config.service';
 import { NotificationService } from '../../core/notification.service';
@@ -31,7 +33,9 @@ import { SmsService } from '../sms.service';
     CheckboxModule,
     CalendarModule,
     ButtonModule,
-    DividerModule
+    DividerModule,
+    FileUploadModule
+
   ],
   templateUrl: './sms-form.component.html',
   styleUrls: ['./sms-form.component.scss']
@@ -53,13 +57,16 @@ export class SmsFormComponent implements OnInit, OnChanges {
   smsNatures:any[] =StaticDataService.smsNature();
   isLoading = false;
 
+  constructor(private messageService: MessageService) {}
+
   ngOnInit() {
     this.initializeForm();
     this.loadDropdownData();
     this.setupFormSubscriptions();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges)
+  {
     // if (changes['smsData'] && this.smsForm)
     // {
     //   console.log("--hereh herhe populateForm");
@@ -70,7 +77,13 @@ export class SmsFormComponent implements OnInit, OnChanges {
     //   console.log("--hereh herhe initNewSms");
     //   this.initNewSms();
     // }
-    this.ngOnInit();
+    this.characterCount = 0;
+    this.smsCount = 1;
+    console.log("--hereh herhe ngOnChanges(changes: SimpleChanges)");
+    if(this.smsForm == null || this.smsForm == undefined)
+    {
+      this.ngOnInit();
+    }
     console.log("--hereh herhe initNewSms changes['smsData'] = ",changes['smsData']);
     if(this.smsData == null || this.smsData == undefined)
     {
@@ -82,16 +95,18 @@ export class SmsFormComponent implements OnInit, OnChanges {
       console.log("--hereh herhe populateForm");
       this.populateForm();
     }
+    this.updateCount();
   }
 
   initNewSms()
   {
     this.smsForm.reset();
     const record: any = {};
-    record.smsType = "single";
-    record.phoneNumberSource = "copyPaste";
-    record.smsNature = "onetime";
+    record.smsMessageType = "SINGLE_SMS";
+    record.phoneNumbersSource = "COPY_PASTE";
+    record.smsNature = "ONE_TIME";
     this.smsForm.patchValue(record);
+    console.log("===>this.smsForm value = ",this.smsForm.value);
   }
 
   initializeForm() {
@@ -106,11 +121,12 @@ export class SmsFormComponent implements OnInit, OnChanges {
       templateSms: [false],
       smsNature: ['ONE_TIME', Validators.required],
       scheduledTime: [null],
-      smsType: [null],
-      phoneNumberSource: [null],
+      smsMessageType: [null],
+      phoneNumbersSource: [null],
       groupId: [null],
       uploadedFile: [null],
-      phoneNo: [null],
+      pagesCount: 0,
+      totalRecipient: 0,
     });
 
     this.populateForm();
@@ -175,6 +191,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
         applicationId: this.smsData.applicationId,
         senderId: this.smsData.senderId,
         messageText: this.smsData.messageText,
+        phoneNumbersSource: this.smsData.phoneNumbersSource,
         phoneNos: this.smsData.phoneNos,
         totalReceipient: this.smsData.totalReceipient,
         actualCost: this.smsData.actualCost,
@@ -183,6 +200,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
         flashSms: this.smsData.flashSms,
         scheduleSms: this.smsData.scheduleSms,
         templateSms: this.smsData.templateSms,
+        smsMessageType: this.smsData.smsMessageType,
         smsNature: this.smsData.smsNature,
         smsNatureName: this.smsData.smsNatureName,
         scheduledTime: this.smsData.scheduledTime ? new Date(this.smsData.scheduledTime) : null
@@ -190,8 +208,10 @@ export class SmsFormComponent implements OnInit, OnChanges {
     }
   }
 
-  onSubmit() {
-    if (this.smsForm.valid) {
+  onSubmit()
+  {
+    if (this.smsForm.valid)
+    {
       const formValue = this.smsForm.getRawValue();
       const smsData: any = {
         ...formValue,
@@ -240,4 +260,60 @@ export class SmsFormComponent implements OnInit, OnChanges {
     }
     return '';
   }
+
+  onFileSelect(event: FileSelectEvent)
+  {
+    const file = event.files[0];
+
+    // Check for a file and validate its type
+    if (!file) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No file selected.' });
+      return;
+    }
+
+    if (file.type !== 'text/plain') {
+      this.messageService.add({ severity: 'error', summary: 'Invalid File Type', detail: 'Please select a .txt file.' });
+      this.clearFile();
+      return;
+    }
+
+    // Use FileReader to read the file content
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const fileContent = e.target?.result as string;
+      this.smsForm.controls['phoneNos'].setValue(fileContent);
+    };
+
+    reader.onerror = () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to read file.' });
+      this.clearFile();
+    };
+
+    reader.readAsText(file);
+  }
+
+  // Clear the file and textarea content
+  private clearFile() {
+    // this.fileContent = '';
+    this.smsForm.controls['phoneNos'].setValue('');
+  }
+
+  characterCount: number = 0;
+  smsCount: number = 1;
+  updateCount()
+  {
+    this.characterCount = this.smsForm.value.messageText.length;
+    if(this.characterCount == 0)
+    {
+      this.smsCount = 0;
+    }
+    else
+    {
+      this.smsCount = Math.ceil(this.characterCount / 160) || 1; // Ensure at least 1 SMS
+    }
+
+    this.smsForm.controls['pagesCount'].setValue(this.smsCount);
+  }
+
 }

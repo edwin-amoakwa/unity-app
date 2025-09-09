@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../core/ApiResponse';
-import {  } from './sms.model';
+import { } from './sms.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class SmsService {
   }
 
   async updateSmsMessage(id: string, sms: Partial<any>): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.apiUrl}/${id}`, sms));
+    return await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.apiUrl}`, sms));
   }
 
   async deleteSmsMessage(id: string): Promise<ApiResponse<any>> {

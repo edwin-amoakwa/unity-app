@@ -40,7 +40,7 @@
 
       <ng-template pTemplate="body" let-sms>
         <tr>
-          <td>{{ sms.senderId }}</td>
+          <td>{{ sms.senderName }}</td>
           <td>
             <div class="text-truncate" style="max-width: 200px;" [pTooltip]="sms.messageText">
               {{ sms.messageText }}
@@ -62,8 +62,8 @@
           </td>
           <td>
             <p-tag
-              [value]="sms.smsNatureName"
-              [severity]="getSmsNatureSeverity(sms.smsNature)">
+              [value]="sms.smsNatureLabel"
+              [severity]="getSmsNatureSeverity(sms.smsNatureLabel)">
             </p-tag>
           </td>
           <td>

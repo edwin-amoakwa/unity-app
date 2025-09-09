@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApiResponse } from 'src/app/core/ApiResponse';
-import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -67,6 +65,15 @@ export class StaticDataService {
    return [
       { id: 'ONE_TIME', itemName: 'Onetime' },
       { id: 'RECURRING', itemName: 'Recurring' },
+    ];
+  }
+
+  public static PhoneNumbersSources():any[]
+  {
+   return [
+      { id: 'COPY_PASTE', itemName: 'Copy and Paste' },
+      { id: 'UPLOADED_FILE', itemName: 'Uploaded File' },
+      { id: 'GROUP', itemName: 'Group' },
     ];
   }
 
