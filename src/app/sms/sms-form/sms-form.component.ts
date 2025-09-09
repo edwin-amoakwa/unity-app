@@ -1,23 +1,22 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 // PrimNG imports
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { CheckboxModule } from 'primeng/checkbox';
-import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
 import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
 
 // Project imports
-import { SmsService } from '../sms.service';
-import { NotificationService } from '../../core/notification.service';
+import { TextareaModule } from 'primeng/textarea';
 import { ConfigService } from '../../config.service';
-import {Textarea} from 'primeng/inputtextarea';
-import {TextareaModule} from 'primeng/textarea';
-import {StaticDataService} from '../../static-data.service';
+import { NotificationService } from '../../core/notification.service';
+import { StaticDataService } from '../../static-data.service';
+import { SmsService } from '../sms.service';
 
 @Component({
   selector: 'app-sms-form',
@@ -50,6 +49,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
   smsForm!: FormGroup;
   applications: any[] = [];
   senderIds: any[] = [];
+  groups: any[] = [];
   smsNatures:any[] =StaticDataService.smsNature();
   isLoading = false;
 
@@ -60,9 +60,38 @@ export class SmsFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['smsData'] && this.smsForm) {
+    // if (changes['smsData'] && this.smsForm)
+    // {
+    //   console.log("--hereh herhe populateForm");
+    //   this.populateForm();
+    // }
+    // else
+    // {
+    //   console.log("--hereh herhe initNewSms");
+    //   this.initNewSms();
+    // }
+    this.ngOnInit();
+    console.log("--hereh herhe initNewSms changes['smsData'] = ",changes['smsData']);
+    if(this.smsData == null || this.smsData == undefined)
+    {
+      console.log("--hereh herhe initNewSms");
+      this.initNewSms();
+    }
+    else
+    {
+      console.log("--hereh herhe populateForm");
       this.populateForm();
     }
+  }
+
+  initNewSms()
+  {
+    this.smsForm.reset();
+    const record: any = {};
+    record.smsType = "single";
+    record.phoneNumberSource = "copyPaste";
+    record.smsNature = "onetime";
+    this.smsForm.patchValue(record);
   }
 
   initializeForm() {
@@ -76,7 +105,12 @@ export class SmsFormComponent implements OnInit, OnChanges {
       scheduleSms: [false],
       templateSms: [false],
       smsNature: ['ONE_TIME', Validators.required],
-      scheduledTime: [null]
+      scheduledTime: [null],
+      smsType: [null],
+      phoneNumberSource: [null],
+      groupId: [null],
+      uploadedFile: [null],
+      phoneNo: [null],
     });
 
     this.populateForm();
