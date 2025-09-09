@@ -76,7 +76,7 @@ const routes: Routes = [
       },
       {
         path: 'register',
-        loadComponent: () => import('./demo/pages/authentication/register/register.component').then((c) => c.RegisterComponent)
+        loadComponent: () => import('./auth/register/register.component').then((c) => c.RegisterComponent)
       }
     ]
   }

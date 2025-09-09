@@ -7,6 +7,7 @@ import { BajajChartComponent } from 'src/app/theme/shared/components/apexchart/b
 import { BarChartComponent } from 'src/app/theme/shared/components/apexchart/bar-chart/bar-chart.component';
 import { ChartDataMonthComponent } from 'src/app/theme/shared/components/apexchart/chart-data-month/chart-data-month.component';
 import { DashboardService } from './dashboard.service';
+import {UserSession} from '../core/user-session';
 
 @Component({
   selector: 'app-dashoard',
@@ -16,6 +17,9 @@ import { DashboardService } from './dashboard.service';
 })
 export class DashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
+
+  merchant = UserSession.getMerchant();
+  user = UserSession.getUser();
 
   // Summary data from API
   summary: any = {};

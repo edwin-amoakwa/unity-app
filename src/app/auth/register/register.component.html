@@ -1,0 +1,153 @@
+<div class="login-container">
+  <div class="login-background">
+    <!-- Background gradient overlay -->
+    <div class="background-overlay"></div>
+  </div>
+
+  <div class="login-content">
+    <div class="glass-container">
+      <div class="login-header">
+        <h4 class="login-title">Ecolink</h4>
+        <h1 class="login-title">Merchant Portal</h1>
+        <p class="login-subtitle">Enter your company details to register as Merchant</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Company Name -->
+        <div class="form-group">
+          <label for="companyName" class="form-label">Company Name</label>
+          <div class="input-container">
+            <i class="input-icon">🏢</i>
+            <input
+              type="text"
+              id="companyName"
+              formControlName="companyName"
+              class="form-input"
+              [class.error]="isFieldInvalid('companyName')"
+              placeholder="Enter company name"
+            />
+          </div>
+          <div *ngIf="isFieldInvalid('companyName')" class="field-error">
+            <small>{{ getFieldError('companyName') }}</small>
+          </div>
+        </div>
+
+        <!-- Contact Person -->
+        <div class="form-group">
+          <label for="contactPerson" class="form-label">Contact Person</label>
+          <div class="input-container">
+            <i class="input-icon">👤</i>
+            <input
+              type="text"
+              id="contactPerson"
+              formControlName="contactPerson"
+              class="form-input"
+              [class.error]="isFieldInvalid('contactPerson')"
+              placeholder="Enter contact person name"
+            />
+          </div>
+          <div *ngIf="isFieldInvalid('contactPerson')" class="field-error">
+            <small>{{ getFieldError('contactPerson') }}</small>
+          </div>
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="form-group">
+          <label for="mobileNo" class="form-label">Mobile Number</label>
+          <div class="input-container">
+            <i class="input-icon">📱</i>
+            <input
+              type="tel"
+              id="mobileNo"
+              formControlName="mobileNo"
+              class="form-input"
+              [class.error]="isFieldInvalid('mobileNo')"
+              placeholder="Enter mobile number"
+            />
+          </div>
+          <div *ngIf="isFieldInvalid('mobileNo')" class="field-error">
+            <small>{{ getFieldError('mobileNo') }}</small>
+          </div>
+        </div>
+
+        <!-- Email Address -->
+        <div class="form-group">
+          <label for="emailAddress" class="form-label">Email Address</label>
+          <div class="input-container">
+            <i class="input-icon">✉️</i>
+            <input
+              type="email"
+              id="emailAddress"
+              formControlName="emailAddress"
+              class="form-input"
+              [class.error]="isFieldInvalid('emailAddress')"
+              placeholder="Enter email address"
+            />
+          </div>
+          <div *ngIf="isFieldInvalid('emailAddress')" class="field-error">
+            <small>{{ getFieldError('emailAddress') }}</small>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="userPassword" class="form-label">Password</label>
+          <div class="input-container">
+            <i class="input-icon">🔒</i>
+            <input
+              type="password"
+              id="userPassword"
+              formControlName="userPassword"
+              class="form-input"
+              [class.error]="isFieldInvalid('userPassword')"
+              placeholder="Enter password"
+            />
+          </div>
+          <div *ngIf="isFieldInvalid('userPassword')" class="field-error">
+            <small>{{ getFieldError('userPassword') }}</small>
+          </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="form-group">
+          <div class="checkbox-container">
+            <input
+              class="checkbox-input"
+              type="checkbox"
+              id="agreeToTerms"
+              formControlName="agreeToTerms"
+            />
+            <label class="checkbox-label" for="agreeToTerms">
+              I agree with Terms & Conditions
+            </label>
+          </div>
+          <div *ngIf="isFieldInvalid('agreeToTerms')" class="field-error">
+            <small>{{ getFieldError('agreeToTerms') }}</small>
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button
+          type="submit"
+          class="login-button"
+          [class.loading]="isLoading"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading" class="button-text">
+            <i class="button-icon">📝</i>
+            Sign Up
+          </span>
+          <span *ngIf="isLoading" class="loading-spinner">
+            <i class="spinner">⟳</i>
+            Signing up...
+          </span>
+        </button>
+
+        <!-- Additional options -->
+        <div class="login-footer">
+          <a routerLink="/login" class="forgot-password">Already have an account? Sign In</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
