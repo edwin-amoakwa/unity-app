@@ -77,4 +77,19 @@ export class StaticDataService {
     ];
   }
 
+
+  public static smsFinalStatus(): any[] {
+    return [
+      { id: 'PENDING', itemName: 'Pending' },
+      { id: 'QUEUED', itemName: 'Queued' },
+      { id: 'CANCELLED', itemName: 'Cancelled' },
+      { id: 'EXPIRED', itemName: 'Expired' },
+      { id: 'FAILED', itemName: 'Failed' },
+      { id: 'SENT', itemName: 'Sent' },
+      { id: 'DELIVERED', itemName: 'Delivered' },
+      { id: 'REJECTED', itemName: 'Rejected' },
+      { id: 'SENT_CONFIRMED', itemName: 'Sent Confirmed' },
+    ];
+  }
+
 }

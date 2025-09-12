@@ -16,6 +16,7 @@ import { NotificationService } from '../core/notification.service';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsFormComponent } from './sms-form/sms-form.component';
 import { SmsService } from './sms.service';
+import {FormView} from '../core/form-view';
 
 @Component({
   selector: 'app-sms',
@@ -40,6 +41,8 @@ export class SmsComponent implements OnInit {
   private smsService = inject(SmsService);
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+
+  formView = FormView.listView();
 
   smsMessages: any[] = [];
   isLoading: boolean = false;
@@ -152,7 +155,7 @@ export class SmsComponent implements OnInit {
   formatPhoneNumbers(phoneNos: string): string {
     if (!phoneNos) return '';
     const phones = phoneNos.split(',');
-    if (phones.length > 3) {
+    if (phones?.length > 3) {
       return `${phones.slice(0, 3).join(', ')} +${phones.length - 3} more`;
     }
     return phones.join(', ');

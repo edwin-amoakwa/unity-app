@@ -110,7 +110,7 @@
     <div class="mb-4">
         <label for="message_text" class="form-label font-weight-bold">Message Text *</label>
         <textarea class="form-control" id="message_text" formControlName="messageText" rows="5"
-        placeholder="Type your message here..." required (input)="updateCount()" ></textarea>
+                  required (input)="updateCount()" ></textarea>
         <div class="d-flex justify-content-between mt-2">
             <!-- <small class="text-muted">Characters: <span id="char_count">0</span>/1000</small> -->
             <span class="sms-count">Characters: {{ characterCount }} / {{ smsCount }} SMS</span>

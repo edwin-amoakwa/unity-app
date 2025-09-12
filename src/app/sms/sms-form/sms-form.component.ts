@@ -303,7 +303,11 @@ export class SmsFormComponent implements OnInit, OnChanges {
   smsCount: number = 1;
   updateCount()
   {
-    this.characterCount = this.smsForm.value.messageText.length;
+    if(!this.smsForm.value.messageText)
+    {
+      return;
+    }
+    this.characterCount = this.smsForm.value.messageText?.length;
     if(this.characterCount == 0)
     {
       this.smsCount = 0;
