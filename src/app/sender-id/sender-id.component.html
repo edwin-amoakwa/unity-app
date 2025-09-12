@@ -23,6 +23,14 @@
             formControlName="senderId"
             maxlength="11">
         </div>
+        <div class="mb-3">
+          <label for="senderId" class="form-label">Authorization Letter</label>
+          <input (change)="onFileChange_authLetter($event)" class="form-control" type="file">
+        </div>
+        <div class="mb-3">
+          <label for="senderId" class="form-label">Business Registration Document / Ghana Card</label>
+          <input (change)="onFileChange_bizDoc($event)" class="form-control" type="file">
+        </div>
         <button type="submit" class="btn btn-primary" [disabled]="!senderIdForm.valid">
           Create Sender ID
         </button>

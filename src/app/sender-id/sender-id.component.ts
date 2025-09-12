@@ -1,25 +1,25 @@
 // angular import
-import { Component, OnInit, inject } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {CardComponent} from '../theme/shared/components/card/card.component';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CardComponent } from '../theme/shared/components/card/card.component';
 
 // primeng imports
-import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { DropdownModule } from 'primeng/dropdown';
 
 // project import
+import { ApplicationService } from '../applications/application.service';
 import { ConfigService } from '../config.service';
 import { NotificationService } from '../core/notification.service';
-import { ApplicationService } from '../applications/application.service';
-import {CollectionUtil} from '../core/system.utils';
+import { CollectionUtil } from '../core/system.utils';
 
 
 @Component({
-  selector: 'sender-id',
+  selector: 'app-sender-id',
   imports: [CardComponent, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule, DropdownModule],
   templateUrl: './sender-id.component.html',
   styleUrls: ['./sender-id.component.scss']
@@ -75,13 +75,63 @@ export class SenderIdComponent implements OnInit {
     }
   }
 
+  // fileResource_authLetter: any = {};
+  fileResource_authLetter: FileResource = new FileResource("",new FileUpload);
+  onFileChange_authLetter(event) {
+    const reader = new FileReader();
+
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+
+      reader.onload = () => {
+
+        const fileUpload: FileUpload = new FileUpload(file.name,reader.result as string);
+        this.fileResource_authLetter.fileUpload = fileUpload;
+
+        ////////console.log("file", file);
+        ////////console.log("fileResource", this.fileResource_authLetter);
+
+      };
+
+    }
+  }
+
+  // fileResource_bizDoc: any = {};
+  fileResource_bizDoc: FileResource = new FileResource("",new FileUpload);
+  onFileChange_bizDoc(event) {
+    const reader = new FileReader();
+
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+
+
+      reader.onload = () => {
+
+        const fileUpload: FileUpload = new FileUpload(file.name,reader.result as string);
+        // fileUpload.fileName = file.name;
+        // fileUpload.fileString = reader.result;
+
+        this.fileResource_bizDoc.fileUpload = fileUpload;
+      };
+
+    }
+  }
+
   async onSubmit() {
     if (this.senderIdForm.valid) {
       this.isLoading = true;
       const formValues = this.senderIdForm.value;
       const payload = {
         senderId: formValues.senderId,
-        applicationId: formValues.applicationId
+        applicationId: formValues.applicationId,
+        authLetter: this.fileResource_authLetter,
+        bizRegDoc: this.fileResource_bizDoc
       };
 
       try {
@@ -113,5 +163,28 @@ export class SenderIdComponent implements OnInit {
       this.notificationService.error(error.message || 'Failed to delete sender ID');
       this.isLoading = false;
     }
+  }
+
+
+}
+
+
+export class  FileResource {
+  id: string;
+  fileUpload: FileUpload;
+  constructor(id: string = '', fileUpload: FileUpload) {
+    this.id = id;
+    this.fileUpload = fileUpload;
+  }
+}
+
+export class  FileUpload {
+  id: number;
+  fileName: string;
+  fileString: string | ArrayBuffer;
+
+  constructor(fileName: string = '', fileString : string | ArrayBuffer = '') {
+    this.fileName = fileName;
+    this.fileString = fileString;
   }
 }
