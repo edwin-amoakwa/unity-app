@@ -64,6 +64,14 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ti ti-brush'
       },
       {
+        id: 'sms-records',
+        title: 'SMS Records',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/sms-records',
+        icon: 'ti ti-brush'
+      },
+      {
         id: 'add-funds',
         title: 'Add Funds',
         type: 'item',
