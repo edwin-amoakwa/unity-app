@@ -14,7 +14,8 @@ import {DashboardService} from '../../dashboard/dashboard.service';
 export class SentSmsChartComponent implements OnInit{
   // public props
   // @ViewChild('chart') chart!: ChartComponent;
-  chartOptions!: Partial<ApexOptions>;
+  // chartOptions!: Partial<ApexOptions>;
+  chartOptions: any = {};
 
   dashboardService = inject(DashboardService);
 
@@ -22,44 +23,7 @@ export class SentSmsChartComponent implements OnInit{
 
   // constructor
   constructor() {
-    this.chartOptions = {
-      chart: {
-        type: 'area',
-        // height: 95,
-        stacked: true,
-        sparkline: {
-          enabled: true
-        },
-        background: 'transparent'
-      },
-      stroke: {
-        curve: 'smooth',
-        width: 1
-      },
-      series: [
-        {
-          data: this.chartData
-        }
-      ],
-      tooltip: {
-        theme: 'light',
-        fixed: {
-          enabled: false
-        },
-        x: {
-          show: false
-        },
-        y: {
-          title: {
-            formatter: () => 'Ticket '
-          }
-        },
-        marker: {
-          show: false
-        }
-      },
-      colors: ['#673ab7']
-    };
+
   }
 
   ngOnInit() {
@@ -69,7 +33,61 @@ export class SentSmsChartComponent implements OnInit{
   async loadChartData() {
     let response = await this.dashboardService.getSentSms();
     this.chartData = response.data;
-    
+
+    // this.chartOptions.series[0].data = this.chartData;
+    this.createChat();
+    console.log("this.chartData", JSON.stringify(this.chartOptions, null, 2));
+  }
+
+  createChat()
+  {
+    this.chartOptions = {
+      chart: {
+        type: 'area',
+        height: 400,
+        stacked: true,
+        sparkline: {
+          enabled: false
+        },
+        background: 'transparent'
+      },
+      stroke: {
+        curve: 'smooth',
+        width: 1
+      },
+      series: this.chartData.series,
+      xaxis: {
+        type: 'category',
+        categories: this.chartData?.labels,
+        labels: {
+          show: true,
+          rotate: -45, // ✅ Optional: rotate if labels are long
+          style: {
+            colors: "#333", // optional styling
+            fontSize: "12px"
+          }
+        }
+      },
+      tooltip: {
+        theme: 'light',
+        fixed: {
+          enabled: false
+        },
+
+        x: {
+          show: false
+        },
+        y: {
+          title: {
+            formatter: () => 'Sent SMS '
+          }
+        },
+        marker: {
+          show: false
+        }
+      },
+      colors: ['#673ab7']
+    };
   }
 
 }
