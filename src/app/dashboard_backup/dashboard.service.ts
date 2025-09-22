@@ -14,8 +14,4 @@ export class DashboardService {
   async getSummary(): Promise<ApiResponse<any>> {
     return await firstValueFrom(this.http.get<ApiResponse<any>>(`${this.apiUrl}/summary`));
   }
-
-  async getSentSms(): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.get<ApiResponse<any>>(`${this.apiUrl}/sent-sms`));
-  }
 }

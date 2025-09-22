@@ -17,25 +17,35 @@ export class SmsService {
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl));
   }
 
-  async createSmsMessage(sms: Partial<any>): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.post<ApiResponse<any>>(this.apiUrl, sms));
-  }
 
-  async updateSmsMessage(id: string, sms: Partial<any>): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.apiUrl}`, sms));
+
+  async saveSmsMessage(sms: any): Promise<ApiResponse<any>> {
+    if(sms.id)
+    {
+      return await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.apiUrl}`, sms));
+    }
+    else
+    {
+      return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}`, sms));
+    }
+
   }
 
   async deleteSmsMessage(id: string): Promise<ApiResponse<any>> {
     return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`));
   }
 
-  async getApplications(): Promise<ApiResponse<any[]>> {
-    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/applications`));
+  async sendSmsMessage(id: string): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}`,{}));
   }
 
-  async getSenderIds(): Promise<ApiResponse<any[]>> {
-    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/sender-ids`));
-  }
+  // async getApplications(): Promise<ApiResponse<any[]>> {
+  //   return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/applications`));
+  // }
+  //
+  // async getSenderIds(): Promise<ApiResponse<any[]>> {
+  //   return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/sender-ids`));
+  // }
 
   calculatePagesCount(messageText: string): number {
     return Math.ceil(messageText.length / 160);

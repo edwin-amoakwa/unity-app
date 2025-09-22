@@ -17,39 +17,7 @@ import { SmsRecordsService } from './sms-records.service';
 import {StaticDataService} from '../static-data.service';
 import {ConfigService} from '../config.service';
 
-export interface SmsRecord {
-  mobileNo: string;
-  senderId: string;
-  application: string;
-  receipient: string;
-  smsText: string;
-  smsProvider: any;
-  smsProviderLabel: string;
-  smsStatus: any;
-  smsStatusLabel: string;
-  finalStatus: any;
-  finalStatusLabel: string;
-  internalStatus: string;
-  externalId: string;
-  providerStatus: string;
-  processingNo: string;
-  actualCost: number;
-  buyPrice: number;
-  margin: number;
-  pageCount: number;
-  deliveredTime: Date;
-  responseRawResponse: string;
-  requestRawResponse: string;
-  institutionId: string;
-  institutionName: string;
-  callBackUrl: string;
-  feedBackReceived: boolean;
-  urlReached: boolean;
-  feedbackRequestCount: number;
-  batchId: string;
-  createdDate: Date;
-  modifiedDate: Date;
-}
+
 
 @Component({
   selector: 'app-sms-records',
@@ -73,16 +41,13 @@ export class SmsRecordsComponent implements OnInit {
   private configService = inject(ConfigService);
   private notificationService = inject(NotificationService);
 
-  smsRecords: SmsRecord[] = [];
+  smsRecords: any[] = [];
   isLoading: boolean = false;
 
   // Filter options
-  finalStatusOptions: any[] = StaticDataService.smsFinalStatus();
+  smsStatusList: any[] = StaticDataService.smsFinalStatus();
   senderIdOptions: any[] = [];
-
-  // Filter values
-  selectedFinalStatus: any = null;
-  selectedSenderId: string = '';
+  filterParam:any = {}
 
   ngOnInit() {
     this.loadSmsRecords();
@@ -92,7 +57,8 @@ export class SmsRecordsComponent implements OnInit {
   async loadSmsRecords() {
     this.isLoading = true;
     try {
-      const response = await this.smsRecordsService.getSmsRecords();
+
+      const response = await this.smsRecordsService.getSmsRecords(this.filterParam);
       this.smsRecords = response.data || [];
     } catch (error) {
       console.error('Error loading SMS records:', error);
@@ -121,8 +87,7 @@ export class SmsRecordsComponent implements OnInit {
   }
 
   clearFilters() {
-    this.selectedFinalStatus = null;
-    this.selectedSenderId = '';
+this.filterParam = {}
     this.loadSmsRecords();
   }
 
@@ -158,8 +123,8 @@ export class SmsRecordsComponent implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    if (amount == null || amount === undefined) return '$0.00';
-    return `$${amount.toFixed(3)}`;
+    if (amount == null || amount === undefined) return '0.00';
+    return `${amount.toFixed(3)}`;
   }
 
   truncateText(text: string, maxLength: number = 50): string {

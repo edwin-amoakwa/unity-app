@@ -20,6 +20,7 @@ import { NotificationService } from '../../core/notification.service';
 import { StaticDataService } from '../../static-data.service';
 import { SmsService } from '../sms.service';
 import {Badge} from 'primeng/badge';
+import {ObjectUtil} from '../../core/system.utils';
 
 @Component({
   selector: 'app-sms-form',
@@ -116,7 +117,8 @@ export class SmsFormComponent implements OnInit, OnChanges {
       id:"",
       senderId: ['', Validators.required],
       messageText: ['', [Validators.required, Validators.maxLength(1000)]],
-      phoneNos: ['', [Validators.required, Validators.pattern(/^[\+]?[0-9,\s-]+$/)]],
+      phoneNos: "",
+      // phoneNos: ['', [Validators.required, Validators.pattern(/^[\+]?[0-9,\s-]+$/)]],
       dispatched: [false],
       flashSms: [false],
       scheduleSms: [false],
@@ -190,6 +192,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
   populateForm() {
     if (this.smsData && this.smsForm) {
       this.smsForm.patchValue({
+        id: this.smsData.id,
         applicationId: this.smsData.applicationId,
         senderId: this.smsData.senderId,
         messageText: this.smsData.messageText,
@@ -223,6 +226,9 @@ export class SmsFormComponent implements OnInit, OnChanges {
       };
       this.smsSubmitted.emit(smsData);
     } else {
+
+      console.log("--hereh herhe this.smsForm.invalid = ",this.smsForm.value);
+      ObjectUtil.logInvalidFields(this.smsForm)
       this.markFormGroupTouched(this.smsForm);
       this.notificationService.error('Please fill in all required fields correctly');
     }

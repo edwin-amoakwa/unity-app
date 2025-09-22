@@ -1,26 +1,31 @@
 // angular import
-import { Component, ViewChild } from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 
 // third party
 import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
+import {DashboardService} from '../../dashboard/dashboard.service';
 
 @Component({
-  selector: 'app-bajaj-chart',
+  selector: 'app-sent-sms-chart',
   imports: [NgApexchartsModule],
-  templateUrl: './bajaj-chart.component.html',
-  styleUrl: './bajaj-chart.component.scss'
+  templateUrl: './sent-sms-chart.component.html',
+  styleUrl: './sent-sms-chart.component.scss'
 })
-export class BajajChartComponent {
+export class SentSmsChartComponent implements OnInit{
   // public props
-  @ViewChild('chart') chart!: ChartComponent;
+  // @ViewChild('chart') chart!: ChartComponent;
   chartOptions!: Partial<ApexOptions>;
+
+  dashboardService = inject(DashboardService);
+
+  chartData: any = [];
 
   // constructor
   constructor() {
     this.chartOptions = {
       chart: {
         type: 'area',
-        height: 95,
+        // height: 95,
         stacked: true,
         sparkline: {
           enabled: true
@@ -33,7 +38,7 @@ export class BajajChartComponent {
       },
       series: [
         {
-          data: [0, 15, 10, 50, 30, 40, 25]
+          data: this.chartData
         }
       ],
       tooltip: {
@@ -56,4 +61,15 @@ export class BajajChartComponent {
       colors: ['#673ab7']
     };
   }
+
+  ngOnInit() {
+    this.loadChartData();
+  }
+
+  async loadChartData() {
+    let response = await this.dashboardService.getSentSms();
+    this.chartData = response.data;
+    
+  }
+
 }

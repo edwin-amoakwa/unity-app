@@ -28,71 +28,73 @@
 
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 120px;">Sender ID</th>
-          <th style="min-width: 200px;">Message</th>
-          <th style="width: 140px;">Phone Numbers</th>
-          <th style="width: 100px;">Recipients</th>
-          <th style="width: 80px;">Pages</th>
-          <th style="width: 80px;">Cost</th>
-          <th style="width: 100px;">Status</th>
-          <th style="width: 110px;">Nature</th>
-          <th style="width: 100px;">Flags</th>
-          <th style="width: 140px;">Scheduled</th>
+          <th >Date</th>
+          <th >Sender ID</th>
+          <th >Message</th>
+<!--          <th >Phone Numbers</th>-->
+          <th >Recipients</th>
+          <th >Pages</th>
+          <th >Cost</th>
+          <th >Status</th>
+<!--          <th >Nature</th>-->
+
           <th style="width: 120px;">Actions</th>
+          <th ></th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-sms>
         <tr>
+          <td>{{ sms.valueDate }}</td>
           <td>{{ sms.senderName }}</td>
           <td>
             <div class="text-truncate" style="max-width: 200px;" [pTooltip]="sms.messageText">
               {{ sms.messageText }}
             </div>
           </td>
-          <td>
-            <div [pTooltip]="sms.phoneNos">
-              {{ formatPhoneNumbers(sms.phoneNos) }}
-            </div>
-          </td>
-          <td>{{ sms.totalReceipient }}</td>
+<!--          <td>-->
+<!--            <div [pTooltip]="sms.phoneNos">-->
+<!--              {{ formatPhoneNumbers(sms.phoneNos) }}-->
+<!--            </div>-->
+<!--          </td>-->
+          <td>{{ sms.totalRecipient }}</td>
           <td>{{ sms.pagesCount }}</td>
-          <td>${{ sms.actualCost.toFixed(3) }}</td>
+          <td>{{ sms.actualCost.toFixed(3) }}</td>
           <td>
             <p-tag
               [value]="sms.dispatched ? 'Dispatched' : 'Pending'"
               [severity]="getStatusSeverity(sms.dispatched)">
             </p-tag>
           </td>
-          <td>
-            <p-tag
-              [value]="sms.smsNatureLabel"
-              [severity]="getSmsNatureSeverity(sms.smsNatureLabel)">
-            </p-tag>
-          </td>
-          <td>
-            <div class="flex gap-1">
-              <p-tag
-                *ngIf="sms.flashSms"
-                value="Flash"
-                severity="danger"
-                class="text-xs">
-              </p-tag>
-              <p-tag
-                *ngIf="sms.scheduleSms"
-                value="Scheduled"
-                severity="info"
-                class="text-xs">
-              </p-tag>
-              <p-tag
-                *ngIf="sms.templateSms"
-                value="Template"
-                severity="warning"
-                class="text-xs">
-              </p-tag>
-            </div>
-          </td>
-          <td>{{ formatScheduledTime(sms.scheduledTime) }}</td>
+<!--          <td>-->
+<!--            <p-tag-->
+<!--              [value]="sms.smsNatureLabel"-->
+<!--              [severity]="getSmsNatureSeverity(sms.smsNatureLabel)">-->
+<!--            </p-tag>-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <div class="flex gap-1">-->
+<!--              <p-tag-->
+<!--                *ngIf="sms.flashSms"-->
+<!--                value="Flash"-->
+<!--                severity="danger"-->
+<!--                class="text-xs">-->
+<!--              </p-tag>-->
+<!--              <p-tag-->
+<!--                *ngIf="sms.scheduleSms"-->
+<!--                value="Scheduled"-->
+<!--                severity="info"-->
+<!--                class="text-xs">-->
+<!--              </p-tag>-->
+<!--              <p-tag-->
+<!--                *ngIf="sms.templateSms"-->
+<!--                value="Template"-->
+<!--                severity="warning"-->
+<!--                class="text-xs">-->
+<!--              </p-tag>-->
+<!--            </div>-->
+<!--          </td>-->
+<!--          <td>{{ formatScheduledTime(sms.scheduledTime) }}</td>-->
           <td>
             <div class="flex gap-1">
               <p-button
@@ -111,7 +113,18 @@
                 pTooltip="Delete"
                 (onClick)="deleteSms(sms)">
               </p-button>
+
             </div>
+          </td>
+          <td>
+            <p-button
+              icon="pi pi-send"
+              size="small"
+              severity="success"
+              [text]="true"
+              pTooltip="Initiate/Send"
+              (onClick)="initiateSms(sms)">
+            </p-button>
           </td>
         </tr>
       </ng-template>

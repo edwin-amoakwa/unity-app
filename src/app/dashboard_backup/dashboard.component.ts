@@ -8,11 +8,10 @@ import { BarChartComponent } from 'src/app/theme/shared/components/apexchart/bar
 import { ChartDataMonthComponent } from 'src/app/theme/shared/components/apexchart/chart-data-month/chart-data-month.component';
 import { DashboardService } from './dashboard.service';
 import {UserSession} from '../core/user-session';
-import {FailedSmsChartComponent} from '../charts/failed-sms-chart/failed-sms-chart.component';
 
 @Component({
   selector: 'app-dashoard',
-  imports: [SentSmsChartComponent, BarChartComponent, ChartDataMonthComponent, SharedModule, FailedSmsChartComponent],
+  imports: [SentSmsChartComponent, BarChartComponent, ChartDataMonthComponent, SharedModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })

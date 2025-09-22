@@ -18,12 +18,12 @@ export class StaticDataService {
   public static formsOfPayment():any[]
   {
     let data = [
-      { id: 'CARD_PAYMENT', itemName: 'Card Payment' },
-      { id: 'CASH', itemName: 'Cash' },
+      { id: 'BANK_TRANSFER', itemName: 'Bank Transfer' },
       { id: 'MTN_MOBILE_MONEY', itemName: 'MTN Mobile Money' },
+      { id: 'CASH', itemName: 'Cash' },
+      { id: 'CARD_PAYMENT', itemName: 'Card Payment' },
       { id: 'AT_CASH', itemName: 'AT Cash' },
       { id: 'VODAFON_CASH', itemName: 'Vodafon Cash' },
-      { id: 'BANK_TRANSFER', itemName: 'Bank Transfer' }
     ];
 
     return data;

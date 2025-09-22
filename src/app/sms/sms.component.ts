@@ -17,6 +17,8 @@ import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsFormComponent } from './sms-form/sms-form.component';
 import { SmsService } from './sms.service';
 import {FormView} from '../core/form-view';
+import {MessageBox} from '../message-helper';
+import {CollectionUtil} from '../core/system.utils';
 
 @Component({
   selector: 'app-sms',
@@ -90,24 +92,19 @@ export class SmsComponent implements OnInit {
 
   async onSmsSubmitted(sms: any) {
     try {
-      if (this.selectedSms && this.selectedSms.id)
-      {
-        // Update existing SMS
-        const response = await this.smsService.updateSmsMessage(this.selectedSms.id, sms);
-        const index = this.smsMessages.findIndex(s => s.id === this.selectedSms!.id);
-        if (index > -1) {
-          this.smsMessages[index] = response.data;
+
+        const response = await this.smsService.saveSmsMessage( sms);
+        if(!response.success)
+        {
+          MessageBox.errorDetail(response.message,response.data)
+          return
         }
 
+        CollectionUtil.add(this.smsMessages, response.data);
+
         this.formView.resetToListView();
-      }
-      else
-      {
-        // Create new SMS
-        const response = await this.smsService.createSmsMessage(sms);
-        this.smsMessages.push(response.data);
-        this.formView.resetToListView();
-      }
+
+
     } catch (error) {
       console.error('Error with SMS message:', error);
       const errorMessage = this.selectedSms ? 'Failed to update SMS message' : 'Failed to create SMS message';
@@ -132,6 +129,29 @@ export class SmsComponent implements OnInit {
           } catch (error) {
             console.error('Error deleting SMS message:', error);
             this.notificationService.error('Failed to delete SMS message');
+          }
+        }
+      }
+    });
+  }
+
+  initiateSms(sms: any) {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to Send this SMS message?`,
+      header: 'Confirm Send / Initiated',
+      icon: 'pi pi-exclamation-triangle',
+      accept: async () => {
+        if (sms.id) {
+          try {
+            await this.smsService.sendSmsMessage(sms.id);
+            // const index = this.smsMessages.findIndex(s => s.id === sms.id);
+            // if (index > -1) {
+            //   this.smsMessages.splice(index, 1);
+            // }
+            // this.notificationService.success('SMS message Initiated/Sent successfully');
+          } catch (error) {
+            console.error('Error deleting SMS message:', error);
+            this.notificationService.error('Failed to Initiate/Send SMS message');
           }
         }
       }

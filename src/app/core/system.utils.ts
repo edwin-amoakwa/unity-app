@@ -1,4 +1,5 @@
 import { formatDate } from "@angular/common";
+import {UntypedFormGroup} from '@angular/forms';
 
 export class CollectionUtil
 {
@@ -404,5 +405,21 @@ export class ObjectUtil {
 
     return "";
   }
+
+  static logInvalidFields(formGroup: UntypedFormGroup, parentKey: string = ''): void {
+    Object.keys(formGroup.controls).forEach((key) => {
+      const control = formGroup.get(key);
+
+      if (control instanceof UntypedFormGroup) {
+        // Recursively log nested FormGroups
+        this.logInvalidFields(control, parentKey ? `${parentKey}.${key}` : key);
+      } else if (control && control.invalid) {
+        const controlPath = parentKey ? `${parentKey}.${key}` : key;
+        console.warn(`Invalid Field: ${controlPath}`, control.errors);
+      }
+    });
+  }
+
+
 
 }

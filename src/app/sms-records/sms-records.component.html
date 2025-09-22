@@ -6,8 +6,8 @@
         <label for="finalStatus" class="form-label">Final Status</label>
         <p-dropdown
           id="finalStatus"
-          [options]="finalStatusOptions"
-          [(ngModel)]="selectedFinalStatus"
+          [options]="smsStatusList"
+          [(ngModel)]="filterParam.smsStatus"
           optionLabel="itemName"
           optionValue="id"
           placeholder="Select Final Status"
@@ -21,9 +21,9 @@
         <p-dropdown
           id="senderId"
           [options]="senderIdOptions"
-          [(ngModel)]="selectedSenderId"
+          [(ngModel)]="filterParam.senderId"
           optionLabel="senderId"
-          optionValue="id"
+          optionValue="senderId"
           placeholder="Select Sender ID"
           [showClear]="true"
           (onChange)="onFilterChange()"
@@ -50,38 +50,37 @@
       [responsive]="true"
       styleClass="p-datatable-sm"
       [scrollable]="true"
-      scrollHeight="600px">
+      scrollHeight="600px"
+      dataKey="id">
 
-      <ng-template pTemplate="header">
+      <ng-template #header>
         <tr>
-          <th style="min-width: 120px;">Mobile No</th>
-          <th style="min-width: 100px;">Sender ID</th>
-          <th style="min-width: 120px;">Application</th>
-          <th style="min-width: 100px;">Recipient</th>
-          <th style="min-width: 200px;">SMS Text</th>
-          <th style="min-width: 120px;">SMS Provider</th>
-          <th style="min-width: 100px;">SMS Status</th>
-          <th style="min-width: 100px;">Final Status</th>
-          <th style="min-width: 120px;">Internal Status</th>
-          <th style="min-width: 100px;">External ID</th>
-          <th style="min-width: 120px;">Provider Status</th>
-          <th style="min-width: 120px;">Processing No</th>
-          <th style="min-width: 100px;"> Cost</th>
-          <th style="min-width: 80px;">Pages</th>
-          <th style="min-width: 140px;">Delivered Time</th>
-          <th style="min-width: 120px;">Institution</th>
-          <th style="min-width: 120px;">Callback URL</th>
-          <th style="min-width: 100px;">Feedback</th>
-          <th style="min-width: 100px;">URL Reached</th>
-          <th style="min-width: 120px;">Feedback Count</th>
-          <th style="min-width: 100px;">Batch ID</th>
-          <th style="min-width: 140px;">Created Date</th>
-          <th style="min-width: 140px;">Modified Date</th>
+          <th ></th>
+          <th >Mobile No</th>
+          <th >Sender ID</th>
+          <th >Application</th>
+          <th >Recipient</th>
+          <th >SMS Text</th>
+          <th >SMS Provider</th>
+          <th >SMS Status</th>
+          <th > Cost</th>
+          <th >Pages</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-record>
+      <ng-template #body  let-record let-expanded="expanded">
         <tr>
+          <td>
+            <p-button
+              type="button"
+              pRipple
+              [pRowToggler]="record"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              severity="secondary"
+              size="small"
+              [text]="true">
+            </p-button>
+          </td>
           <td>{{ record.mobileNo }}</td>
           <td>{{ record.senderId }}</td>
           <td>{{ record.application }}</td>
@@ -98,47 +97,90 @@
               [severity]="getSmsStatusSeverity(record.smsStatusLabel)">
             </p-tag>
           </td>
-          <td>
-            <p-tag
-              [value]="record.finalStatusLabel"
-              [severity]="getFinalStatusSeverity(record.finalStatusLabel)">
-            </p-tag>
-          </td>
-          <td>{{ record.internalStatus }}</td>
-          <td>{{ record.externalId }}</td>
-          <td>{{ record.providerStatus }}</td>
-          <td>{{ record.processingNo }}</td>
           <td>{{ formatCurrency(record.actualCost) }}</td>
           <td>{{ record.pageCount }}</td>
-          <td>{{ formatDateTime(record.deliveredTime) }}</td>
-          <td>{{ record.institutionName }}</td>
-          <td>
-            <div class="text-truncate" style="max-width: 120px;" [pTooltip]="record.callBackUrl">
-              {{ truncateText(record.callBackUrl, 20) }}
+        </tr>
+      </ng-template>
+
+      <ng-template #expandedrow  let-record>
+        <tr>
+          <td colspan="10">
+            <div class="p-3">
+              <h5>Additional Details</h5>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="mb-2">
+                    <strong>Internal Status:</strong>
+                    <span class="ms-2">{{ record.internalStatus }}</span>
+                  </div>
+                  <div class="mb-2">
+                    <strong>External ID:</strong>
+                    <span class="ms-2">{{ record.externalId }}</span>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Provider Status:</strong>
+                    <span class="ms-2">{{ record.providerStatus }}</span>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Processing No:</strong>
+                    <span class="ms-2">{{ record.processingNo }}</span>
+                  </div>
+                  <div class="mb-2">
+                    <strong>URL Reached:</strong>
+                    <p-tag
+                      class="ms-2"
+                      [value]="record.urlReached ? 'Yes' : 'No'"
+                      [severity]="record.urlReached ? 'success' : 'danger'">
+                    </p-tag>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-2">
+                    <strong>Delivered Time:</strong>
+                    <span class="ms-2">{{ formatDateTime(record.deliveredTime) }}</span>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Callback URL:</strong>
+                    <span class="ms-2" [pTooltip]="record.callBackUrl">
+                      {{ truncateText(record.callBackUrl, 30) }}
+                    </span>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Feedback:</strong>
+                    <p-tag
+                      class="ms-2"
+                      [value]="record.feedBackReceived ? 'Yes' : 'No'"
+                      [severity]="record.feedBackReceived ? 'success' : 'warning'">
+                    </p-tag>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Feedback Count:</strong>
+                    <span class="ms-2">{{ record.feedbackRequestCount }}</span>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Batch ID:</strong>
+                    <span class="ms-2">{{ record.batchId }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-2">
+                    <strong>Created Date:</strong>
+                    <span class="ms-2">{{ formatDateTime(record.createdDate) }}</span>
+                  </div>
+                  <div class="mb-2">
+                    <strong>Modified Date:</strong>
+                    <span class="ms-2">{{ formatDateTime(record.modifiedDate) }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </td>
-          <td>
-            <p-tag
-              [value]="record.feedBackReceived ? 'Yes' : 'No'"
-              [severity]="record.feedBackReceived ? 'success' : 'warning'">
-            </p-tag>
-          </td>
-          <td>
-            <p-tag
-              [value]="record.urlReached ? 'Yes' : 'No'"
-              [severity]="record.urlReached ? 'success' : 'danger'">
-            </p-tag>
-          </td>
-          <td>{{ record.feedbackRequestCount }}</td>
-          <td>{{ record.batchId }}</td>
-          <td>{{ formatDateTime(record.createdDate) }}</td>
-          <td>{{ formatDateTime(record.modifiedDate) }}</td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="25" class="text-center p-4">
+          <td colspan="10" class="text-center p-4">
             <div class="flex flex-column align-items-center gap-2">
               <i class="pi pi-inbox text-4xl text-muted"></i>
               <p class="text-muted mb-0">No SMS records found</p>

@@ -129,10 +129,34 @@
   (onHide)="closePaymentDialog()">
 
   <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
-    <div class="row">
-      <!-- Amount -->
-      <div class="col-12 col-md-6 mb-3">
-        <label for="amount">Amount *</label>
+
+    <!-- Form of Payment -->
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label for="formOfPayment" class="form-label">Form of Payment *</label>
+      </div>
+      <div class="col-md-9">
+        <p-dropdown
+          id="formOfPayment"
+          optionValue="id"
+          optionLabel="itemName"
+          formControlName="formOfPayment"
+          [options]="formOfPaymentOptions"
+          [class.ng-invalid]="isFieldInvalid('formOfPayment')"
+          styleClass="w-full">
+        </p-dropdown>
+        <small class="p-error" *ngIf="isFieldInvalid('formOfPayment')">
+          {{ getFieldError('formOfPayment') }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Amount -->
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label for="amount" class="form-label">Amount *</label>
+      </div>
+      <div class="col-md-9">
         <p-inputNumber
           id="amount"
           formControlName="amount"
@@ -148,28 +172,16 @@
           {{ getFieldError('amount') }}
         </small>
       </div>
+    </div>
 
 
-      <!-- Form of Payment -->
-      <div class="col-12 col-md-6 mb-3">
-        <label for="formOfPayment">Form of Payment *</label>
-        <p-dropdown
-          id="formOfPayment"
-          optionValue="id"
-          optionLabel="itemName"
-          formControlName="formOfPayment"
-          [options]="formOfPaymentOptions"
-          [class.ng-invalid]="isFieldInvalid('formOfPayment')"
-          styleClass="w-full">
-        </p-dropdown>
-        <small class="p-error" *ngIf="isFieldInvalid('formOfPayment')">
-          {{ getFieldError('formOfPayment') }}
-        </small>
+
+    <!-- Payment Notes -->
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label for="paymentNotes" class="form-label">Payment Notes</label>
       </div>
-
-      <!-- Payment Notes -->
-      <div class="col-12 col-md-6 mb-3">
-        <label for="paymentNotes">Payment Notes</label>
+      <div class="col-md-9">
         <textarea
           pInputTextarea
           id="paymentNotes"

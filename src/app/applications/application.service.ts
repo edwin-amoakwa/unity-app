@@ -28,13 +28,16 @@ export class ApplicationService {
     return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`));
   }
 
-  private generateApiKey(): string {
-    const prefix = 'sk_test_';
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let result = prefix;
-    for (let i = 0; i < 24; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
+  async renewApiKey(id: string): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}/renew`, {}));
   }
+
+  async disableApplication(id: string): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}/disable`, {}));
+  }
+
+  async enableApplication(id: string): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}/enable`, {}));
+  }
+
 }
