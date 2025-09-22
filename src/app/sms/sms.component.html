@@ -1,12 +1,16 @@
 <app-card cardTitle="SMS Management" >
-  <div class="card-body">
+
+
+
+
+  <div class="card-body" *ngIf="formView.listView">
     <!-- Header with Create Button -->
     <div class="row mb-3">
       <div class="col-12">
         <p-button
           label="Create SMS"
           icon="pi pi-plus"
-          (onClick)="openCreateDialog()"
+          (onClick)="createNewMessage()"
           class="p-button-sm">
         </p-button>
       </div>
@@ -124,23 +128,46 @@
       </ng-template>
     </p-table>
   </div>
+
+
+  <div class="card-body" *ngIf="formView.createView">
+
+    <app-sms-form
+      [smsData]="selectedSms"
+      (smsSubmitted)="onSmsSubmitted($event)"
+      (cancelled)="this.formView.resetToListView()">
+    </app-sms-form>
+
+<!--    <p-button-->
+<!--      label="Close" severity="contrast"-->
+<!--      icon="pi pi-close"-->
+<!--      (onClick)="formView.resetToListView()"-->
+<!--      class="p-button-sm">-->
+<!--    </p-button>-->
+
+
+  </div>
+
+
+
+
 </app-card>
 
 <!-- SMS Form Dialog -->
-<p-dialog
-  [header]="selectedSms ? 'Edit SMS Message' : 'Create SMS Message'"
-  [(visible)]="showDialog"
-  [style]="{ width: '600px' }"
-  [modal]="true"
-  [draggable]="false"
-  [resizable]="false">
+<!--<p-dialog-->
+<!--  [header]="selectedSms ? 'Edit SMS Message' : 'Create SMS Message'"-->
+<!--  [(visible)]="showDialog"-->
+<!--  [style]="{ width: '600px' }"-->
+<!--  [modal]="true"-->
+<!--  [draggable]="false"-->
+<!--  [resizable]="false">-->
 
-  <app-sms-form
-    [smsData]="selectedSms"
-    (smsSubmitted)="onSmsSubmitted($event)"
-    (cancelled)="closeDialog()">
-  </app-sms-form>
-</p-dialog>
+<!--  <app-sms-form-->
+<!--    [smsData]="selectedSms"-->
+<!--    (smsSubmitted)="onSmsSubmitted($event)"-->
+<!--    (cancelled)="closeDialog()">-->
+<!--  </app-sms-form>-->
+<!--</p-dialog>-->
 
 <!-- Confirmation Dialog -->
 <p-confirmDialog></p-confirmDialog>

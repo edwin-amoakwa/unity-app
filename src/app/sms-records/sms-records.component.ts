@@ -11,11 +11,11 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 
 // Project imports
-import { NotificationService } from '../../core/notification.service';
-import { CardComponent } from '../../theme/shared/components/card/card.component';
+import { NotificationService } from '../core/notification.service';
+import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsRecordsService } from './sms-records.service';
-import {StaticDataService} from '../../static-data.service';
-import {ConfigService} from '../../config.service';
+import {StaticDataService} from '../static-data.service';
+import {ConfigService} from '../config.service';
 
 export interface SmsRecord {
   mobileNo: string;

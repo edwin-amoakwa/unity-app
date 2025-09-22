@@ -45,7 +45,7 @@ const routes: Routes = [
       },
       {
         path: 'sms-records',
-        loadComponent: () => import('./sms/sms-records/sms-records.component').then((c) => c.SmsRecordsComponent)
+        loadComponent: () => import('./sms-records/sms-records.component').then((c) => c.SmsRecordsComponent)
       },
       {
         path: 'typography',

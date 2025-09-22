@@ -46,7 +46,7 @@ export class SmsComponent implements OnInit {
 
   smsMessages: any[] = [];
   isLoading: boolean = false;
-  showDialog: boolean = false;
+  // showDialog: boolean = false;
   selectedSms: any | null = null;
 
   ngOnInit() {
@@ -67,24 +67,26 @@ export class SmsComponent implements OnInit {
     }
   }
 
-  openCreateDialog() {
+
+
+  createNewMessage() {
     // this.selectedSms = null;
     this.selectedSms = {};
     this.selectedSms.smsMessageType = "SINGLE_SMS";
     this.selectedSms.phoneNumbersSource = "COPY_PASTE";
     this.selectedSms.smsNature = "ONE_TIME";
-    this.showDialog = true;
+    this.formView.resetToCreateView();
   }
 
   openEditDialog(sms: any) {
     this.selectedSms = sms;
-    this.showDialog = true;
+    this.formView.resetToCreateView();
   }
 
-  closeDialog() {
-    this.showDialog = false;
-    this.selectedSms = null;
-  }
+  // closeDialog() {
+  //   this.showDialog = false;
+  //   this.selectedSms = null;
+  // }
 
   async onSmsSubmitted(sms: any) {
     try {
@@ -96,16 +98,15 @@ export class SmsComponent implements OnInit {
         if (index > -1) {
           this.smsMessages[index] = response.data;
         }
-        this.notificationService.success('SMS message updated successfully');
-        this.closeDialog();
+
+        this.formView.resetToListView();
       }
       else
       {
         // Create new SMS
         const response = await this.smsService.createSmsMessage(sms);
         this.smsMessages.push(response.data);
-        this.notificationService.success('SMS message created successfully');
-        this.closeDialog();
+        this.formView.resetToListView();
       }
     } catch (error) {
       console.error('Error with SMS message:', error);

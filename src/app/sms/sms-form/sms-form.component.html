@@ -125,33 +125,12 @@
         </select>
     </div> -->
 
-    <div class="mb-4">
-        <label for="phone_numbers" class="form-label font-weight-bold">SMS Nature *</label>
-        <div class="d-flex flex-row gap-3">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="onetime" value="ONE_TIME">
-                <label class="form-check-label" for="onetime">
-                    Onetime
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="recurring" value="RECURRING">
-                <label class="form-check-label" for="recurring">
-                    Recurring
-                </label>
-            </div>
-        </div>
-    </div>
+
 
     <div class="mb-4">
         <label class="form-label font-weight-bold">SMS Options</label>
         <div class="d-flex flex-row gap-3 flex-wrap">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="dispatched" formControlName="dispatched">
-                <label class="form-check-label" for="dispatched">
-                    Dispatched
-                </label>
-            </div>
+
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="flash_sms" formControlName="flashSms">
                 <label class="form-check-label" for="flash_sms">
@@ -173,6 +152,26 @@
         </div>
     </div>
     <div class="mb-4" *ngIf="smsForm?.value?.scheduleSms">
+
+      <div class="mb-4">
+        <label class="form-label font-weight-bold">SMS Nature *</label>
+        <div class="d-flex flex-row gap-3">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="onetime" value="ONE_TIME">
+            <label class="form-check-label" for="onetime">
+              Onetime
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="recurring" value="RECURRING">
+            <label class="form-check-label" for="recurring">
+              Recurring
+            </label>
+          </div>
+        </div>
+      </div>
+
+
         <label for="phoneNos" class="form-label font-weight-bold w-100">Scheduled Time*</label>
         <!-- <input type="datetime" class="form-control" id="phoneNos" formControlName="scheduledTime" placeholder=""> -->
         <p-calendar
@@ -196,7 +195,7 @@
     </div>
 
     <div class="d-flex justify-content-end gap-3 mt-4">
-        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Close</button>
         <button type="submit" class="btn btn-success">
             <i class="fa-solid fa-floppy-disk me-2"></i>Save SMS
         </button>

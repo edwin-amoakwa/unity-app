@@ -19,6 +19,7 @@ import { ConfigService } from '../../config.service';
 import { NotificationService } from '../../core/notification.service';
 import { StaticDataService } from '../../static-data.service';
 import { SmsService } from '../sms.service';
+import {Badge} from 'primeng/badge';
 
 @Component({
   selector: 'app-sms-form',
@@ -34,7 +35,8 @@ import { SmsService } from '../sms.service';
     CalendarModule,
     ButtonModule,
     DividerModule,
-    FileUploadModule
+    FileUploadModule,
+    Badge
 
   ],
   templateUrl: './sms-form.component.html',

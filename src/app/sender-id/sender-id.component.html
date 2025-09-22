@@ -3,37 +3,57 @@
   <div class="col-sm-12 mb-4">
     <app-card cardTitle="Create Sender ID">
       <form [formGroup]="senderIdForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="application" class="form-label">Application</label>
-          <p-dropdown
-            id="application"
-            formControlName="applicationId"
-            [options]="applications"
-            optionLabel="appName"
-            optionValue="id"
-            styleClass="w-full">
-          </p-dropdown>
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label for="application" class="form-label">Application</label>
+          </div>
+          <div class="col-md-9">
+            <p-dropdown
+              id="application"
+              formControlName="applicationId"
+              [options]="applications"
+              optionLabel="appName"
+              optionValue="id"
+              styleClass="w-full">
+            </p-dropdown>
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="senderId" class="form-label">Sender ID</label>
-          <input
-            type="text"
-            class="form-control"
-            id="senderId"
-            formControlName="senderId"
-            maxlength="11">
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label for="senderId" class="form-label">Sender ID</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              id="senderId"
+              formControlName="senderId"
+              maxlength="11">
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="senderId" class="form-label">Authorization Letter</label>
-          <input (change)="onFileChange_authLetter($event)" class="form-control" type="file">
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label for="authLetter" class="form-label">Authorization Letter</label>
+          </div>
+          <div class="col-md-9">
+            <input (change)="onFileChange_authLetter($event)" class="form-control" type="file" id="authLetter">
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="senderId" class="form-label">Business Registration Document / Ghana Card</label>
-          <input (change)="onFileChange_bizDoc($event)" class="form-control" type="file">
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label for="bizDoc" class="form-label">Business Registration Document / Ghana Card</label>
+          </div>
+          <div class="col-md-9">
+            <input (change)="onFileChange_bizDoc($event)" class="form-control" type="file" id="bizDoc">
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="!senderIdForm.valid">
-          Create Sender ID
-        </button>
+        <div class="row">
+          <div class="col-md-9 offset-md-3">
+            <button type="submit" class="btn btn-primary" [disabled]="!senderIdForm.valid">
+              Create Sender ID
+            </button>
+          </div>
+        </div>
       </form>
     </app-card>
   </div>
