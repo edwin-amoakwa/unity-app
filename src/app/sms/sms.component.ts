@@ -17,7 +17,7 @@ import { NotificationService } from '../core/notification.service';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsFormComponent } from './sms-form/sms-form.component';
 import { SmsService } from './sms.service';
-// import {MessageBox} from '../message-helper';
+import {MessageBox} from '../message-helper';
 import { CollectionUtil } from '../core/system.utils';
 
 @Component({
@@ -85,18 +85,13 @@ export class SmsComponent implements OnInit {
     this.formView.resetToCreateView();
   }
 
-  // closeDialog() {
-  //   this.showDialog = false;
-  //   this.selectedSms = null;
-  // }
-
   async onSmsSubmitted(sms: any) {
     try {
 
         const response = await this.smsService.saveSmsMessage( sms);
         if(!response.success)
         {
-          // MessageBox.errorDetail(response.message,response.data)
+          MessageBox.errorDetail(response.message,response.data)
            const errorMessage = response.message;
           this.notificationService.error(errorMessage);
           return
@@ -122,12 +117,12 @@ export class SmsComponent implements OnInit {
       accept: async () => {
         if (sms.id) {
           try {
-            await this.smsService.deleteSmsMessage(sms.id);
-            const index = this.smsMessages.findIndex(s => s.id === sms.id);
-            if (index > -1) {
-              this.smsMessages.splice(index, 1);
-            }
-            this.notificationService.success('SMS message deleted successfully');
+           const response = await this.smsService.deleteSmsMessage(sms.id);
+           if(response.success)
+           {
+             CollectionUtil.remove(this.smsMessages, sms.id);
+           }
+
           } catch (error) {
             console.error('Error deleting SMS message:', error);
             this.notificationService.error('Failed to delete SMS message');
@@ -146,11 +141,7 @@ export class SmsComponent implements OnInit {
         if (sms.id) {
           try {
             await this.smsService.sendSmsMessage(sms.id);
-            // const index = this.smsMessages.findIndex(s => s.id === sms.id);
-            // if (index > -1) {
-            //   this.smsMessages.splice(index, 1);
-            // }
-            // this.notificationService.success('SMS message Initiated/Sent successfully');
+
           } catch (error) {
             console.error('Error deleting SMS message:', error);
             this.notificationService.error('Failed to Initiate/Send SMS message');
