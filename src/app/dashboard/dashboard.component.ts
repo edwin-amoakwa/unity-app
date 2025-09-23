@@ -9,10 +9,11 @@ import { ChartDataMonthComponent } from 'src/app/theme/shared/components/apexcha
 import { DashboardService } from './dashboard.service';
 import {UserSession} from '../core/user-session';
 import {FailedSmsChartComponent} from '../charts/failed-sms-chart/failed-sms-chart.component';
+import {Badge} from 'primeng/badge';
 
 @Component({
   selector: 'app-dashoard',
-  imports: [SentSmsChartComponent, BarChartComponent, ChartDataMonthComponent, SharedModule, FailedSmsChartComponent],
+  imports: [SentSmsChartComponent, BarChartComponent, ChartDataMonthComponent, SharedModule, FailedSmsChartComponent, Badge],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -24,11 +25,23 @@ export class DashboardComponent implements OnInit {
 
   // Summary data from API
   summary: any = {};
+  smsStats:any = {};
+  latestSms:any[] = [];
+
+  totalSmsSent: number = 0;
 
   async ngOnInit() {
     try {
       const response = await this.dashboardService.getSummary();
       this.summary = response.data;
+
+      const smsStatsResponse = await this.dashboardService.getSmsStats();
+      this.smsStats = smsStatsResponse.data;
+
+      this.totalSmsSent = (Object.values(this.smsStats) as number[]).reduce((sum, value) => sum + value, 0)
+
+      const latestSmsResponse = await this.dashboardService.getLatestSms();
+      this.latestSms = latestSmsResponse.data;
     } catch (error) {
       console.error('Error fetching dashboard summary:', error);
     }

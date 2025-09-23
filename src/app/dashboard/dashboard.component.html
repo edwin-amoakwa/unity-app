@@ -122,8 +122,8 @@
             <i class="text-warning ti ti-layout-board-split f-24"></i>
           </div>
           <div class="ms-2">
-            <h4 class="f-w-600 mb-1">$203k</h4>
-            <p class="mb-0 opacity-50 text-sm">Total Income</p>
+            <h4 class="f-w-600 mb-1">{{totalSmsSent}}</h4>
+            <p class="mb-0 opacity-50 text-sm">Total SMS</p>
           </div>
         </div>
       </div>
@@ -133,6 +133,58 @@
 
 
   <div class="col-xl-8 col-md-12">
+
+    <div class="row">
+      <div class="stats-container">
+        <div class="stat-card sent">
+          <div class="card-content">
+            <div class="icon-container">
+              <i class="pi pi-send icon"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">{{smsStats.sent}}</div>
+              <div class="stat-label">Sent</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card queued">
+          <div class="card-content">
+            <div class="icon-container">
+              <i class="pi pi-clock icon"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">{{smsStats.queued}}</div>
+              <div class="stat-label">Queued</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card failed">
+          <div class="card-content">
+            <div class="icon-container">
+              <i class="pi pi-times-circle icon"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">{{smsStats.failed}}</div>
+              <div class="stat-label">Failed</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card rejected">
+          <div class="card-content">
+            <div class="icon-container">
+              <i class="pi pi-ban icon"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">{{smsStats.rejected}}</div>
+              <div class="stat-label">Rejected</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="rounded bg-light-secondary overflow-hidden mb-3">
       <div class="px-3 pt-3">
@@ -151,6 +203,7 @@
 
 <!--    <app-bar-chart />-->
   </div>
+
   <div class="col-xl-4 col-md-12">
     <div class="card">
       <div class="card-body">
@@ -175,31 +228,35 @@
           <app-failed-sms-chart />
         </div>
         <ul class="list-group list-group-flush">
-          @for (list of ListGroup; track list) {
+          @for (list of latestSms; track list) {
             <li class="list-group-item px-0 {{ list.space }}">
               <div class="row align-items-start">
                 <div class="col">
-                  <h5 class="mb-0">{{ list.name }}</h5>
-                  <small class="{{ list.color }}">{{ list.profit }}</small>
+                  <h5 class="mb-0">{{ list.messageText }}</h5>
+                  <small class="{{ list.color }}">{{ list.valueDate }}</small>
                 </div>
                 <div class="col-auto">
-                  <h4 class="mb-0">
-                    {{ list.invest }}
+                  <div class="mb-0">
+                    <p-badge value="Sent: {{ list.smsStats.sent }}" severity="success" />
+                    <p-badge value="Queued: {{ list.smsStats.queued }}" severity="info" />
+                    <p-badge value="Failed: {{ list.smsStats.failed }}" severity="warn" />
+                    <p-badge value="Rejected: {{ list.smsStats.rejected }}" severity="contrast" />
+
                     <span class="ms-2 align-top avatar avatar-xxs {{ list.bgColor }}">
                       <i class="{{ list.icon }} {{ list.color }}"></i>
                     </span>
-                  </h4>
+                  </div>
                 </div>
               </div>
             </li>
           }
         </ul>
-        <div class="text-center">
-          <a href="javascript:" class="b-b-primary text-primary f-w-500">
-            View all
-            <i class="ti ti-chevron-right"></i>
-          </a>
-        </div>
+<!--        <div class="text-center">-->
+<!--          <a href="javascript:" class="b-b-primary text-primary f-w-500">-->
+<!--            View all-->
+<!--            <i class="ti ti-chevron-right"></i>-->
+<!--          </a>-->
+<!--        </div>-->
       </div>
     </div>
   </div>
