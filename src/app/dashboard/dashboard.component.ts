@@ -2,18 +2,16 @@
 import { Component, OnInit, inject } from '@angular/core';
 
 // project import
-import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { Badge } from 'primeng/badge';
 import { SentSmsChartComponent } from 'src/app/charts/sent-sms-chart/sent-sms-chart.component';
-import { BarChartComponent } from 'src/app/theme/shared/components/apexchart/bar-chart/bar-chart.component';
-import { ChartDataMonthComponent } from 'src/app/theme/shared/components/apexchart/chart-data-month/chart-data-month.component';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { FailedSmsChartComponent } from '../charts/failed-sms-chart/failed-sms-chart.component';
+import { UserSession } from '../core/user-session';
 import { DashboardService } from './dashboard.service';
-import {UserSession} from '../core/user-session';
-import {FailedSmsChartComponent} from '../charts/failed-sms-chart/failed-sms-chart.component';
-import {Badge} from 'primeng/badge';
 
 @Component({
   selector: 'app-dashoard',
-  imports: [SentSmsChartComponent, BarChartComponent, ChartDataMonthComponent, SharedModule, FailedSmsChartComponent, Badge],
+  imports: [SentSmsChartComponent,  SharedModule, FailedSmsChartComponent, Badge],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })

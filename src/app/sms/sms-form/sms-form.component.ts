@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 // PrimNG imports
 import { ButtonModule } from 'primeng/button';
@@ -17,10 +18,9 @@ import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfigService } from '../../config.service';
 import { NotificationService } from '../../core/notification.service';
+import { ObjectUtil } from '../../core/system.utils';
 import { StaticDataService } from '../../static-data.service';
 import { SmsService } from '../sms.service';
-import {Badge} from 'primeng/badge';
-import {ObjectUtil} from '../../core/system.utils';
 
 @Component({
   selector: 'app-sms-form',
@@ -36,9 +36,7 @@ import {ObjectUtil} from '../../core/system.utils';
     CalendarModule,
     ButtonModule,
     DividerModule,
-    FileUploadModule,
-    Badge
-
+    FileUploadModule
   ],
   templateUrl: './sms-form.component.html',
   styleUrls: ['./sms-form.component.scss']
@@ -279,18 +277,36 @@ export class SmsFormComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (file.type !== 'text/plain') {
-      this.messageService.add({ severity: 'error', summary: 'Invalid File Type', detail: 'Please select a .txt file.' });
-      this.clearFile();
-      return;
-    }
+    // if (file.type !== 'text/plain') {
+    //   this.messageService.add({ severity: 'error', summary: 'Invalid File Type', detail: 'Please select a .txt file.' });
+    //   this.clearFile();
+    //   return;
+    // }
 
     // Use FileReader to read the file content
     const reader = new FileReader();
 
-    reader.onload = (e) => {
-      const fileContent = e.target?.result as string;
-      this.smsForm.controls['phoneNos'].setValue(fileContent);
+    reader.onload = (e: any) =>
+    {
+      if (file.name.endsWith('.csv') || file.name.endsWith('.txt'))
+      {
+        const fileContent = e.target?.result as string;
+        this.smsForm.controls['phoneNos'].setValue(fileContent);
+      }
+      else
+      {
+        // import('xlsx').then((xlsx) => {
+        const data = new Uint8Array(e.target?.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+
+        // Convert the worksheet to a string (e.g., CSV format)
+        const fileContent = XLSX.utils.sheet_to_csv(worksheet);
+        this.smsForm.controls['phoneNos'].setValue(fileContent);
+      }
+      // const fileContent = e.target?.result as string;
+      // this.smsForm.controls['phoneNos'].setValue(fileContent);
     };
 
     reader.onerror = () => {
@@ -298,7 +314,13 @@ export class SmsFormComponent implements OnInit, OnChanges {
       this.clearFile();
     };
 
-    reader.readAsText(file);
+    if (file.name.endsWith('.csv') || file.name.endsWith('.txt'))
+    {
+      reader.readAsText(file);
+    }
+    else {
+      reader.readAsArrayBuffer(file);
+    }
   }
 
   // Clear the file and textarea content

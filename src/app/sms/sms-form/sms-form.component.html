@@ -79,15 +79,15 @@
             #fileUploader
             mode="basic"
             name="uploadedFile"
-            accept=".txt"
+            accept=".txt,.xlsx,.xls,.csv"
             [auto]="true"
             [customUpload]="true"
             (onSelect)="onFileSelect($event)"
             [showUploadButton]="false"
             [showCancelButton]="false"
-            chooseLabel="Choose a .txt File"
+            chooseLabel="Choose a .txt,.xlsx,.xls,.csv File"
             invalidFileTypeMessageSummary="Invalid File Type"
-            invalidFileTypeMessageDetail="Please select a .txt file."
+            invalidFileTypeMessageDetail="Please select a .txt,.xlsx,.xls,.csv file."
           ></p-fileUpload>
     </div>
 

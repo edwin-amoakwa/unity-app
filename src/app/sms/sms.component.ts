@@ -12,13 +12,13 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 
 // Project imports
+import { FormView } from '../core/form-view';
 import { NotificationService } from '../core/notification.service';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsFormComponent } from './sms-form/sms-form.component';
 import { SmsService } from './sms.service';
-import {FormView} from '../core/form-view';
-import {MessageBox} from '../message-helper';
-import {CollectionUtil} from '../core/system.utils';
+// import {MessageBox} from '../message-helper';
+import { CollectionUtil } from '../core/system.utils';
 
 @Component({
   selector: 'app-sms',
@@ -96,7 +96,9 @@ export class SmsComponent implements OnInit {
         const response = await this.smsService.saveSmsMessage( sms);
         if(!response.success)
         {
-          MessageBox.errorDetail(response.message,response.data)
+          // MessageBox.errorDetail(response.message,response.data)
+           const errorMessage = response.message;
+          this.notificationService.error(errorMessage);
           return
         }
 
