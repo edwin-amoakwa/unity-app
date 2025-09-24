@@ -209,11 +209,11 @@
       <div class="card-body">
         <div class="row mb-3 align-items-center">
           <div class="col">
-            <h4>Failure Rates</h4>
+            <h4>Lastest SMS Sent</h4>
           </div>
           <div class="col-auto"></div>
         </div>
-        <div class="rounded bg-light-secondary overflow-hidden mb-3">
+        <div class="rounded bg-light-secondary overflow-hidden mb-3 d-none">
 <!--          <div class="px-3 pt-3">-->
 <!--            <div class="row mb-1 align-items-start">-->
 <!--              <div class="col">-->
@@ -228,22 +228,22 @@
           <app-failed-sms-chart />
         </div>
         <ul class="list-group list-group-flush">
-          @for (list of latestSms; track list) {
-            <li class="list-group-item px-0 {{ list.space }}">
+          @for (sms of latestSms; track sms) {
+            <li class="list-group-item px-0 {{ sms.space }}">
+              <strong> <i>{{sms.smsNatureLabel}} {{sms.smsMessageTypeLabel}}</i> </strong>
               <div class="row align-items-start">
                 <div class="col">
-                  <h5 class="mb-0">{{ list.messageText }}</h5>
-                  <small class="{{ list.color }}">{{ list.valueDate }}</small>
+                  <h5 class="mb-0">{{ sms.messageText }}</h5>
+                  <small class="{{ sms.color }}">{{ sms.valueDate }}</small>
                 </div>
                 <div class="col-auto">
                   <div class="mb-0">
-                    <p-badge value="Sent: {{ list.smsStats.sent }}" severity="success" />
-                    <p-badge value="Queued: {{ list.smsStats.queued }}" severity="info" />
-                    <p-badge value="Failed: {{ list.smsStats.failed }}" severity="warn" />
-                    <p-badge value="Rejected: {{ list.smsStats.rejected }}" severity="contrast" />
-
-                    <span class="ms-2 align-top avatar avatar-xxs {{ list.bgColor }}">
-                      <i class="{{ list.icon }} {{ list.color }}"></i>
+                    <p-badge value="Sent: {{ sms.smsStats.sent }}" severity="success" />
+                    <p-badge value="Queued: {{ sms.smsStats.queued }}" severity="info" />
+                    <p-badge value="Failed: {{ sms.smsStats.failed }}" severity="warn" />
+                    <p-badge value="Rejected: {{ sms.smsStats.rejected }}" severity="contrast" />
+                    <span class="ms-2 align-top avatar avatar-xxs {{ sms.bgColor }}">
+                      <i class="{{ sms.icon }} {{ sms.color }}"></i>
                     </span>
                   </div>
                 </div>

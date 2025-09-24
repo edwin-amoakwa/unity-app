@@ -65,7 +65,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'sms-records',
-        title: 'SMS Records',
+        title: 'Message Logs',
         type: 'item',
         classes: 'nav-item',
         url: '/sms-records',
