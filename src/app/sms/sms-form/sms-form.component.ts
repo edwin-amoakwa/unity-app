@@ -16,9 +16,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { TextareaModule } from 'primeng/textarea';
+import { DistributionGroupsService } from 'src/app/distribution-groups/distribution-groups.service';
 import { ConfigService } from '../../config.service';
 import { NotificationService } from '../../core/notification.service';
-import { ObjectUtil } from '../../core/system.utils';
+import { CollectionUtil, ObjectUtil } from '../../core/system.utils';
 import { StaticDataService } from '../../static-data.service';
 import { SmsService } from '../sms.service';
 
@@ -50,6 +51,8 @@ export class SmsFormComponent implements OnInit, OnChanges {
   private smsService = inject(SmsService);
   private notificationService = inject(NotificationService);
   private configService = inject(ConfigService);
+  private distributionGroupsService = inject(DistributionGroupsService);
+  private messageService = inject(MessageService);
 
   smsForm!: FormGroup;
   applications: any[] = [];
@@ -58,7 +61,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
   smsNatures:any[] =StaticDataService.smsNature();
   isLoading = false;
 
-  constructor(private messageService: MessageService) {}
+  constructor() {}
 
   ngOnInit() {
     this.initializeForm();
@@ -73,7 +76,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
 
         // This prevents infinite loops by not setting the same value again
         if (cleanedValue !== newValue) {
-          newValue = this.standardizeNewlines(newValue);
+          newValue = ObjectUtil.standardizeNewlines(newValue);
           this.smsForm.get('phoneNos')?.setValue(cleanedValue, { emitEvent: false });
         }
 
@@ -87,32 +90,6 @@ export class SmsFormComponent implements OnInit, OnChanges {
     this.setupFormSubscriptions();
   }
 
-  /**
- * Examines a string for newline characters and standardizes them to Windows format (\r\n)
- * if they are currently only Unix format (\n).
- * * @param content The string content from the textbox.
- * @returns The standardized string content.
- */
- standardizeNewlines(content: string): string {
-      if (!content) {
-          return '';
-      }
-
-      // 1. Check if the content contains the simple newline character (\n)
-      if (content.includes('\n')) {
-
-          // 2. Check if the content already contains the Windows newline sequence (\r\n)
-          if (!content.includes('\r\n')) {
-
-              // If it contains '\n' but NOT '\r\n', then replace all single '\n'
-              // with the Windows standard '\r\n'. The 'g' flag ensures all occurrences are replaced.
-              return content.replace(/\n/g, '\r\n');
-          }
-      }
-
-      // If no '\n' was found, or if '\r\n' was already present, return the original content.
-      return content;
-  }
 
   ngOnChanges(changes: SimpleChanges)
   {
@@ -164,7 +141,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
       senderId: ['', Validators.required],
       messageText: ['', [Validators.required, Validators.maxLength(1000)]],
       // phoneNos: "",
-      phoneNos: ['', [Validators.required, Validators.pattern(/^[\+]?[0-9,\s-]+$/)]],
+      phoneNos: ['', [Validators.pattern(/^[\+]?[0-9,\s-]+$/)]],
       // phoneNos: [Validators.required, Validators.pattern(/^[0-9\s\-\n]*$/)],
       dispatched: [false],
       flashSms: [false],
@@ -217,23 +194,31 @@ export class SmsFormComponent implements OnInit, OnChanges {
   }
 
   async loadDropdownData() {
-    this.isLoading = true;
+    // this.isLoading = true;
 
-    try {
-      // Load sender IDs using config service
-      const response = await this.configService.getSenderIds();
-      if (response.success) {
-        this.senderIds = response.data;
-      } else {
-        console.error('Error loading sender IDs:', response);
-        this.notificationService.error('Failed to load sender IDs');
-      }
-    } catch (error) {
-      console.error('Error loading sender IDs:', error);
-      this.notificationService.error('Failed to load sender IDs');
-    } finally {
-      this.isLoading = false;
-    }
+    // try {
+    //   // Load sender IDs using config service
+    //   const response = await this.configService.getSenderIds();
+    //   if (response.success) {
+    //     this.senderIds = response.data;
+    //   } else {
+    //     console.error('Error loading sender IDs:', response);
+    //     this.notificationService.error('Failed to load sender IDs');
+    //   }
+    // } catch (error) {
+    //   console.error('Error loading sender IDs:', error);
+    //   this.notificationService.error('Failed to load sender IDs');
+    // } finally {
+    //   this.isLoading = false;
+    // }
+
+    this.configService.getSenderIds().then(response=>{
+      this.senderIds = response.data;
+    });
+
+    this.distributionGroupsService.getDistributionGroups().then(response=>{
+      this.groups = response.data;
+    });
   }
 
   populateForm() {
@@ -260,13 +245,26 @@ export class SmsFormComponent implements OnInit, OnChanges {
     }
   }
 
+  onGroupSelected()
+  {
+    const formValue = this.smsForm.getRawValue();
+    const groupId = formValue.groupId;
+    if(!ObjectUtil.isNullOrUndefined(groupId))
+    {
+      const grp = CollectionUtil.findById(this.groups,groupId);
+      if(grp){
+        this.smsForm.controls['totalRecipient'].setValue(grp.contactCount);
+      }
+    }
+  }
+
   onSubmit()
   {
     if (this.smsForm.valid)
     {
       const formValue = this.smsForm.getRawValue();
       console.log("formvalue before = ",formValue);
-      formValue.phoneNos = this.standardizeNewlines(formValue.phoneNos);
+      formValue.phoneNos = ObjectUtil.standardizeNewlines(formValue.phoneNos);
       console.log("formvalue after = ",formValue);
       const smsData: any = {
         ...formValue,
@@ -347,7 +345,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
       if (file.name.endsWith('.csv') || file.name.endsWith('.txt'))
       {
         const fileContent = e.target?.result as string;
-        const newContent = currentContent + fileContent + '\n\n';
+        const newContent = currentContent + fileContent + '\r\n';
         this.smsForm.controls['phoneNos'].setValue(newContent);
       }
       else
@@ -360,7 +358,7 @@ export class SmsFormComponent implements OnInit, OnChanges {
 
         // Convert the worksheet to a string (e.g., CSV format)
         const fileContent = XLSX.utils.sheet_to_csv(worksheet);
-        const newContent = currentContent + fileContent + '\n\n';
+        const newContent = currentContent + fileContent + '\r\n';
         this.smsForm.controls['phoneNos'].setValue(newContent);
       }
       // const fileContent = e.target?.result as string;

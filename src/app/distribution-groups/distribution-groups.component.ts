@@ -1,22 +1,22 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 // PrimNG imports
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
-import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { Textarea } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
+import { Tooltip } from 'primeng/tooltip';
 import { NotificationService } from '../core/notification.service';
+import { CollectionUtil } from '../core/system.utils';
+import { StaticDataService } from '../static-data.service';
 import { DistributionGroupsService } from './distribution-groups.service';
-import {Tooltip} from 'primeng/tooltip';
-import {CollectionUtil} from '../core/system.utils';
-import {StaticDataService} from '../static-data.service';
 import { GroupContactsComponent } from './group-contacts/group-contacts.component';
-import {Textarea} from 'primeng/textarea';
 
 @Component({
   selector: 'app-distribution-groups',
@@ -40,6 +40,12 @@ import {Textarea} from 'primeng/textarea';
   styleUrls: ['./distribution-groups.component.scss']
 })
 export class DistributionGroupsComponent implements OnInit {
+
+   private fb = inject(FormBuilder);
+   private notificationService = inject(NotificationService);
+   private distributionGroupsService = inject(DistributionGroupsService);
+
+
   groups: any[] = [];
   groupForm!: FormGroup;
   showGroupDialog = false;
@@ -52,15 +58,12 @@ export class DistributionGroupsComponent implements OnInit {
 
   groupTypeList = StaticDataService.groupTypes();
 
-  constructor(
-    private fb: FormBuilder,
-    private notificationService: NotificationService,
-    private distributionGroupsService: DistributionGroupsService
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.loadGroups();
+
   }
 
   initializeForm(): void {
@@ -69,6 +72,18 @@ export class DistributionGroupsComponent implements OnInit {
       groupType: ["", [Validators.required]],
       groupName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]]
     });
+  }
+
+  countContactsInTextBox()
+  {
+    console.log("==countContactsInTextBox() called==");
+    console.log("==countContactsInTextBox() newFreeFormPhoneNos == ",this.newFreeFormPhoneNos);
+    const lines = this.newFreeFormPhoneNos.split(/\r?\n/).filter(line => line.trim() !== '');
+    console.log("==countContactsInTextBox() lines == ",lines);
+    // const length = lines.length > 0 ? lines.length - 1 : 0;
+    const length = lines.length;
+    // this.groupForm.controls['totalRecipient'].setValue(length);
+    this.selectedGroup.contactCount = length;
   }
 
   async loadGroups(): Promise<void> {
@@ -194,13 +209,24 @@ export class DistributionGroupsComponent implements OnInit {
     return labels[fieldName] || fieldName;
   }
 
-  manageGroup(group: any): void {
+  manageGroup(group: any): void
+  {
     this.selectedGroup = group;
+    if(this.selectedGroup.groupType == "FREE_FORM")
+    {
+      this.newFreeFormPhoneNos = this.selectedGroup.phoneNos;
+    }
     this.showDetailsPanel = true;
   }
 
   backToList(): void {
     this.showDetailsPanel = false;
     this.selectedGroup = null;
+  }
+
+  contactsUpdated(group)
+  {
+    this.selectedGroup = group;
+    CollectionUtil.add(this.groups, group);
   }
 }

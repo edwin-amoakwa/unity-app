@@ -1,18 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 // PrimNG imports
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
-import { CalendarModule } from 'primeng/calendar';
 import { Tooltip } from 'primeng/tooltip';
 
 import { NotificationService } from '../../core/notification.service';
+import { CollectionUtil, DateUtil, ObjectUtil } from '../../core/system.utils';
 import { DistributionGroupsService } from '../distribution-groups.service';
-import {CollectionUtil, DateUtil} from '../../core/system.utils';
 
 @Component({
   selector: 'app-group-contacts',
@@ -31,6 +31,11 @@ import {CollectionUtil, DateUtil} from '../../core/system.utils';
   styleUrls: ['./group-contacts.component.scss']
 })
 export class GroupContactsComponent implements OnInit, OnChanges {
+
+   private fb = inject(FormBuilder);
+   private notificationService = inject(NotificationService);
+   private distributionGroupsService = inject(DistributionGroupsService);
+
   @Input() selectedGroup: any | null = null;
   @Input() loading = false;
   @Output() contactsChange = new EventEmitter<any[]>();
@@ -40,11 +45,7 @@ export class GroupContactsComponent implements OnInit, OnChanges {
   showContactDialog = false;
   editingContact: any | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private notificationService: NotificationService,
-    private distributionGroupsService: DistributionGroupsService
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.initializeContactForm();
@@ -74,7 +75,8 @@ export class GroupContactsComponent implements OnInit, OnChanges {
     try {
       const response = await this.distributionGroupsService.getGroupContacts(this.selectedGroup.id);
       this.contacts = response.data || [];
-      this.contactsChange.emit(this.contacts);
+      // this.contactsChange.emit(this.contacts);
+      // this.contactsChange.emit(response.meta);
     } catch (error) {
       this.notificationService.error('Failed to load contacts');
     }
@@ -104,12 +106,21 @@ export class GroupContactsComponent implements OnInit, OnChanges {
     if (this.contactForm.valid) {
       try {
         const formValue = this.contactForm.value;
-        formValue.birthDate = DateUtil.toDate(formValue.birthDate )
+        try {
+          formValue.birthDate = DateUtil.toDate(formValue.birthDate )
+        } catch (error) {}
+        if(ObjectUtil.isNullOrUndefinedOrEmpty(formValue.birthDate))
+        {
+          delete formValue.birthDate;
+        }
+
         const response = await this.distributionGroupsService.saveGroupContact(formValue);
 
-        if (response.success) {
+        if (response.success)
+        {
           CollectionUtil.add(this.contacts, response.data);
-          this.contactsChange.emit(this.contacts);
+          // this.contactsChange.emit(this.contacts);
+          this.contactsChange.emit(response.meta);
           this.closeContactDialog();
           this.notificationService.success('Contact saved successfully');
         }
@@ -129,8 +140,10 @@ export class GroupContactsComponent implements OnInit, OnChanges {
     try {
       const response = await this.distributionGroupsService.deleteGroupContact(contact.id);
       if (response.success) {
-        CollectionUtil.remove(this.contacts, contact.id);
-        this.contactsChange.emit(this.contacts);
+        // CollectionUtil.remove(this.contacts, contact.id);
+        CollectionUtil.remove(this.contacts, response.data);
+        // this.contactsChange.emit(this.contacts);
+        this.contactsChange.emit(response.meta);
         this.notificationService.success('Contact deleted successfully');
       } else {
         this.notificationService.error(response.message || 'Failed to delete contact');
