@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-12">
-    <app-card cardTitle="Account Profile">
-      <div *ngIf="user; else noData">
+    <app-card cardTitle="User Profile">
+      <div *ngIf="user">
         <div class="row mb-3">
           <div class="col-md-3">
             <strong>Account Name:</strong>
@@ -38,22 +38,60 @@
           </div>
         </div>
 
+      </div>
+    </app-card>
+
+
+    <app-card cardTitle="Merchant Profile">
+      <div *ngIf="merchant">
         <div class="row mb-3">
           <div class="col-md-3">
             <strong>Merchant Name:</strong>
           </div>
           <div class="col-md-9">
-            {{ user.merchantName }}
+            {{ merchant.merchantName }}
           </div>
         </div>
-      </div>
 
-      <ng-template #noData>
-        <div class="alert alert-warning" role="alert">
-          <i class="ti ti-alert-triangle me-2"></i>
-          No user data found in localStorage. Please log in to view your profile.
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>Primary Contact Name</strong>
+          </div>
+          <div class="col-md-9">
+            {{ merchant.contactName || 'Not provided' }}
+          </div>
         </div>
-      </ng-template>
+
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>Primary Contact Phone Number:</strong>
+          </div>
+          <div class="col-md-9">
+            {{ merchant.contactMobileNo || 'Not provided' }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>SMS Price</strong>
+          </div>
+          <div class="col-md-9">
+            <span class="badge bg-primary">{{ merchant.currentPrice }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <strong>Account Status:</strong>
+          </div>
+          <div class="col-md-9">
+            <span class="badge bg-primary">{{ merchant.accountStatus }}</span>
+          </div>
+        </div>
+
+      </div>
     </app-card>
+
   </div>
 </div>
