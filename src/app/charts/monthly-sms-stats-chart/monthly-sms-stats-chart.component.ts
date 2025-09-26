@@ -1,8 +1,9 @@
 // angular import
-import { Component, ViewChild } from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 
 // third party
 import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
+import {DashboardService} from '../../dashboard/dashboard.service';
 
 @Component({
   selector: 'monthly-sms-chart-chart',
@@ -10,13 +11,85 @@ import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
   templateUrl: './monthly-sms-stats-chart.component.html',
   styleUrl: './monthly-sms-stats-chart.component.scss'
 })
-export class MonthlySmsStatsChartComponent {
+export class MonthlySmsStatsChartComponent implements OnInit{
   // public props
   @ViewChild('chart') chart!: ChartComponent;
   chartOptions!: Partial<ApexOptions>;
 
+  dashboardService = inject(DashboardService);
+
+  chartData: any = {};
   // Constructor
   constructor() {
+this.chartOptions = {}
+  }
+
+  ngOnInit() {
+    this.loadChartData();
+  }
+
+  async loadChartData() {
+    let response = await this.dashboardService.getMonthlySMS();
+    this.chartData = response.data;
+
+    // this.chartOptions.series[0].data = this.chartData;
+    this.createChart();
+    console.log("this.chartData", JSON.stringify(this.chartOptions, null, 2));
+  }
+
+
+
+
+
+  createChart(){
+    this.chartOptions =  {
+      series: this.chartData?.series,
+      dataLabels: {
+        enabled: false
+      },
+      chart: {
+        type: 'bar',
+        // height: 480,
+        stacked: true,
+        toolbar: {
+          show: true
+        },
+        background: 'transparent'
+      },
+      colors: ['#1E88E5', '#D32F2F', '#388E3C', '#FBC02D'],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }
+      ],
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%'
+        }
+      },
+      xaxis: {
+        type: 'category',
+        categories: this.chartData?.labels,
+      },
+      tooltip: {
+        theme: 'light'
+      }
+    };
+  }
+
+
+
+
+  // Constructor
+  constructor1() {
     this.chartOptions = {
       series: [
         {
@@ -69,11 +142,17 @@ export class MonthlySmsStatsChartComponent {
       },
       xaxis: {
         type: 'category',
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        categories: this.chartData?.labels,
+        // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       },
       tooltip: {
         theme: 'light'
       }
     };
   }
+
+
+
+
+
 }

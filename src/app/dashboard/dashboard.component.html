@@ -207,28 +207,24 @@
   <div class="col-xl-4 col-md-12">
     <div class="card">
       <div class="card-body">
+        <h3>Monthly Summary</h3>
+
+          <monthly-sms-chart-chart />
+
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
         <div class="row mb-3 align-items-center">
           <div class="col">
-            <h4>Monthly Summary</h4>
+            <h3>Lastest SMS Sent</h3>
           </div>
           <div class="col-auto"></div>
         </div>
-        <div class="rounded bg-light-secondary overflow-hidden mb-3">
-<!--          <div class="px-3 pt-3">-->
-<!--            <div class="row mb-1 align-items-start">-->
-<!--              <div class="col">-->
-<!--                <h5 class="text-secondary mb-0">Bajaj Finery</h5>-->
-<!--                <small class="text-muted">10% Profit</small>-->
-<!--              </div>-->
-<!--              <div class="col-auto">-->
-<!--                <h4 class="mb-0">$1839.00</h4>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-          <monthly-sms-chart-chart />
-        </div>
-        <br />
-        <h3>Lastest SMS Sent</h3>
+
+
+
         <ul class="list-group list-group-flush">
           @for (sms of latestSms; track sms) {
             <li class="list-group-item px-0 {{ sms.space }}">
@@ -253,13 +249,16 @@
             </li>
           }
         </ul>
-<!--        <div class="text-center">-->
-<!--          <a href="javascript:" class="b-b-primary text-primary f-w-500">-->
-<!--            View all-->
-<!--            <i class="ti ti-chevron-right"></i>-->
-<!--          </a>-->
-<!--        </div>-->
+        <!--        <div class="text-center">-->
+        <!--          <a href="javascript:" class="b-b-primary text-primary f-w-500">-->
+        <!--            View all-->
+        <!--            <i class="ti ti-chevron-right"></i>-->
+        <!--          </a>-->
+        <!--        </div>-->
       </div>
     </div>
+
+
+
   </div>
 </div>
