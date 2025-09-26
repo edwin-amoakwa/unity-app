@@ -62,8 +62,56 @@ export class SmsFormComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initializeForm();
+
+    // Key Change: Subscribe to valueChanges on the specific form control
+    this.smsForm.get('phoneNos')?.valueChanges.subscribe(
+      (newValue: string) => {
+        if(ObjectUtil.isNullOrUndefined(newValue)) return;
+
+         // You can add a UX fix here to immediately clean the input
+        const cleanedValue = newValue.replace(/[^0-9\s\-\n]/g, '');
+
+        // This prevents infinite loops by not setting the same value again
+        if (cleanedValue !== newValue) {
+          newValue = this.standardizeNewlines(newValue);
+          this.smsForm.get('phoneNos')?.setValue(cleanedValue, { emitEvent: false });
+        }
+
+        // This function will be called on every change (typing, paste, backspace)
+        console.log("phoneNos value changed = ",newValue);
+        this.countContactsInTextBox(newValue);
+      }
+    );
+
     this.loadDropdownData();
     this.setupFormSubscriptions();
+  }
+
+  /**
+ * Examines a string for newline characters and standardizes them to Windows format (\r\n)
+ * if they are currently only Unix format (\n).
+ * * @param content The string content from the textbox.
+ * @returns The standardized string content.
+ */
+ standardizeNewlines(content: string): string {
+      if (!content) {
+          return '';
+      }
+
+      // 1. Check if the content contains the simple newline character (\n)
+      if (content.includes('\n')) {
+
+          // 2. Check if the content already contains the Windows newline sequence (\r\n)
+          if (!content.includes('\r\n')) {
+
+              // If it contains '\n' but NOT '\r\n', then replace all single '\n'
+              // with the Windows standard '\r\n'. The 'g' flag ensures all occurrences are replaced.
+              return content.replace(/\n/g, '\r\n');
+          }
+      }
+
+      // If no '\n' was found, or if '\r\n' was already present, return the original content.
+      return content;
   }
 
   ngOnChanges(changes: SimpleChanges)
@@ -115,8 +163,9 @@ export class SmsFormComponent implements OnInit, OnChanges {
       id:"",
       senderId: ['', Validators.required],
       messageText: ['', [Validators.required, Validators.maxLength(1000)]],
-      phoneNos: "",
-      // phoneNos: ['', [Validators.required, Validators.pattern(/^[\+]?[0-9,\s-]+$/)]],
+      // phoneNos: "",
+      phoneNos: ['', [Validators.required, Validators.pattern(/^[\+]?[0-9,\s-]+$/)]],
+      // phoneNos: [Validators.required, Validators.pattern(/^[0-9\s\-\n]*$/)],
       dispatched: [false],
       flashSms: [false],
       scheduleSms: [false],
@@ -216,6 +265,9 @@ export class SmsFormComponent implements OnInit, OnChanges {
     if (this.smsForm.valid)
     {
       const formValue = this.smsForm.getRawValue();
+      console.log("formvalue before = ",formValue);
+      formValue.phoneNos = this.standardizeNewlines(formValue.phoneNos);
+      console.log("formvalue after = ",formValue);
       const smsData: any = {
         ...formValue,
         id: this.smsData?.id,
@@ -223,8 +275,8 @@ export class SmsFormComponent implements OnInit, OnChanges {
         updatedAt: new Date()
       };
       this.smsSubmitted.emit(smsData);
-    } else {
-
+    }
+    else {
       console.log("--hereh herhe this.smsForm.invalid = ",this.smsForm.value);
       ObjectUtil.logInvalidFields(this.smsForm)
       this.markFormGroupTouched(this.smsForm);
@@ -288,10 +340,15 @@ export class SmsFormComponent implements OnInit, OnChanges {
 
     reader.onload = (e: any) =>
     {
+      //GET THE CURRENT CONTENT of the textbox
+      const currentContent = this.smsForm.get('phoneNos')?.value || '';
+
+
       if (file.name.endsWith('.csv') || file.name.endsWith('.txt'))
       {
         const fileContent = e.target?.result as string;
-        this.smsForm.controls['phoneNos'].setValue(fileContent);
+        const newContent = currentContent + fileContent + '\n\n';
+        this.smsForm.controls['phoneNos'].setValue(newContent);
       }
       else
       {
@@ -303,15 +360,17 @@ export class SmsFormComponent implements OnInit, OnChanges {
 
         // Convert the worksheet to a string (e.g., CSV format)
         const fileContent = XLSX.utils.sheet_to_csv(worksheet);
-        this.smsForm.controls['phoneNos'].setValue(fileContent);
+        const newContent = currentContent + fileContent + '\n\n';
+        this.smsForm.controls['phoneNos'].setValue(newContent);
       }
       // const fileContent = e.target?.result as string;
       // this.smsForm.controls['phoneNos'].setValue(fileContent);
+      // this.countContactsInTextBox();
     };
 
     reader.onerror = () => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to read file.' });
-      this.clearFile();
+      // this.clearFile();
     };
 
     if (file.name.endsWith('.csv') || file.name.endsWith('.txt'))
@@ -321,12 +380,73 @@ export class SmsFormComponent implements OnInit, OnChanges {
     else {
       reader.readAsArrayBuffer(file);
     }
+
+
   }
 
   // Clear the file and textarea content
   private clearFile() {
     // this.fileContent = '';
     this.smsForm.controls['phoneNos'].setValue('');
+  }
+
+  /**
+   * Counts the number of lines (contacts) in the newly uploaded content.
+   * Assumes each line represents a contact.
+   * @param newContent The string content of the uploaded file.
+   */
+  // countContacts(newContent: string):number
+  // {
+  //   // Split the content by newline characters ('\n' or '\r\n')
+  //   // and filter out any empty lines that might result from trailing newlines.
+  //   const lines = newContent.split(/\r?\n/).filter(line => line.trim() !== '');
+
+  //   // The first line is often a header row, so we subtract 1 from the count.
+  //   // If you do NOT have a header row, remove the '- 1'.
+  //   const newContacts = lines.length > 0 ? lines.length - 1 : 0;
+
+  //   let contactCount += newContacts;
+
+  //   console.log(`Uploaded ${newContacts} new contacts.`);
+  //   console.log(`Total contacts in textbox: ${contactCount}`);
+  // }
+
+  // New function to read the entire textbox and count the lines
+  // calculateLineCounts() {
+  //   if (!this.fileContent) {
+  //     this.totalLineCount = 0;
+  //     this.contactCount = 0;
+  //     return;
+  //   }
+
+  //   // 1. Split the entire textbox content by newline characters
+  //   // \r?\n handles both Windows (\r\n) and Unix (\n) newlines
+  //   const lines = this.fileContent.split(/\r?\n/);
+
+  //   // 2. Filter out empty lines (which can result from trailing newlines or double-spacing)
+  //   const nonBlankLines = lines.filter(line => line.trim() !== '');
+
+  //   this.totalLineCount = nonBlankLines.length;
+
+  //   // 3. Calculate contacts (assuming the very first line of the entire content is a header)
+  //   // NOTE: If you have multiple uploads, this 'header' logic might need adjustment
+  //   // depending on how you structure the appended content.
+  //   this.contactCount = this.totalLineCount > 0 ? this.totalLineCount - 1 : 0;
+
+  //   console.log(`Total non-blank lines in textbox: ${this.totalLineCount}`);
+  //   console.log(`Estimated contacts (Lines - 1 Header): ${this.contactCount}`);
+  // }
+
+  countContactsInTextBox(content)
+  {
+    console.log("==countContactsInTextBox() called==");
+    // const content = this.smsForm.value.phoneNos;
+    console.log("==countContactsInTextBox() content == ",content);
+    const lines = content.split(/\r?\n/).filter(line => line.trim() !== '');
+    console.log("==countContactsInTextBox() lines == ",lines);
+    // const length = lines.length > 0 ? lines.length - 1 : 0;
+    const length = lines.length;
+    this.smsForm.controls['totalRecipient'].setValue(length);
   }
 
   characterCount: number = 0;

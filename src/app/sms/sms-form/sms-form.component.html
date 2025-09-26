@@ -45,7 +45,8 @@
 
     <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'SINGLE_SMS'">
         <label for="phoneNos" class="form-label font-weight-bold">Phone Numbers*</label>
-        <input type="tel" class="form-control" id="phoneNos" formControlName="phoneNos" placeholder="">
+        <!-- <input type="tel" class="form-control" id="phoneNos" formControlName="phoneNos" placeholder="" (change)="countContactsInTextBox()" (keypress)="countContactsInTextBox()"> -->
+        <input type="tel" class="form-control" id="phoneNos" formControlName="phoneNos" placeholder="" >
     </div>
 
     <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS'">
@@ -93,6 +94,7 @@
 
     <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource !== 'GROUP'">
         <label for="phoneNos" class="form-label font-weight-bold">Phone No.s*</label>
+        <!-- <textarea class="form-control" id="phoneNos" formControlName="phoneNos" rows="5" (change)="countContactsInTextBox()" (keypress)="countContactsInTextBox()" ></textarea> -->
         <textarea class="form-control" id="phoneNos" formControlName="phoneNos" rows="5"></textarea>
     </div>
 
