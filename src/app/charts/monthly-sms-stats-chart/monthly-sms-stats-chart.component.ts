@@ -5,12 +5,12 @@ import { Component, ViewChild } from '@angular/core';
 import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
 
 @Component({
-  selector: 'app-failed-sms-chart',
+  selector: 'monthly-sms-chart-chart',
   imports: [NgApexchartsModule],
-  templateUrl: './failed-sms-chart.component.html',
-  styleUrl: './failed-sms-chart.component.scss'
+  templateUrl: './monthly-sms-stats-chart.component.html',
+  styleUrl: './monthly-sms-stats-chart.component.scss'
 })
-export class FailedSmsChartComponent {
+export class MonthlySmsStatsChartComponent {
   // public props
   @ViewChild('chart') chart!: ChartComponent;
   chartOptions!: Partial<ApexOptions>;
