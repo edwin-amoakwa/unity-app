@@ -5,13 +5,13 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Badge } from 'primeng/badge';
 import { SentSmsChartComponent } from 'src/app/charts/sent-sms-chart/sent-sms-chart.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { FailedSmsChartComponent } from '../charts/failed-sms-chart/failed-sms-chart.component';
+import { MonthlySmsStatsChartComponent } from '../charts/monthly-sms-stats-chart/monthly-sms-stats-chart.component';
 import { UserSession } from '../core/user-session';
 import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashoard',
-  imports: [SentSmsChartComponent,  SharedModule, FailedSmsChartComponent, Badge],
+  imports: [SentSmsChartComponent,  SharedModule, MonthlySmsStatsChartComponent, Badge],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
