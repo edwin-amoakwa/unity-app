@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../core/ApiResponse';
@@ -27,7 +27,7 @@ export class DistributionGroupsService {
   }
 
   async mangeFreeFormNumbers(request: string): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/manage-phone-nos}`,request));
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/manage-phone-nos`,request));
   }
 
   async deleteDistributionGroup(id: string): Promise<ApiResponse<any>> {

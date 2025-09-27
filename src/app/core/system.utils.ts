@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import {UntypedFormGroup} from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 export class CollectionUtil
 {
@@ -421,5 +421,31 @@ export class ObjectUtil {
   }
 
 
+  /**
+ * Examines a string for newline characters and standardizes them to Windows format (\r\n)
+ * if they are currently only Unix format (\n).
+ * * @param content The string content from the textbox.
+ * @returns The standardized string content.
+ */
+  static standardizeNewlines(content: string): string {
+      if (!content) {
+          return '';
+      }
+
+      // 1. Check if the content contains the simple newline character (\n)
+      if (content.includes('\n')) {
+
+          // 2. Check if the content already contains the Windows newline sequence (\r\n)
+          if (!content.includes('\r\n')) {
+
+              // If it contains '\n' but NOT '\r\n', then replace all single '\n'
+              // with the Windows standard '\r\n'. The 'g' flag ensures all occurrences are replaced.
+              return content.replace(/\n/g, '\r\n');
+          }
+      }
+
+      // If no '\n' was found, or if '\r\n' was already present, return the original content.
+      return content;
+  }
 
 }
