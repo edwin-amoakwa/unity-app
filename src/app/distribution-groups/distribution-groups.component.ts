@@ -17,6 +17,8 @@ import { CollectionUtil } from '../core/system.utils';
 import { StaticDataService } from '../static-data.service';
 import { DistributionGroupsService } from './distribution-groups.service';
 import { GroupContactsComponent } from './group-contacts/group-contacts.component';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import {MessageBox} from '../message-helper';
 
 @Component({
   selector: 'app-distribution-groups',
@@ -34,7 +36,7 @@ import { GroupContactsComponent } from './group-contacts/group-contacts.componen
     ToastModule,
     Tooltip,
     GroupContactsComponent,
-    Textarea
+    Textarea,ScrollPanelModule
   ],
   templateUrl: './distribution-groups.component.html',
   styleUrls: ['./distribution-groups.component.scss']
@@ -144,6 +146,10 @@ export class DistributionGroupsComponent implements OnInit {
         CollectionUtil.add(this.groups, response.data);
         this.selectedGroup = response.data;
       }
+      else
+      {
+        MessageBox.errorDetail(response.message,response.data);
+      }
     } catch (error) {
       this.notificationService.error('An error occurred while updating the contact');
     }
@@ -214,7 +220,7 @@ export class DistributionGroupsComponent implements OnInit {
     this.selectedGroup = group;
     if(this.selectedGroup.groupType == "FREE_FORM")
     {
-      this.newFreeFormPhoneNos = this.selectedGroup.phoneNos;
+      // this.newFreeFormPhoneNos = this.selectedGroup.phoneNos;
     }
     this.showDetailsPanel = true;
   }

@@ -107,7 +107,25 @@
 
           <div class="row">
 
-            <textarea rows="5" cols="25" pTextarea [(ngModel)]="newFreeFormPhoneNos" (ngModelChange)="countContactsInTextBox()"></textarea>
+            <div class="col-lg-6">
+              <textarea rows="5" cols="25" pTextarea [(ngModel)]="newFreeFormPhoneNos" (ngModelChange)="countContactsInTextBox()"></textarea>
+
+            </div>
+
+            <div class="col-lg-6">
+
+
+
+              <p-scrollpanel [style]="{ width: '100%', height: '200px' }" >
+
+                <textarea rows="5" cols="25" pTextarea [(ngModel)]="selectedGroup.phoneNos" disabled></textarea>
+              </p-scrollpanel>
+
+
+
+            </div>
+
+
 
           </div>
 
