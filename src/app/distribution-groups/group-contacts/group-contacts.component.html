@@ -1,12 +1,28 @@
 <div class="col-12">
-  <div class="flex justify-content-between align-items-center mb-3">
-    <h4>Contacts</h4>
-    <p-button
-      label="Add Contact"
-      icon="pi pi-plus"
-      (onClick)="openNewContactDialog()"
-      styleClass="p-button-primary">
-    </p-button>
+
+  <div class="row">
+
+    <div class="flex justify-content-between align-items-center mb-3">
+      <h4>Contacts</h4>
+      <p-button
+        label="Add Contact"
+        icon="pi pi-plus"
+        (onClick)="openNewContactDialog()"
+        styleClass="p-button-primary">
+      </p-button>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-auto">
+      <input (change)="onFileChange($event)" class="form-control" formControlName="selectedFile" type="file">
+    </div>
+    <div class="col-auto">
+      <button type="button" pButton (click)="upload()">upload</button>
+    </div>
+    <div class="col-auto d-none">
+      <button type="button" pButton class="p-button-secondary" (click)="clearUploadForm()">Clear</button>
+    </div>
   </div>
 
   <p-table [value]="contacts" [loading]="loading" styleClass="p-datatable-sm">

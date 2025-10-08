@@ -49,4 +49,9 @@ export class DistributionGroupsService {
   async deleteGroupContact(id: string): Promise<ApiResponse<any>> {
     return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.contactsApiUrl}/${id}`));
   }
+
+  async uploadContacts(groupId: string,dto: any): Promise<ApiResponse<any>>
+  {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${groupId}/upload-contacts`,dto));
+  }
 }
