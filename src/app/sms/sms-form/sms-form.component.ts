@@ -273,6 +273,12 @@ export class SmsFormComponent implements OnInit, OnChanges
         createdAt: this.smsData?.createdAt,
         updatedAt: new Date()
       };
+
+      try {
+        // Apply the fix
+        smsData.scheduledTime = this.formatDateTimeForApi(smsData.scheduledTime);
+      } catch (error) {console.log(error);}
+
       this.smsSubmitted.emit(smsData);
     }
     else {
@@ -468,5 +474,38 @@ export class SmsFormComponent implements OnInit, OnChanges
 
     this.smsForm.controls['pagesCount'].setValue(this.smsCount);
   }
+
+
+  /**
+ * Function to remove the trailing 'Z' from a timestamp string.
+ * @param timestamp The ISO 8601 string.
+ * @returns The new string without the trailing 'Z'.
+ */
+  stripTrailingZ(timestamp: string): string {
+    console.log("timestamp = ",timestamp);
+      // The regular expression /Z$/ matches the character 'Z' ONLY at the end of the string ($).
+      return timestamp.replace(/Z$/, '');
+  }
+
+   /**
+     * Converts a Date object to an ISO string and removes the trailing 'Z'.
+     * @param dateObj The JavaScript Date object from p-calendar.
+     * @returns A zone-less ISO 8601 string (e.g., "2025-10-16T16:08:57.000").
+     */
+    private formatDateTimeForApi(dateObj: Date): string {
+
+      console.log("dateObj = ",dateObj);
+        // 1. Convert the Date object to the ISO string format ("YYYY-MM-DDTHH:mm:ss.sssZ").
+        const isoStringWithZ = dateObj.toISOString();
+
+        console.log("isoStringWithZ = ",isoStringWithZ);
+
+        // 2. Remove the last character ('Z') using slice(0, -1).
+        const isoStringWithoutZ = isoStringWithZ.slice(0, -1);
+
+        console.log("isoStringWithoutZ = ",isoStringWithoutZ);
+
+        return isoStringWithoutZ;
+    }
 
 }

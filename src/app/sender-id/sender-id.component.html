@@ -35,24 +35,26 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-3">
-            <label for="authLetter" class="form-label">Authorization Letter</label>
+            <label for="authLetter" class="form-label">Authorization Letter<span style="font-size:12px"><i>(pdf)</i></span></label>
           </div>
           <div class="col-md-9">
-            <input (change)="onFileChange_authLetter($event)" class="form-control" type="file" id="authLetter">
+            <input #authLetterInput (change)="onFileChange_authLetter($event)" accept="application/pdf" class="form-control" type="file" id="authLetter">
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-3">
-            <label for="bizDoc" class="form-label">Business Registration Document / Ghana Card</label>
+            <label for="bizDoc" class="form-label">Business Registration Document / Ghana Card<span style="font-size:12px"><i>(pdf)</i></span></label>
           </div>
           <div class="col-md-9">
-            <input (change)="onFileChange_bizDoc($event)" class="form-control" type="file" id="bizDoc">
+            <input #bizDocInput (change)="onFileChange_bizDoc($event)" accept="application/pdf" class="form-control" type="file" id="bizDoc">
           </div>
         </div>
         <div class="row">
           <div class="col-md-9 offset-md-3">
             <button type="submit" class="btn btn-primary" [disabled]="!senderIdForm.valid">
-              Create Sender ID
+              <span *ngIf="senderIdForm?.value?.id === null || senderIdForm?.value?.id === undefined">Create</span>
+              <span *ngIf="senderIdForm?.value?.id !== null && senderIdForm?.value?.id !== undefined">Edit</span>
+              Sender ID
             </button>
           </div>
         </div>
@@ -85,7 +87,8 @@
               </p-tag>
             </td>
             <td>
-              <p-button icon="pi pi-trash" severity="danger" pTooltip="Delete" (click)="deleteSenderId(sender)"/>
+              <p-button icon="pi pi-pencil" severity="info" pTooltip="Edit" (click)="editSenderId(sender)"/>
+              <p-button icon="pi pi-trash" severity="danger" class="mx-1" pTooltip="Delete" (click)="deleteSenderId(sender)"/>
             </td>
           </tr>
         </ng-template>
