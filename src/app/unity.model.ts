@@ -26,23 +26,4 @@ export enum ActiveInactiveStatus {
   INACTIVE = 'INACTIVE'
 }
 
-export interface Payment {
-  id?: string;
-  amount: number;
-  paid?: boolean;
-  paymentRefNo: string;
-  paymentNotes: string;
-  processingNo?: string;
-  formOfPayment: FormOfPayment;
-  formOfPaymentName?: string;
-  initiationSource: PaymentInitiator;
-  initiationSourceName?: string;
-  initiatedById?: string;
-  initiatedByName?: string;
-  verifiedById?: string;
-  verifiedByName?: string;
-  valueDate?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
 

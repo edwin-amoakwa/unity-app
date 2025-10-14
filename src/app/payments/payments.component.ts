@@ -14,7 +14,6 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-import { Payment} from '../unity.model';
 import { PaymentService } from './payment.service';
 import {StaticDataService} from '../static-data.service';
 import {NotificationService} from '../core/notification.service';
@@ -47,9 +46,9 @@ export class PaymentsComponent implements OnInit {
   private notificationService = inject(NotificationService);
 
   paymentForm!: FormGroup;
-  payments: Payment[] = [];
+  payments: any[] = [];
   loading = false;
-  editingPayment: Payment | null = null;
+  editingPayment: any | null = null;
   showPaymentDialog = false;
 
   formOfPaymentOptions = StaticDataService.formsOfPayment();
@@ -91,16 +90,8 @@ export class PaymentsComponent implements OnInit {
         const formValue = this.paymentForm.value;
 
 
-        const paymentData: Partial<Payment> = {
-          ...formValue,
-        };
+         let response = await this.paymentService.savePayment(formValue);
 
-        let response;
-        if (this.editingPayment) {
-          response = await this.paymentService.updatePayment(this.editingPayment.id!, paymentData);
-        } else {
-          response = await this.paymentService.createPayment(paymentData);
-        }
 
         if (response.success) {
           this.closePaymentDialog();
@@ -118,19 +109,13 @@ export class PaymentsComponent implements OnInit {
     }
   }
 
-  editPayment(payment: Payment) {
+  editPayment(payment: any) {
     this.editingPayment = payment;
-    this.paymentForm.patchValue({
-      amount: payment.amount,
-      paymentRefNo: payment.paymentRefNo,
-      paymentNotes: payment.paymentNotes,
-      formOfPayment: payment.formOfPayment,
-      initiationSource: payment.initiationSource
-    });
+    this.paymentForm.patchValue(payment);
     this.showPaymentDialog = true;
   }
 
-  async deletePayment(payment: Payment) {
+  async deletePayment(payment: any) {
     if (payment.id && confirm('Are you sure you want to delete this payment?')) {
       try {
         this.loading = true;
