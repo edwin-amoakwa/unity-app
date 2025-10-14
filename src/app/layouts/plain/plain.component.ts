@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-guest',
   imports: [RouterModule],
   templateUrl: './plain.component.html',
+  standalone: true,
   styleUrls: ['./plain.component.css']
 })
 export class PlainComponent {}
