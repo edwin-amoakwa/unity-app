@@ -144,9 +144,12 @@
 /* Desktop: reserve space when sidebar open */
 @media (min-width: 992px) {
   .content { margin-left: 260px; }
-  .app-shell:not(.sidebar-open) .content { margin-left: 0; }
+  /*.app-shell:not(.sidebar-open) .content { margin-left: 0; }*/
   .topbar .hamburger { display: none; }
 }
+
+
+
 
 /* Mobile behavior */
 @media (max-width: 991.98px) {

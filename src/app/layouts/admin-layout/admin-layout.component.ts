@@ -13,7 +13,7 @@ import {CoreModule} from '../../core/core.module';
 export class AdminLayoutComponent implements OnInit {
   sidebarOpen = true;
   isMobile = false;
-  theme: 'light' | 'dark' = 'dark';
+  theme: 'light' | 'dark' = 'light';
   showUserMenu = false;
 
   constructor(private router: Router) {}
@@ -26,7 +26,7 @@ export class AdminLayoutComponent implements OnInit {
     } else if (savedTheme === 'dark') {
       this.setTheme('dark');
     } else {
-      this.setTheme('dark');
+      this.setTheme('light');
     }
 
     const savedSidebar = localStorage.getItem('sidebarOpen');
