@@ -8,17 +8,17 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TableModule } from 'primeng/table';
 import { Textarea } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { Tooltip } from 'primeng/tooltip';
 import { NotificationService } from '../core/notification.service';
 import { CollectionUtil } from '../core/system.utils';
+import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
 import { DistributionGroupsService } from './distribution-groups.service';
 import { GroupContactsComponent } from './group-contacts/group-contacts.component';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
-import {MessageBox} from '../message-helper';
 
 @Component({
   selector: 'app-distribution-groups',
@@ -158,6 +158,9 @@ export class DistributionGroupsComponent implements OnInit {
 
   async deleteGroup(group: any): Promise<void> {
     if (!group.id) return;
+
+    const confirm = await MessageBox.deleteConfirmDialog("Delete Group?","Are you sure you want to delete Group?");
+    if (!confirm.value) return;
 
     try {
       const response = await this.distributionGroupsService.deleteDistributionGroup(group.id);

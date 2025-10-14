@@ -1,6 +1,7 @@
+import { CollectionUtil } from './../core/system.utils';
 // angular import
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 
@@ -15,7 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ApplicationService } from '../applications/application.service';
 import { ConfigService } from '../config.service';
 import { NotificationService } from '../core/notification.service';
-import { CollectionUtil } from '../core/system.utils';
+import { MessageBox } from '../message-helper';
 
 
 @Component({
@@ -36,9 +37,13 @@ export class SenderIdComponent implements OnInit {
 
   // Application dropdown properties
   applications: any[] = [];
+  @ViewChild('authLetterInput') authLetterInput!: ElementRef;
+  @ViewChild('bizDocInput') bizDocInput!: ElementRef;
 
-  constructor() {
+  constructor()
+  {
     this.senderIdForm = this.formBuilder.group({
+      id:null,
       senderId: ['', [Validators.required, Validators.maxLength(11)]],
       applicationId: ['', Validators.required]
     });
@@ -128,6 +133,7 @@ export class SenderIdComponent implements OnInit {
       this.isLoading = true;
       const formValues = this.senderIdForm.value;
       const payload = {
+        id: formValues.id,
         senderId: formValues.senderId,
         applicationId: formValues.applicationId,
         authLetter: this.fileResource_authLetter,
@@ -136,10 +142,13 @@ export class SenderIdComponent implements OnInit {
 
       try {
         const response = await this.configService.createSenderId(payload);
-
-        this.senderIds.push(response.data);
+        CollectionUtil.add(this.senderIds,response.data);
         this.senderIdForm.reset();
+        // this.senderIdForm.controls[""].reset();
         this.isLoading = false;
+        // ✅ Reset the input so the same file can be reselected
+        this.authLetterInput.nativeElement.value = '';
+        this.bizDocInput.nativeElement.value = '';
       } catch (error: any) {
         console.error('Error creating sender ID:', error);
         this.notificationService.error(error.message || 'Failed to create sender ID');
@@ -149,6 +158,11 @@ export class SenderIdComponent implements OnInit {
   }
 
   async deleteSenderId(sender: any) {
+
+
+    const confirm = await MessageBox.deleteConfirmDialog("Delete Sender ID?","Are you sure you want to delete  Sender ID?");
+    if (!confirm.value) return;
+
     this.isLoading = true;
     try {
       await this.configService.deleteSenderId(sender.id);
@@ -165,6 +179,11 @@ export class SenderIdComponent implements OnInit {
     }
   }
 
+
+  async editSenderId(sender: any) {
+    this.senderIdForm.reset();
+    this.senderIdForm.patchValue(sender);
+  }
 
 }
 
