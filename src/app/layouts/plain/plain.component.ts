@@ -1,4 +1,4 @@
-// Angular import
+
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -6,6 +6,6 @@ import { RouterModule } from '@angular/router';
   selector: 'app-guest',
   imports: [RouterModule],
   templateUrl: './plain.component.html',
-  styleUrls: ['./plain.component.scss']
+  styleUrls: ['./plain.component.css']
 })
 export class PlainComponent {}

@@ -12,6 +12,7 @@ import {Toast} from 'primeng/toast';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   imports: [RouterOutlet, SpinnerComponent, Toast],
+  standalone: true
 })
 export class AppComponent {
   title = 'Berry Angular Free Version';

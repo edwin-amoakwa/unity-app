@@ -9,6 +9,7 @@ import { Spinkit } from './spinkits';
   selector: 'app-spinner',
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.css', './spinkit-css/sk-line-material.css'],
+  standalone: true,
   encapsulation: ViewEncapsulation.None
 })
 export class SpinnerComponent implements OnDestroy {

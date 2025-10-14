@@ -60,11 +60,14 @@
 
   .p-dialog {
     .p-dialog-header {
-      background-color: #f9fafb;
-      border-bottom: 1px solid #e5e7eb;
+      background-color: var(--surface);
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
     }
 
     .p-dialog-content {
+      background-color: var(--surface);
+      color: var(--text);
       padding: 1.5rem;
     }
   }

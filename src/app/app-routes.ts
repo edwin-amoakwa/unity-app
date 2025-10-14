@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PlainComponent } from './theme/layout/plain/plain.component';
 import { SenderIdComponent } from './sender-id/sender-id.component';
 import { AuthGuard } from './core/auth.guard';
 import { PaymentsComponent } from './payments/payments.component';
@@ -19,6 +18,7 @@ import { SmsRecordsComponent } from './sms-records/sms-records.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+import {PlainComponent} from './layouts/plain/plain.component';
 
 const routes: Routes = [
   {
