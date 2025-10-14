@@ -31,8 +31,12 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(withInterceptors([RequestInterceptor])),
     providePrimeNG({
       theme: {
-        preset: Aura
-      }
+        preset: Aura,
+        options: {
+          darkModeSelector: false, // This disables system dark mode detection
+        },
+      },
+
     }),
     { provide: LOCALE_ID, useValue: 'en-GH' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'GHS' }
