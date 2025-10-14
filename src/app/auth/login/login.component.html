@@ -13,11 +13,6 @@
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-        <!-- Error message -->
-        <div *ngIf="errorMessage" class="error-message">
-          <i class="error-icon">⚠</i>
-          {{ errorMessage }}
-        </div>
 
         <!-- Username field -->
         <div class="form-group">
