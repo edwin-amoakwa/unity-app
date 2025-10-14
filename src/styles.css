@@ -30,6 +30,7 @@
 /* Presets and customizer */
 @import "./scss/style-preset.css";
 @import "./scss/themes/customizer.css";
+@import "./app/app-common.css";
 
 /* Global styles and theme variables */
 :root {
