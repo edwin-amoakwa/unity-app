@@ -22,7 +22,7 @@ import { CollectionUtil } from '../core/system.utils';
   selector: 'app-sender-id',
   imports: [CardComponent, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule, DropdownModule],
   templateUrl: './sender-id.component.html',
-  styleUrls: ['./sender-id.component.scss']
+  styleUrls: ['./sender-id.component.css']
 })
 export class SenderIdComponent implements OnInit {
   private configService = inject(ConfigService);

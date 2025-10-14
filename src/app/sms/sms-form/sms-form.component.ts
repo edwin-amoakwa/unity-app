@@ -40,7 +40,7 @@ import { SmsService } from '../sms.service';
     FileUploadModule
   ],
   templateUrl: './sms-form.component.html',
-  styleUrls: ['./sms-form.component.scss']
+  styleUrls: ['./sms-form.component.css']
 })
 export class SmsFormComponent implements OnInit, OnChanges
 {

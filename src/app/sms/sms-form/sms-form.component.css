@@ -1,0 +1,19 @@
+.sms-form .p-fluid .p-component {
+  width: 100%;
+}
+
+.sms-form .p-divider {
+  margin: 1rem 0;
+}
+
+.sms-form .p-checkbox + label {
+  font-weight: normal;
+}
+
+.sms-form .p-error {
+  font-size: 0.875rem;
+}
+
+.sms-form .text-red-500 {
+  color: #ef4444;
+}

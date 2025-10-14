@@ -10,7 +10,7 @@ import {Toast} from 'primeng/toast';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.css'],
   imports: [RouterOutlet, SpinnerComponent, Toast],
 })
 export class AppComponent {

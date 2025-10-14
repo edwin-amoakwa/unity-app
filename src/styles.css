@@ -1,0 +1,52 @@
+/* Global styles and theme variables */
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --primary: #4f46e5;
+  --primary-contrast: #ffffff;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #e5e7eb;
+  --sidebar-accent: #22d3ee;
+  --border: #e5e7eb;
+  --shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] {
+  --bg: #0b1020;
+  --surface: #0f172a;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary: #6366f1;
+  --primary-contrast: #ffffff;
+  --sidebar-bg: #2c1111; /* deep red for dark theme sidebar */
+  --sidebar-text: #cbd5e1;
+  --sidebar-accent: #38bdf8;
+  --border: #1f2937;
+  --shadow: 0 10px 25px rgba(0,0,0,0.35);
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+* { box-sizing: border-box; }
+
+a { color: inherit; text-decoration: none; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}

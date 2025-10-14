@@ -37,7 +37,7 @@ import { SmsService } from './sms.service';
   ],
   providers: [ConfirmationService],
   templateUrl: './sms.component.html',
-  styleUrls: ['./sms.component.scss']
+  styleUrls: ['./sms.component.css']
 })
 export class SmsComponent implements OnInit {
   private smsService = inject(SmsService);

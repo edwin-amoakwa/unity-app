@@ -8,7 +8,7 @@ import { Spinkit } from './spinkits';
 @Component({
   selector: 'app-spinner',
   templateUrl: './spinner.component.html',
-  styleUrls: ['./spinner.component.scss', './spinkit-css/sk-line-material.scss'],
+  styleUrls: ['./spinner.component.css', './spinkit-css/sk-line-material.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class SpinnerComponent implements OnDestroy {

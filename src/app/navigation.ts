@@ -28,7 +28,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/dashboard',
-        icon: 'ti ti-dashboard',
+        icon: 'bi bi-speedometer2',
         breadcrumbs: false
       }
     ]
@@ -45,7 +45,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/applications',
-        icon: 'ti ti-typography'
+        icon: 'bi bi-grid'
       },
       {
         id: 'sender-id',
@@ -53,7 +53,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/sender-id',
-        icon: 'ti ti-typography'
+        icon: 'bi bi-tag'
       },
       {
         id: 'send-sms',
@@ -61,7 +61,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/send-sms',
-        icon: 'ti ti-brush'
+        icon: 'bi bi-envelope'
       },
       {
         id: 'sms-records',
@@ -69,7 +69,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/sms-records',
-        icon: 'ti ti-brush'
+        icon: 'bi bi-clock-history'
       },
       {
         id: 'add-funds',
@@ -77,7 +77,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/add-funds',
-        icon: 'ti ti-currency-dollar',
+        icon: 'bi bi-wallet2',
       },
       {
         id: 'group-contacts',
@@ -85,7 +85,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/group-contacts',
-        icon: 'ti ti-users',
+        icon: 'bi bi-people',
       },
       {
         id: 'users',
@@ -93,7 +93,15 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/users',
-        icon: 'ti ti-brush',
+        icon: 'bi bi-person-gear',
+      },
+      {
+        id: 'settings',
+        title: 'Settings',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/profile',
+        icon: 'bi bi-gear',
       }
 
     ]

@@ -7,11 +7,13 @@ import { AuthGuard } from './core/auth.guard';
 import {PaymentsComponent} from './payments/payments.component';
 import {UpdatePasswordComponent} from './update-password/update-password.component';
 import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
+import {AdminLayoutComponent} from './layouts/admin-layout/admin-layout.component';
+import {ProvidersComponent} from './providers/providers.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent,
+    component: AdminLayoutComponent,
     canActivate: [AuthGuard],
     children: [
       {
@@ -26,6 +28,8 @@ const routes: Routes = [
       {path: "sender-id", component: SenderIdComponent},
       {path: "add-funds", component: PaymentsComponent},
       {path: "update-password", component: UpdatePasswordComponent},
+      {path: "providers", component: ProvidersComponent},
+
 
       {
         path: 'users',
