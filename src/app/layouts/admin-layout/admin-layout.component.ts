@@ -13,7 +13,7 @@ import {CoreModule} from '../../core/core.module';
 export class AdminLayoutComponent implements OnInit {
   sidebarOpen = true;
   isMobile = false;
-  theme: 'light' | 'dark' = 'light';
+  theme: 'light' | 'dark' = 'dark';
   showUserMenu = false;
 
   constructor(private router: Router) {}
@@ -21,10 +21,12 @@ export class AdminLayoutComponent implements OnInit {
   ngOnInit(): void {
     this.onResize();
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
+    if (savedTheme === 'light') {
+      this.setTheme('light');
+    } else if (savedTheme === 'dark') {
       this.setTheme('dark');
     } else {
-      this.setTheme('light');
+      this.setTheme('dark');
     }
 
     const savedSidebar = localStorage.getItem('sidebarOpen');
