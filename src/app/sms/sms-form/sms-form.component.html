@@ -28,12 +28,6 @@
 
     <div class="mb-4">
         <label for="sender_id" class="form-label font-weight-bold">Sender ID *</label>
-        <!-- <select class="form-select" id="senderId" formControlName="senderId">
-            <option selected disabled>Select an ID</option>
-            <option value="1">ID 1</option>
-            <option value="2">ID 2</option>
-            <option value="3">ID 3</option>
-        </select> -->
         <p-dropdown
           id="senderId"
           formControlName="senderId"
@@ -74,7 +68,10 @@
     </div>
 
     <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource === 'UPLOADED_FILE'">
-        <label for="uploadedFile" class="form-label font-weight-bold">Uplodaed File*</label>
+        <label for="uploadedFile" class="form-label font-weight-bold">
+          Uploaded File:*
+          <span style="font-size:12px;"><i>for xls/xlxs/csv files, contacts must be in one column</i></span>
+        </label>
         <!-- <input type="file" class="form-control" id="uploadedFile" formControlName="uploadedFile"> -->
          <p-fileUpload
             #fileUploader

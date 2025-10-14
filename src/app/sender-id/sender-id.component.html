@@ -36,7 +36,7 @@
             <label for="authLetter" class="form-label">Authorization Letter</label>
           </div>
           <div class="col-md-9">
-            <input (change)="onFileChange_authLetter($event)" class="form-control" type="file" id="authLetter">
+            <input (change)="onFileChange_authLetter($event)" accept="image/*, application/pdf" class="form-control" type="file" id="authLetter">
           </div>
         </div>
         <div class="row mb-3">
@@ -44,7 +44,7 @@
             <label for="bizDoc" class="form-label">Business Registration Document / Ghana Card</label>
           </div>
           <div class="col-md-9">
-            <input (change)="onFileChange_bizDoc($event)" class="form-control" type="file" id="bizDoc">
+            <input (change)="onFileChange_bizDoc($event)" accept="image/*, application/pdf" class="form-control" type="file" id="bizDoc">
           </div>
         </div>
         <div class="row">
@@ -83,6 +83,7 @@
               </p-tag>
             </td>
             <td>
+              <p-button icon="pi pi-pencil" severity="info" pTooltip="Edit" (click)="deleteSenderId(sender)"/>
               <p-button icon="pi pi-trash" severity="danger" pTooltip="Delete" (click)="deleteSenderId(sender)"/>
             </td>
           </tr>
