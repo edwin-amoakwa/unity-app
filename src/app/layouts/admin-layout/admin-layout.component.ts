@@ -13,6 +13,7 @@ export class AdminLayoutComponent implements OnInit {
   sidebarOpen = true;
   isMobile = false;
   theme: 'light' | 'dark' = 'light';
+  showUserMenu = false;
 
   ngOnInit(): void {
     this.onResize();
@@ -38,6 +39,11 @@ export class AdminLayoutComponent implements OnInit {
     this.isMobile = window.innerWidth < 992;
   }
 
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.showUserMenu = false;
+  }
+
   toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
     localStorage.setItem('sidebarOpen', String(this.sidebarOpen));
@@ -52,6 +58,11 @@ export class AdminLayoutComponent implements OnInit {
 
   toggleTheme(): void {
     this.setTheme(this.theme === 'light' ? 'dark' : 'light');
+  }
+
+  toggleUserMenu(event: MouseEvent): void {
+    event.stopPropagation();
+    this.showUserMenu = !this.showUserMenu;
   }
 
   private setTheme(t: 'light' | 'dark'): void {

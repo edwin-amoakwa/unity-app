@@ -1,14 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminComponent } from './theme/layout/admin/admin.component';
 import { PlainComponent } from './theme/layout/plain/plain.component';
-import {SenderIdComponent} from './sender-id/sender-id.component';
+import { SenderIdComponent } from './sender-id/sender-id.component';
 import { AuthGuard } from './core/auth.guard';
-import {PaymentsComponent} from './payments/payments.component';
-import {UpdatePasswordComponent} from './update-password/update-password.component';
-import {PasswordResetComponent} from './auth/password-reset/password-reset.component';
-import {AdminLayoutComponent} from './layouts/admin-layout/admin-layout.component';
-import {ProvidersComponent} from './providers/providers.component';
+import { PaymentsComponent } from './payments/payments.component';
+import { UpdatePasswordComponent } from './update-password/update-password.component';
+import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { ProvidersComponent } from './providers/providers.component';
+
+// Eagerly loaded (no lazy loading)
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { UsersComponent } from './users/users.component';
+import { ApplicationsComponent } from './applications/applications.component';
+import { DistributionGroupsComponent } from './distribution-groups/distribution-groups.component';
+import { SmsComponent } from './sms/sms.component';
+import { SmsRecordsComponent } from './sms-records/sms-records.component';
+import { ProfileComponent } from './profile/profile.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 
 const routes: Routes = [
   {
@@ -16,76 +26,28 @@ const routes: Routes = [
     component: AdminLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      {
-        path: '',
-        redirectTo: '/dashboard',
-        pathMatch: 'full'
-      },
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./dashboard/dashboard.component').then((c) => c.DashboardComponent)
-      },
-      {path: "sender-id", component: SenderIdComponent},
-      {path: "add-funds", component: PaymentsComponent},
-      {path: "update-password", component: UpdatePasswordComponent},
-      {path: "providers", component: ProvidersComponent},
+      { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'sender-id', component: SenderIdComponent },
+      { path: 'add-funds', component: PaymentsComponent },
 
-
-      {
-        path: 'users',
-        loadComponent: () => import('./users/users.component').then((c) => c.UsersComponent)
-      },
-      {
-        path: 'applications',
-        loadComponent: () => import('./applications/applications.component').then((c) => c.ApplicationsComponent)
-      },
-      {
-        path: 'group-contacts',
-        loadComponent: () => import('./distribution-groups/distribution-groups.component').then((c) => c.DistributionGroupsComponent)
-      },
-      {
-        path: 'send-sms',
-        loadComponent: () => import('./sms/sms.component').then((c) => c.SmsComponent)
-      },
-      {
-        path: 'sms-records',
-        loadComponent: () => import('./sms-records/sms-records.component').then((c) => c.SmsRecordsComponent)
-      },
-      {
-        path: 'typography',
-        loadComponent: () => import('./demo/elements/typography/typography.component').then((c) => c.TypographyComponent)
-      },
-      {
-        path: 'color',
-        loadComponent: () => import('./demo/elements/element-color/element-color.component').then((c) => c.ElementColorComponent)
-      },
-      {
-        path: 'sample-page',
-        loadComponent: () => import('./demo/other/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
-      },
-      {
-        path: 'profile',
-        loadComponent: () => import('./profile/profile.component').then((c) => c.ProfileComponent)
-      },
-      {
-        path: 'update-password',
-        loadComponent: () => import('./update-password/update-password.component').then((c) => c.UpdatePasswordComponent)
-      }
+      { path: 'providers', component: ProvidersComponent },
+      { path: 'users', component: UsersComponent },
+      { path: 'applications', component: ApplicationsComponent },
+      { path: 'group-contacts', component: DistributionGroupsComponent },
+      { path: 'send-sms', component: SmsComponent },
+      { path: 'sms-records', component: SmsRecordsComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'update-password', component: UpdatePasswordComponent },
     ]
   },
   {
     path: '',
     component: PlainComponent,
     children: [
-      {path: "password-reset", component: PasswordResetComponent},
-      {
-        path: 'login',
-        loadComponent: () => import('./auth/login/login.component').then((c) => c.LoginComponent)
-      },
-      {
-        path: 'register',
-        loadComponent: () => import('./auth/register/register.component').then((c) => c.RegisterComponent)
-      }
+      { path: 'password-reset', component: PasswordResetComponent },
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent }
     ]
   }
 ];

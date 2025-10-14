@@ -1,0 +1,24 @@
+/* Shared styles for common elements across app pages */
+
+.page-title {
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* Slightly larger on wider screens */
+@media (min-width: 768px) {
+  .page-title {
+    font-size: 1.75rem;
+  }
+}
+
+/* Muted helper text under titles, if needed */
+.page-subtitle {
+  margin-top: 0.25rem;
+  color: var(--muted);
+}

@@ -156,3 +156,33 @@
 }
 
 .muted { color: var(--muted); }
+
+
+/* User dropdown menu */
+.topbar .topbar-actions { position: relative; }
+.user-menu {
+  position: absolute;
+  right: 0;
+  top: 115%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  min-width: 200px;
+  padding: 0.25rem;
+  z-index: 1002;
+}
+.user-menu .user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  color: var(--text);
+}
+.user-menu .user-menu-item i {
+  width: 1rem;
+}
+.user-menu .user-menu-item:hover {
+  background: rgba(0,0,0,0.05);
+}
