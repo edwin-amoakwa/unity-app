@@ -42,7 +42,8 @@ import { SmsService } from '../sms.service';
   templateUrl: './sms-form.component.html',
   styleUrls: ['./sms-form.component.scss']
 })
-export class SmsFormComponent implements OnInit, OnChanges {
+export class SmsFormComponent implements OnInit, OnChanges
+{
   @Input() smsData: any | null = null;
   @Output() smsSubmitted = new EventEmitter<any>();
   @Output() cancelled = new EventEmitter<void>();

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 
 // PrimNG imports
 import { ButtonModule } from 'primeng/button';
@@ -48,6 +48,7 @@ export class GroupContactsComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnInit(): void {
+    this.initUploadForm();
     this.initializeContactForm();
   }
 
@@ -188,4 +189,74 @@ export class GroupContactsComponent implements OnInit, OnChanges {
     };
     return labels[fieldName] || fieldName;
   }
+
+
+  uploadForm: UntypedFormGroup;
+  fileString: any;
+  fileName: any;
+
+  initUploadForm() {
+    this.uploadForm = this.fb.group({
+      selectedFile: null,
+    });
+  }
+
+
+  onFileChange(event) {
+    const reader = new FileReader();
+
+    if (event.target.files && event.target.files.length)
+    {
+      const [file] = event.target.files;
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+
+      reader.onload = () => {
+        // //console.log("reader.result == ",reader.result);
+        this.fileString = reader.result;
+      };
+
+      //console.log("file.name == ", file.name);
+      this.fileName = file.name;
+    }
+  }
+
+
+  clearUploadForm()
+  {
+    this.uploadForm.reset();
+    this.uploadForm.controls['selectedFile'].reset();
+    this.fileName = null;
+    this.fileString = null;
+  }
+
+  getFormValues(uploadFile: any) {
+    const fileUpload: any = {};
+    fileUpload.fileName = this.fileName;
+    fileUpload.fileString = this.fileString;
+    uploadFile.fileUpload = fileUpload;
+  }
+
+  public async upload()
+  {
+    try
+    {
+      this.loading = true;
+      const uploadFile: any = {};
+      this.getFormValues(uploadFile);
+
+      const result = await this.distributionGroupsService.uploadContacts(this.selectedGroup?.id,uploadFile);
+      if (result.success)
+      {
+        result.data.forEach(element => {
+          CollectionUtil.add(this.contacts,element);
+        });
+      }
+    } catch (error) {
+    } finally {
+      this.loading = false;
+    }
+  }
+
 }
