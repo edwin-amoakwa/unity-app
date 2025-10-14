@@ -45,6 +45,7 @@ export class ApplicationFormComponent implements OnInit {
 
   private initializeForm() {
     this.applicationForm = this.fb.group({
+      id:"",
       appName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       applicationType: [null, [Validators.required]]
     });
@@ -64,27 +65,15 @@ export class ApplicationFormComponent implements OnInit {
 
   private populateForm() {
     if (this.application) {
-      this.applicationForm.patchValue({
-        appName: this.application.appName,
-        apiKey: this.application.apiKey,
-        currentPrice: this.application.currentPrice,
-        applicationType: this.application.applicationType,
-        applicationTypeName: this.application.applicationTypeName,
-      });
+      this.applicationForm.patchValue(this.application);
     }
   }
 
   onSubmit() {
     if (this.applicationForm.valid) {
       const formValue = this.applicationForm.value;
-      const applicationData: any = {
-        ...formValue,
-        id: this.application?.id,
-        createdAt: this.application?.createdAt,
-        updatedAt: new Date()
-      };
 
-      this.applicationSubmitted.emit(applicationData);
+      this.applicationSubmitted.emit(formValue);
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.applicationForm.controls).forEach(key => {
