@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import { NgClass } from '@angular/common';
 import {CoreModule} from '../../core/core.module';
 
@@ -15,6 +15,8 @@ export class AdminLayoutComponent implements OnInit {
   isMobile = false;
   theme: 'light' | 'dark' = 'light';
   showUserMenu = false;
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.onResize();
@@ -64,6 +66,16 @@ export class AdminLayoutComponent implements OnInit {
   toggleUserMenu(event: MouseEvent): void {
     event.stopPropagation();
     this.showUserMenu = !this.showUserMenu;
+  }
+
+  logout(): void {
+    try {
+      localStorage.clear();
+    } catch (e) {
+      // ignore storage errors
+    }
+    this.showUserMenu = false;
+    this.router.navigateByUrl('/login');
   }
 
   private setTheme(t: 'light' | 'dark'): void {

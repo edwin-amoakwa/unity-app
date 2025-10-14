@@ -30,9 +30,9 @@ bootstrapApplication(AppComponent, {
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([RequestInterceptor])),
     providePrimeNG({
-      // theme: {
-      //   preset: Aura
-      // }
+      theme: {
+        preset: Aura
+      }
     }),
     { provide: LOCALE_ID, useValue: 'en-GH' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'GHS' }
