@@ -58,7 +58,7 @@
           <div class="form-group">
             <label for="mobileNo" class="form-label">Mobile Number</label>
             <div class="input-container">
-              <i class="input-icon">📱</i>
+              <i class="input-icon" aria-hidden="true" title="Ghana">🇬🇭</i>
               <input
                 type="tel"
                 id="mobileNo"
@@ -69,6 +69,7 @@
                 minlength="10"
                 maxlength="10"
                 pattern="0[0-9]{9}"
+                aria-label="Ghana mobile number"
               />
             </div>
             <div *ngIf="isFieldInvalid('mobileNo')" class="field-error">
