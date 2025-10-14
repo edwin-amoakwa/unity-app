@@ -2,7 +2,7 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 
 import { environment } from './environments/environment';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { AppRoutingModule } from './app/app-routing.module';
+import { AppRoutes } from './app/app-routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AppComponent } from './app/app.component';
@@ -25,7 +25,7 @@ registerLocaleData(localeEnGh);
 bootstrapApplication(AppComponent, {
   providers: [
     MessageService,
-    importProvidersFrom(BrowserModule, AppRoutingModule, CoreModule),
+    importProvidersFrom(BrowserModule, AppRoutes, CoreModule),
     provideAnimations(),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([RequestInterceptor])),
