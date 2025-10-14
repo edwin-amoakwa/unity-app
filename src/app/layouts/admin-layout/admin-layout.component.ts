@@ -1,11 +1,12 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import { NgClass } from '@angular/common';
+import {CoreModule} from '../../core/core.module';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, NgClass, RouterLinkActive],
+  imports: [CoreModule, RouterLink, NgClass, RouterLinkActive],
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']
 })
