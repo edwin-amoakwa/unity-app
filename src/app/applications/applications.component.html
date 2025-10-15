@@ -72,7 +72,8 @@
               icon="pi pi-eye"
               class="p-button-rounded p-button-text p-button-info"
               (click)="openDetailView(application)"
-              pTooltip="View details">
+              pTooltip="View details"
+              tooltipPosition="left">
             </button>
             <button
               pButton
@@ -80,15 +81,17 @@
               icon="pi pi-pencil"
               class="p-button-rounded p-button-text p-button-warning"
               (click)="openEditDialog(application)"
-              pTooltip="Edit application">
+              pTooltip="Edit application"
+              tooltipPosition="left">
             </button>
             <button
               pButton
               type="button"
-              icon="pi pi-trash"
+              icon="pi pi-ban"
               class="p-button-rounded p-button-text p-button-danger"
-              (click)="deleteApplication(application)"
-              pTooltip="Delete application">
+              (click)="disableApplication(application)"
+              pTooltip="Disable application"
+              tooltipPosition="left">
             </button>
           </div>
         </td>

@@ -1,24 +1,24 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 // PrimNG imports
-import { TableModule } from 'primeng/table';
+import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { DialogModule } from 'primeng/dialog';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
 
 // Project imports
-import { CardComponent } from '../theme/shared/components/card/card.component';
+import { FormView } from '../core/form-view';
 import { NotificationService } from '../core/notification.service';
-import { ApplicationService } from './application.service';
+import { CollectionUtil } from '../core/system.utils';
+import { CardComponent } from '../theme/shared/components/card/card.component';
+import { ApplicationType } from '../unity.model';
 import { ApplicationFormComponent } from './application-form/application-form.component';
-import {ApplicationType} from '../unity.model';
-import {CollectionUtil} from '../core/system.utils';
-import {FormView} from '../core/form-view';
+import { ApplicationService } from './application.service';
 
 @Component({
   selector: 'app-applications',
@@ -137,19 +137,24 @@ export class ApplicationsComponent implements OnInit {
     }
   }
 
-  deleteApplication(application: any) {
+  disableApplication(application: any) {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete the application "${application.appName}"?`,
-      header: 'Confirm Delete',
+      message: `Are you sure you want to disable the application "${application.appName}"?`,
+      header: 'Confirm Disable',
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         if (application.id) {
           try {
-            await this.applicationService.deleteApplication(application.id);
-          CollectionUtil.remove(this.applications, application.id);
+            const response = await this.applicationService.disableApplication(application.id);
+            if (response.success) {
+              CollectionUtil.add(this.applications, response.data);
+              this.formView.resetToListView();
+            }
+            // await this.applicationService.disableApplication(application.id);
+            // CollectionUtil.remove(this.applications, application.id);
           } catch (error) {
-            console.error('Error deleting application:', error);
-            this.notificationService.error('Failed to delete application');
+            console.error('Error disabling application:', error);
+            this.notificationService.error('Failed to disabling application');
           }
         }
       }
