@@ -70,7 +70,7 @@
     <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource === 'UPLOADED_FILE'">
         <label for="uploadedFile" class="form-label font-weight-bold">
           Uploaded File:*
-          <span style="font-size:12px;"><i>for xls/xlxs/csv files, contacts must be in one column</i></span>
+          <span style="font-size:12px;"><i>for xls/xlxs/csv files: contacts must be in only first column of the spreadsheet</i></span>
         </label>
         <!-- <input type="file" class="form-control" id="uploadedFile" formControlName="uploadedFile"> -->
          <p-fileUpload

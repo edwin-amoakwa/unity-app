@@ -49,6 +49,18 @@
             <input #bizDocInput (change)="onFileChange_bizDoc($event)" accept="application/pdf" class="form-control" type="file" id="bizDoc">
           </div>
         </div>
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label for="documentComments" class="form-label">Attached Documents Content</label>
+          </div>
+          <div class="col-md-9">
+            <textarea
+              class="form-control"
+              id="documentComments"
+              formControlName="documentComments">
+            </textarea>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-9 offset-md-3">
             <button type="submit" class="btn btn-primary" [disabled]="!senderIdForm.valid">

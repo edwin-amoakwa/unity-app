@@ -44,6 +44,7 @@ export class SenderIdComponent implements OnInit {
   {
     this.senderIdForm = this.formBuilder.group({
       id:null,
+      documentComments:null,
       senderId: ['', [Validators.required, Validators.maxLength(11)]],
       applicationId: ['', Validators.required]
     });

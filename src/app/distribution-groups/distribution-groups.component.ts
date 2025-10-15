@@ -145,6 +145,7 @@ export class DistributionGroupsComponent implements OnInit {
       if (response.success) {
         CollectionUtil.add(this.groups, response.data);
         this.selectedGroup = response.data;
+        this.newFreeFormPhoneNos = null;
       }
       else
       {
