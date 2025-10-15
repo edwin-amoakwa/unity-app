@@ -2,7 +2,7 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 
 import { environment } from './environments/environment';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { AppRoutes } from './app/app-routes';
+import {routes} from './app/app-routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AppComponent } from './app/app.component';
@@ -15,6 +15,7 @@ import {MessageService} from 'primeng/api';
 import { registerLocaleData } from '@angular/common';
 import localeEnGh from '@angular/common/locales/en-GH';
 import { LOCALE_ID,DEFAULT_CURRENCY_CODE } from '@angular/core';
+import {provideRouter} from '@angular/router';
 
 if (environment.production) {
   enableProdMode();
@@ -25,8 +26,9 @@ registerLocaleData(localeEnGh);
 bootstrapApplication(AppComponent, {
   providers: [
     MessageService,
-    importProvidersFrom(BrowserModule, AppRoutes, CoreModule),
+    importProvidersFrom(BrowserModule, CoreModule),
     provideAnimations(),
+    provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([RequestInterceptor])),
     providePrimeNG({

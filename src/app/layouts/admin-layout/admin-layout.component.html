@@ -20,10 +20,12 @@
         <i class="pi pi-wallet" aria-hidden="true"></i>
         <span>Add Funds</span>
       </a>
-      <a class="menu-item" routerLink="/providers" routerLinkActive="active">
-        <i class="pi pi-users" aria-hidden="true"></i>
-        <span>Providers</span>
-      </a>
+
+<!--      <a class="menu-item" routerLink="/providers" routerLinkActive="active">-->
+<!--        <i class="pi pi-users" aria-hidden="true"></i>-->
+<!--        <span>Providers</span>-->
+<!--      </a>-->
+
       <a class="menu-item" routerLink="/users" routerLinkActive="active">
         <i class="pi pi-user" aria-hidden="true"></i>
         <span>Users</span>
@@ -63,7 +65,7 @@
       </button>
       <div class="user" (click)="toggleUserMenu($event)" role="button" tabindex="0" aria-haspopup="true" [attr.aria-expanded]="showUserMenu">
         <img src="https://i.pravatar.cc/40" alt="User avatar">
-        <span class="name">Admin</span>
+        <span class="name">{{user.name}}</span>
       </div>
       <div class="user-menu" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
         <a class="user-menu-item" routerLink="/profile" routerLinkActive="active" (click)="showUserMenu=false">

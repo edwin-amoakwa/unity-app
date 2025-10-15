@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import { NgClass } from '@angular/common';
 import {CoreModule} from '../../core/core.module';
+import {UserSession} from '../../core/user-session';
 
 @Component({
   selector: 'app-admin-layout',
@@ -15,10 +16,15 @@ export class AdminLayoutComponent implements OnInit {
   isMobile = false;
   theme: 'light' | 'dark' = 'light';
   showUserMenu = false;
+  user:any
+  // userName:anu;
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
+    this.user = UserSession.getUser();
+    this.user.name = this.getFirstName(this.user.accountName);
+
     this.onResize();
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
@@ -37,6 +43,11 @@ export class AdminLayoutComponent implements OnInit {
     if (this.isMobile) {
       this.sidebarOpen = false;
     }
+  }
+
+  getFirstName(name: string): string {
+    const firstPart = name.trim().split(' ')[0];
+    return firstPart;
   }
 
   @HostListener('window:resize')

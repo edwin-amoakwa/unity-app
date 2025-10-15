@@ -20,7 +20,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import {PlainComponent} from './layouts/plain/plain.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
@@ -52,8 +52,3 @@ const routes: Routes = [
   }
 ];
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutes {}
