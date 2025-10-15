@@ -107,6 +107,16 @@
                 pTooltip="Edit"
                 (onClick)="openEditDialog(sms)">
               </p-button>
+
+              <p-button
+                icon="pi pi-clone"
+                size="small"
+                severity="secondary"
+                [text]="true"
+                pTooltip="Duplicate"
+                (onClick)="duplicateSms(sms)">
+              </p-button>
+
               <p-button
                 icon="pi pi-trash"
                 size="small"

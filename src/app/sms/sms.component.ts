@@ -109,6 +109,30 @@ export class SmsComponent implements OnInit {
     }
   }
 
+  async duplicateSms(sms: any) {
+    try {
+
+        const response = await this.smsService.duplicateSmsMessage(sms.id);
+        if(!response.success)
+        {
+          MessageBox.errorDetail(response.message,response.data)
+           const errorMessage = response.message;
+          this.notificationService.error(errorMessage);
+          return
+        }
+
+        // CollectionUtil.add(this.smsMessages, response.data);
+        // this.formView.resetToListView();
+
+        this.openEditDialog(response.data);
+
+    } catch (error) {
+      console.error('Error with SMS message:', error);
+      const errorMessage = this.selectedSms ? 'Failed to Duplicate SMS message' : 'Failed to Duplicate SMS message';
+      this.notificationService.error(errorMessage);
+    }
+  }
+
   deleteSms(sms: any) {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete this SMS message?`,

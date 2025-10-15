@@ -39,6 +39,10 @@ export class SmsService {
     return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}`,{}));
   }
 
+  async duplicateSmsMessage(id: string): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.get<ApiResponse<any>>(`${this.apiUrl}/${id}/duplicate`,{}));
+  }
+
   // async getApplications(): Promise<ApiResponse<any[]>> {
   //   return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/applications`));
   // }
