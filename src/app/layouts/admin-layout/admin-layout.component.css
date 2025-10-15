@@ -24,6 +24,12 @@
   letter-spacing: 0.2px;
 }
 
+ .topbar-brand-container {
+  background: linear-gradient(to right, #00b09b, #96c93d);
+   width: 260px;
+   height: 64px;
+}
+
 .topbar .hamburger {
   background: transparent;
   border: none;
