@@ -110,6 +110,34 @@ body.berry-dark .tab-content {
   flex-shrink: 0;
 }
 
+/* Styles for latest SMS message preview */
+#sms-message {
+  /* ensure long SMS content wraps nicely */
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+
+  /* show up to 3 lines with ellipsis */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* readability */
+  line-height: 1.4;
+  font-size: 0.95rem;
+
+  /* visual container */
+  background-color: #f1f3f5; /* light gray */
+  border: 1px solid #e0e0e0;
+  padding: 8px 10px;
+  border-radius: 6px;
+
+  /* sunken shadow */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12), inset 0 -1px 0 rgba(255, 255, 255, 0.35);
+}
+
 .icon {
   font-size: 20px;
   color: white;
