@@ -52,6 +52,6 @@ export class DistributionGroupsService {
 
   async uploadContacts(groupId: string,dto: any): Promise<ApiResponse<any>>
   {
-    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${groupId}/upload-contacts`,dto));
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.contactsApiUrl}/${groupId}/upload-contacts`,dto));
   }
 }

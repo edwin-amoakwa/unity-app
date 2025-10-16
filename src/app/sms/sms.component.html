@@ -105,6 +105,7 @@
                 severity="info"
                 [text]="true"
                 pTooltip="Edit"
+                tooltipPosition="left"
                 (onClick)="openEditDialog(sms)">
               </p-button>
 
@@ -114,6 +115,7 @@
                 severity="secondary"
                 [text]="true"
                 pTooltip="Duplicate"
+                tooltipPosition="left"
                 (onClick)="duplicateSms(sms)">
               </p-button>
 
@@ -123,6 +125,7 @@
                 severity="danger"
                 [text]="true"
                 pTooltip="Delete"
+                tooltipPosition="left"
                 (onClick)="deleteSms(sms)">
               </p-button>
 
@@ -135,6 +138,7 @@
               severity="success"
               [text]="true"
               pTooltip="Initiate/Send"
+                tooltipPosition="left"
               (onClick)="initiateSms(sms)">
             </p-button>
           </td>

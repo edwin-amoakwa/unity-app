@@ -1,21 +1,21 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 // PrimNG imports
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
-import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 
-import { UserService } from './user.service';
-import { StaticDataService } from '../static-data.service';
+import { NotificationService } from '../core/notification.service';
 import { CollectionUtil } from '../core/system.utils';
-import {NotificationService} from '../core/notification.service';
+import { StaticDataService } from '../static-data.service';
+import { UserService } from './user.service';
 
 @Component({
   selector: 'app-users',
@@ -259,9 +259,14 @@ export class UsersComponent implements OnInit {
       return;
     }
 
+    const payload:any = {};
+    payload.userId = this.currentUser.id;
+    payload.newPassword = newPassword;
+    payload.confirmPassword = confirmPassword;
+
     try {
       this.passwordLoading = true;
-      const response = await this.userService.updatePassword(this.currentUser.id, newPassword);
+      const response = await this.userService.updatePassword(payload);
 
       if (response.success) {
         this.closePasswordDialog();

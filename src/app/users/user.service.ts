@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../core/ApiResponse';
@@ -34,9 +34,8 @@ export class UserService {
     return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`));
   }
 
-  async updatePassword(userId: string, password: string): Promise<ApiResponse<any>> {
-    const payload = { userId, password };
-    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/update-password`, payload));
+  async updatePassword(payload:any): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/update-password`, payload));
   }
 
   async updatePasswordWithCurrent(data): Promise<ApiResponse<any>> {
