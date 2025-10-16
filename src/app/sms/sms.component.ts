@@ -164,7 +164,13 @@ export class SmsComponent implements OnInit {
       accept: async () => {
         if (sms.id) {
           try {
-            await this.smsService.sendSmsMessage(sms.id);
+            // await this.smsService.sendSmsMessage(sms.id);
+
+            const response = await this.smsService.sendSmsMessage(sms.id);
+            if(response.success)
+            {
+              CollectionUtil.add(this.smsMessages, response.data);
+            }
 
           } catch (error) {
             console.error('Error deleting SMS message:', error);

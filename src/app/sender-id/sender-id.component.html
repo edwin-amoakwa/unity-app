@@ -77,19 +77,25 @@
   <!-- Sender IDs List Table -->
   <div class="col-sm-12">
     <app-card cardTitle="Sender IDs List">
-      <p-table [value]="senderIds" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+      <p-table [value]="senderIds" dataKey="id" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                [tableStyle]="{'min-width': '50rem'}" styleClass="p-datatable-gridlines">
         <ng-template pTemplate="header">
           <tr>
+            <th></th>
             <th>App</th>
             <th>Sender ID</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-sender>
+        <ng-template pTemplate="body" let-sender let-expanded="expanded">
           <tr>
+            <td>
+                <button type="button" pButton pRipple [pRowToggler]="sender"
+                    class="p-button-text p-button-rounded p-button-plain"
+                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+            </td>
             <td>{{ sender.appName }}</td>
             <td>{{ sender.senderId }}</td>
             <td>
@@ -104,6 +110,19 @@
             </td>
           </tr>
         </ng-template>
+        <ng-template #expandedrow let-sender>
+          <tr>
+            <td colspan="1"></td>
+            <td colspan="8">
+              <div class="row">
+                <div class="col-auto">
+                  <label class="field-label">Documents Content: </label>
+                  <label class="field-value"><i>{{sender?.documentComments}}</i></label>
+                </div>
+              </div>
+            </td>
+          </tr>
+      </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="5" class="text-center text-muted py-3">

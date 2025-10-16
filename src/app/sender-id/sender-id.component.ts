@@ -136,6 +136,7 @@ export class SenderIdComponent implements OnInit {
       const payload = {
         id: formValues.id,
         senderId: formValues.senderId,
+        documentComments: formValues.documentComments,
         applicationId: formValues.applicationId,
         authLetter: this.fileResource_authLetter,
         bizRegDoc: this.fileResource_bizDoc

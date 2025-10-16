@@ -151,6 +151,7 @@
           optionLabel="itemName"
           formControlName="accountCategory"
           [options]="accountCategoryOptions"
+          appendTo="body"
           [class.ng-invalid]="isFieldInvalid('accountCategory')"
           styleClass="w-full">
         </p-dropdown>
@@ -169,6 +170,7 @@
           optionLabel="itemName"
           formControlName="accountStatus"
           [options]="accountStatusOptions"
+          appendTo="body"
           [class.ng-invalid]="isFieldInvalid('accountStatus')"
           styleClass="w-full">
         </p-dropdown>

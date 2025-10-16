@@ -1,23 +1,23 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 // PrimNG imports
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
-import { TableModule } from 'primeng/table';
-import { CardModule } from 'primeng/card';
-import { TextareaModule } from 'primeng/textarea';
-import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 
+import { Tooltip } from 'primeng/tooltip';
+import { NotificationService } from '../core/notification.service';
+import { StaticDataService } from '../static-data.service';
 import { PaymentService } from './payment.service';
-import {StaticDataService} from '../static-data.service';
-import {NotificationService} from '../core/notification.service';
-import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-payments',
@@ -62,6 +62,7 @@ export class PaymentsComponent implements OnInit {
 
   private initializeForm() {
     this.paymentForm = this.fb.group({
+      id: null,
       amount: [null, [Validators.required, Validators.min(0.01)]],
       paymentRefNo: "",
       paymentNotes: [''],
