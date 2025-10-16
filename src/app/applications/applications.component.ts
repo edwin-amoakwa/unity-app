@@ -102,14 +102,17 @@ export class ApplicationsComponent implements OnInit {
       const response = await this.applicationService.renewApiKey(application.id);
       if (response.success) {
         // Update the application in the list
-        const index = this.applications.findIndex(a => a.id === application.id);
-        if (index > -1) {
-          this.applications[index] = { ...this.applications[index], ...response.data };
-        }
-        // Update selected application if it's the same
-        if (this.selectedApplication?.id === application.id) {
-          this.selectedApplication = { ...this.selectedApplication, ...response.data };
-        }
+        // const index = this.applications.findIndex(a => a.id === application.id);
+        // if (index > -1) {
+        //   this.applications[index] = { ...this.applications[index], ...response.data };
+        // }
+        // // Update selected application if it's the same
+        // if (this.selectedApplication?.id === application.id) {
+        //   this.selectedApplication = { ...this.selectedApplication, ...response.data };
+        // }
+this.selectedApplication = response.data;
+        CollectionUtil.add(this.applications, response.data);
+
         this.notificationService.success('API Key renewed successfully');
       }
     } catch (error) {
@@ -137,29 +140,7 @@ export class ApplicationsComponent implements OnInit {
     }
   }
 
-  disableApplication(application: any) {
-    this.confirmationService.confirm({
-      message: `Are you sure you want to disable the application "${application.appName}"?`,
-      header: 'Confirm Disable',
-      icon: 'pi pi-exclamation-triangle',
-      accept: async () => {
-        if (application.id) {
-          try {
-            const response = await this.applicationService.disableApplication(application.id);
-            if (response.success) {
-              CollectionUtil.add(this.applications, response.data);
-              this.formView.resetToListView();
-            }
-            // await this.applicationService.disableApplication(application.id);
-            // CollectionUtil.remove(this.applications, application.id);
-          } catch (error) {
-            console.error('Error disabling application:', error);
-            this.notificationService.error('Failed to disabling application');
-          }
-        }
-      }
-    });
-  }
+
 
   getApplicationTypeSeverity(type: ApplicationType | null): 'success' | 'warning' | 'danger' | 'info' {
     if (!type) return 'info';
@@ -172,12 +153,7 @@ export class ApplicationsComponent implements OnInit {
     }
   }
 
-  formatPrice(price: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'GHS'
-    }).format(price);
-  }
+
 
   maskApiKey(apiKey: string): string {
     if (!apiKey || apiKey.length <= 8) return apiKey;
