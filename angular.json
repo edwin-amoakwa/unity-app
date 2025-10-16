@@ -26,10 +26,12 @@
             "inlineStyleLanguage": "css",
             "assets": ["src/favicon.ico", "src/_redirects", "src/assets"],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/assets/bootstrap/bootstrap.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/bootstrap/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {

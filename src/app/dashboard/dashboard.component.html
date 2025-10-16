@@ -36,72 +36,43 @@
 <!--  }-->
 
   <div class="col-xl-4 col-md-6">
-    <div class="card earning-card bg-secondary-dark text-white overflow-hidden">
-      <span class="round secondary-round small"></span>
-      <span class="round secondary-round big"></span>
-      <div class="card-body">
-        <div class="row">
-          <div class="col">
-            <div class="avatar avatar-lg">
-              <i class="text-white ti ti-credit-card f-24"></i>
+
+    <div class="row">
+      <div class="stats-container">
+        <div class="stat-card card-purple">
+          <div class="card-content">
+            <div class="icon-container">
+              <i class="pi pi-wallet icon"></i>
             </div>
-          </div>
-          <div class="col-auto" *ngIf="false" >
-            <div class="btn-group" ngbDropdown>
-              <a type="button" class="avatar avatar-xs bg-secondary dropdown-toggle arrow-none" ngbDropdownToggle>
-                <i class="ti ti-dots"></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                <li><button class="dropdown-item" type="button">Import Card</button></li>
-                <li><button class="dropdown-item" type="button">Export</button></li>
-              </ul>
+            <div class="stat-info">
+              <div class="stat-number"> {{summary.creditBalance | currency}}</div>
+              <div class="stat-label">Credit Balance</div>
             </div>
           </div>
         </div>
-        <span class="text-white d-block f-34 f-w-500 my-2">
-          {{summary.creditBalance | currency}}
-          <i class="ti ti-circle-arrow-up-right opacity-50"></i>
-        </span>
-        <p class="mb-0 opacity-50">Credit Balance</p>
+
+
       </div>
     </div>
+
+
+
+
   </div>
   <div class="col-xl-4 col-md-6">
-    <div class="card earning-card bg-primary-dark text-white overflow-hidden">
-      <span class="round primary-round small"></span>
-      <span class="round primary-round big"></span>
-      <div class="card-body">
-        <div class="row">
-          <div class="col">
-            <div class="avatar avatar-lg">
-              <i class="text-white ti ti-credit-card f-24"></i>
-            </div>
-          </div>
-          <div class="col-auto" *ngIf="false" >
-            <div class="btn-group" ngbDropdown>
-              <a type="button" class="avatar avatar-xs bg-secondary dropdown-toggle arrow-none" ngbDropdownToggle>
-                <i class="ti ti-dots"></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                <li><button class="dropdown-item" type="button">Import Card</button></li>
-                <li><button class="dropdown-item" type="button">Export</button></li>
-              </ul>
-            </div>
-          </div>
+
+    <div class="stat-card card-blue">
+      <div class="card-content">
+        <div class="icon-container">
+          <i class="pi pi-envelope icon"></i>
         </div>
-        <span class="text-white d-block f-34 f-w-500 my-2">
-          {{summary.smsBalance | number}}
-          <i class="ti ti-circle-arrow-up-right opacity-50"></i>
-        </span>
-        <p class="mb-0 opacity-50">SMS Balance</p>
+        <div class="stat-info">
+          <div class="stat-number"> {{summary.smsBalance | number}}</div>
+          <div class="stat-label">Credit Balance</div>
+        </div>
       </div>
-
-
-
-<!--      <div class="card-body">-->
-<!--        <app-chart-data-month />-->
-<!--      </div>-->
     </div>
+
   </div>
   <div class="col-xl-4 col-md-12">
     <div class="card total-income-card overflow-hidden bg-primary-dark text-white">
@@ -117,7 +88,11 @@
         </div>
       </div>
     </div>
+
+    <br />
+
     <div class="card total-income-card warning overflow-hidden">
+
       <div class="card-body">
         <div class="d-flex align-items-center">
           <div class="avatar avatar-lg icon-warning m-r-5">
@@ -129,12 +104,24 @@
           </div>
         </div>
       </div>
+
+
+
     </div>
+
+    <br />
+
+
+
+
   </div>
 
 
 
+
+
   <div class="col-xl-8 col-md-12">
+
 
     <div class="row">
       <div class="stats-container">
@@ -144,7 +131,7 @@
               <i class="pi pi-send icon"></i>
             </div>
             <div class="stat-info">
-              <div class="stat-number">{{smsStats.sent}}</div>
+              <div class="stat-number">{{smsStats.sent | number}}</div>
               <div class="stat-label">Sent</div>
             </div>
           </div>
@@ -156,7 +143,7 @@
               <i class="pi pi-clock icon"></i>
             </div>
             <div class="stat-info">
-              <div class="stat-number">{{smsStats.queued}}</div>
+              <div class="stat-number">{{smsStats.queued | number}}</div>
               <div class="stat-label">Queued</div>
             </div>
           </div>
@@ -168,7 +155,7 @@
               <i class="pi pi-times-circle icon"></i>
             </div>
             <div class="stat-info">
-              <div class="stat-number">{{smsStats.failed}}</div>
+              <div class="stat-number">{{smsStats.failed | number}}</div>
               <div class="stat-label">Failed</div>
             </div>
           </div>
@@ -180,7 +167,7 @@
               <i class="pi pi-ban icon"></i>
             </div>
             <div class="stat-info">
-              <div class="stat-number">{{smsStats.rejected}}</div>
+              <div class="stat-number">{{smsStats.rejected | number}}</div>
               <div class="stat-label">Rejected</div>
             </div>
           </div>
@@ -215,7 +202,7 @@
 
       </div>
     </div>
-
+    <br />
     <div class="card">
       <div class="card-body">
         <div class="row mb-3 align-items-center">
@@ -233,7 +220,7 @@
               <strong> <i>{{sms.smsNatureLabel}} {{sms.smsMessageTypeLabel}}</i> </strong>
               <div class="row align-items-start">
                 <div class="col">
-                  <h5 class="mb-0">{{ sms.messageText }}</h5>
+                  <div id="sms-message" class="mb-0 text-muted">{{ sms.messageText }}</div>
                   <small class="{{ sms.color }}">{{ sms.valueDate }}</small>
                 </div>
                 <div class="col-auto">

@@ -10,7 +10,7 @@ import { UserSession } from '../core/user-session';
 import { DashboardService } from './dashboard.service';
 
 @Component({
-  selector: 'app-dashoard',
+  selector: 'app-dashboard',
   imports: [SentSmsChartComponent,  SharedModule, MonthlySmsStatsChartComponent, Badge],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']

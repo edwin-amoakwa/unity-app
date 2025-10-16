@@ -1,35 +1,5 @@
 @import "primeicons/primeicons.css";
-/* Theme placeholders migrated from SCSS */
-/*@import "./scss/settings/bootstrap-variables.css";*/
-/*@import "./scss/settings/color-variables.css";*/
-/*@import "./scss/settings/theme-variables.css";*/
-/* Optional Bootstrap SCSS placeholder (actual Bootstrap loaded via angular.json) */
-@import "./scss/bootstrap/bootstrap.css";
-/* Layouts */
-/*@import "./scss/themes/layouts/font-family.css";*/
-/*@import "./scss/themes/layouts/layouts.css";*/
-/*@import "./scss/themes/layouts/menu-list.css";*/
-/*@import "./scss/themes/layouts/pc-common.css";*/
-/*@import "./scss/themes/layouts/pc-footer.css";*/
-/*@import "./scss/themes/layouts/pc-header.css";*/
-/*@import "./scss/themes/layouts/pc-sidebar.css";*/
-/*@import "./scss/themes/layouts/style-config.css";*/
-/*!* Components *!*/
-/*@import "./scss/themes/components/avatar.css";*/
-/*@import "./scss/themes/components/card.css";*/
-/*@import "./scss/themes/components/components.css";*/
-/*@import "./scss/themes/components/forms.css";*/
-/*!* Pages *!*/
-/*@import "./scss/themes/pages/authentication.css";*/
-/*@import "./scss/themes/pages/dashboard.css";*/
-/*@import "./scss/themes/pages/page.css";*/
-/*@import "./scss/themes/pages/pages.css";*/
-/*!* Generic and general *!*/
-/*@import "./scss/themes/generic.css";*/
-/*@import "./scss/themes/general.css";*/
-/*!* Presets and customizer *!*/
-/*@import "./scss/style-preset.css";*/
-/*@import "./scss/themes/customizer.css";*/
+
 
 
 @import "app-common.css";
