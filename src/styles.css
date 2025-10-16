@@ -17,6 +17,9 @@
   --sidebar-accent: #22d3ee;
   --border: #e5e7eb;
   --shadow: 0 10px 25px rgba(0,0,0,0.08);
+  /* Card header (light mode) */
+  --card-header-bg: #f7f8fb; /* subtle light gray distinct from white surface */
+  --card-header-shadow: 0 1px 0 rgba(0, 0, 0, 0.06); /* gentle bottom separator */
 }
 
 [data-theme="dark"] {
@@ -31,6 +34,9 @@
   --sidebar-accent: #38bdf8;
   --border: #1f2937;
   --shadow: 0 10px 25px rgba(0,0,0,0.35);
+  /* Card header (dark mode) */
+  --card-header-bg: var(--surface);
+  --card-header-shadow: none;
 }
 
 html, body {
