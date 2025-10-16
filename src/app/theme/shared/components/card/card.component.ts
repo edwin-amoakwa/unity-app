@@ -10,7 +10,9 @@ import { NgClass } from '@angular/common';
 })
 export class CardComponent {
   // public props (backward compatible)
-  @Input() cardTitle: string = '';
+  @Input() title: string = '';
+  @Input() subtitle?: string;
+  @Input('subTitle') set subTitle(value: string | undefined) { this.subtitle = value; }
   @Input() customHeader: boolean = false; // when true, consumer provides header content via [card-header]
 
   // adaptability/theming props

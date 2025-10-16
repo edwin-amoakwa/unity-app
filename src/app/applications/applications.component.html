@@ -1,20 +1,24 @@
 <h1 class="page-title">Applications</h1>
 
-<app-card title="Applications" subtitle="Manage your applications">
+
+
+<app-button-toolbar>
+  <button
+    pButton
+    type="button"
+    label="New Application"
+    icon="pi pi-plus"
+    class="p-button-primary"
+    (click)="openCreateDialog()"
+    pTooltip="Create new application">
+  </button>
+</app-button-toolbar>
+
+<app-card title="Applications List" subtitle="Manage your applications">
 
   <!-- List View -->
   <div *ngIf="formView.listView">
-    <ng-container class="card-header-right">
-      <button
-        pButton
-        type="button"
-        label="New Application"
-        icon="pi pi-plus"
-        class="p-button-primary"
-        (click)="openCreateDialog()"
-        pTooltip="Create new application">
-      </button>
-    </ng-container>
+
 
     <p-table
     [value]="applications"
@@ -119,6 +123,9 @@
       </tr>
     </ng-template>
     </p-table>
+
+
+
   </div>
 
   <!-- Create/Edit View -->

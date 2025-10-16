@@ -17,11 +17,13 @@ import { ApplicationService } from '../applications/application.service';
 import { ConfigService } from '../config.service';
 import { NotificationService } from '../core/notification.service';
 import { MessageBox } from '../message-helper';
+import { FormView } from '../core/form-view';
+import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 
 
 @Component({
   selector: 'app-sender-id',
-  imports: [CardComponent, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule, DropdownModule],
+  imports: [CardComponent, ButtonToolbarComponent, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule, DropdownModule],
   templateUrl: './sender-id.component.html',
   styleUrls: ['./sender-id.component.css']
 })
@@ -30,6 +32,8 @@ export class SenderIdComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private applicationService = inject(ApplicationService);
   private formBuilder = inject(FormBuilder);
+
+  formView = FormView.listView();
 
   senderIdForm: FormGroup;
   senderIds: any[] = [];
@@ -53,6 +57,15 @@ export class SenderIdComponent implements OnInit {
   ngOnInit() {
     this.loadSenderIds();
     this.loadApplications();
+  }
+
+  openCreate() {
+    this.senderIdForm.reset();
+    this.formView.resetToCreateView();
+  }
+
+  backToList() {
+    this.formView.resetToListView();
   }
 
   async loadSenderIds() {
@@ -146,11 +159,11 @@ export class SenderIdComponent implements OnInit {
         const response = await this.configService.createSenderId(payload);
         CollectionUtil.add(this.senderIds,response.data);
         this.senderIdForm.reset();
-        // this.senderIdForm.controls[""].reset();
         this.isLoading = false;
         // ✅ Reset the input so the same file can be reselected
         this.authLetterInput.nativeElement.value = '';
         this.bizDocInput.nativeElement.value = '';
+        this.formView.resetToListView();
       } catch (error: any) {
         console.error('Error creating sender ID:', error);
         this.notificationService.error(error.message || 'Failed to create sender ID');
@@ -185,6 +198,7 @@ export class SenderIdComponent implements OnInit {
   async editSenderId(sender: any) {
     this.senderIdForm.reset();
     this.senderIdForm.patchValue(sender);
+    this.formView.resetToCreateView();
   }
 
 }

@@ -23,6 +23,8 @@ if (environment.production) {
 
 registerLocaleData(localeEnGh);
 
+document.documentElement.setAttribute('data-theme', 'dark');
+
 bootstrapApplication(AppComponent, {
   providers: [
     MessageService,
@@ -35,7 +37,9 @@ bootstrapApplication(AppComponent, {
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: false, // This disables system dark mode detection
+          // Activate PrimeNG dark theme tokens when the app is in dark mode.
+          // We use the global [data-theme="dark"] attribute that the app toggles.
+          darkModeSelector: '[data-theme="dark"]',
         },
       },
 

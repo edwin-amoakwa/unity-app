@@ -19,6 +19,7 @@ import { CardComponent } from '../theme/shared/components/card/card.component';
 import { ApplicationType } from '../unity.model';
 import { ApplicationFormComponent } from './application-form/application-form.component';
 import { ApplicationService } from './application.service';
+import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 
 @Component({
   selector: 'app-applications',
@@ -27,6 +28,7 @@ import { ApplicationService } from './application.service';
     CommonModule,
     FormsModule,
     CardComponent,
+    ButtonToolbarComponent,
     TableModule,
     ButtonModule,
     TagModule,

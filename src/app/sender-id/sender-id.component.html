@@ -1,9 +1,21 @@
 <h1 class="page-title">Sender IDs</h1>
 
+<app-button-toolbar>
+  <button
+    pButton
+    type="button"
+    label="New Sender ID"
+    icon="pi pi-plus"
+    class="p-button-primary"
+    (click)="openCreate()"
+    pTooltip="Create new sender ID">
+  </button>
+</app-button-toolbar>
+
 <div class="row">
   <!-- Create Sender ID Form -->
-  <div class="col-sm-12 mb-4">
-    <app-card cardTitle="Create Sender ID">
+  <div class="col-sm-12 mb-4" *ngIf="formView.createView">
+    <app-card title="Create Sender ID">
       <form [formGroup]="senderIdForm" (ngSubmit)="onSubmit()">
         <div class="row mb-3">
           <div class="col-md-3">
@@ -62,7 +74,8 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-9 offset-md-3">
+          <div class="col-md-9 offset-md-3 d-flex gap-2">
+            <button type="button" class="btn btn-secondary" (click)="backToList()">Cancel</button>
             <button type="submit" class="btn btn-primary" [disabled]="!senderIdForm.valid">
               <span *ngIf="senderIdForm?.value?.id === null || senderIdForm?.value?.id === undefined">Create</span>
               <span *ngIf="senderIdForm?.value?.id !== null && senderIdForm?.value?.id !== undefined">Edit</span>
@@ -75,8 +88,8 @@
   </div>
 
   <!-- Sender IDs List Table -->
-  <div class="col-sm-12">
-    <app-card cardTitle="Sender IDs List">
+  <div class="col-sm-12" *ngIf="formView.listView">
+    <app-card title="Sender IDs List">
       <p-table [value]="senderIds" dataKey="id" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                [tableStyle]="{'min-width': '50rem'}" styleClass="p-datatable-gridlines">
@@ -126,7 +139,7 @@
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="5" class="text-center text-muted py-3">
-              No sender IDs found. Create one using the form above.
+              No sender IDs found.
             </td>
           </tr>
         </ng-template>

@@ -1,16 +1,98 @@
 <h1 class="page-title">Add Funds</h1>
 
-<div class="grid">
+<app-button-toolbar>
+  <button
+    pButton
+    type="button"
+    label="New Payment"
+    icon="pi pi-plus"
+    class="p-button-primary"
+    (click)="openCreate()"
+    pTooltip="Create new payment">
+  </button>
+</app-button-toolbar>
+
+<!-- Create Payment Form -->
+<div class="col-sm-12 mb-4" *ngIf="formView.createView">
+  <app-card title="Create Payment">
+    <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+      <!-- Form of Payment -->
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label for="formOfPayment" class="form-label">Form of Payment *</label>
+        </div>
+        <div class="col-md-9">
+          <p-dropdown
+            id="formOfPayment"
+            optionValue="id"
+            optionLabel="itemName"
+            formControlName="formOfPayment"
+            [options]="formOfPaymentOptions"
+            [class.ng-invalid]="isFieldInvalid('formOfPayment')"
+            styleClass="w-full">
+          </p-dropdown>
+          <small class="p-error" *ngIf="isFieldInvalid('formOfPayment')">
+            {{ getFieldError('formOfPayment') }}
+          </small>
+        </div>
+      </div>
+
+      <!-- Amount -->
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label for="amount" class="form-label">Amount *</label>
+        </div>
+        <div class="col-md-9">
+          <p-inputNumber
+            id="amount"
+            formControlName="amount"
+            mode="decimal"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            currency="GHS"
+            locale="en-US"
+            styleClass="w-full"
+            [class.ng-invalid]="isFieldInvalid('amount')">
+          </p-inputNumber>
+          <small class="p-error" *ngIf="isFieldInvalid('amount')">
+            {{ getFieldError('amount') }}
+          </small>
+        </div>
+      </div>
+
+      <!-- Payment Notes -->
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label for="paymentNotes" class="form-label">Payment Notes</label>
+        </div>
+        <div class="col-md-9">
+          <textarea
+            pInputTextarea
+            id="paymentNotes"
+            formControlName="paymentNotes"
+            rows="3"
+            class="w-full">
+          </textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-9 offset-md-3 d-flex gap-2">
+          <button type="button" class="btn btn-secondary" (click)="backToList()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="paymentForm.invalid">
+            <span *ngIf="!editingPayment">Create</span>
+            <span *ngIf="editingPayment">Update</span>
+            Payment
+          </button>
+        </div>
+      </div>
+    </form>
+  </app-card>
+</div>
+
+<div class="grid" *ngIf="formView.listView">
   <div class="col-12">
     <div class="card">
-      <div class="flex justify-content-between align-items-center mb-3">
-        <p-button
-          label="New Payment"
-          icon="pi pi-plus"
-          (onClick)="openNewPaymentDialog()"
-          styleClass="p-button-primary">
-        </p-button>
-      </div>
 
       <p-table
         [value]="payments"

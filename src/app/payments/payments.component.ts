@@ -18,6 +18,9 @@ import { Tooltip } from 'primeng/tooltip';
 import { NotificationService } from '../core/notification.service';
 import { StaticDataService } from '../static-data.service';
 import { PaymentService } from './payment.service';
+import { FormView } from '../core/form-view';
+import { CardComponent } from '../theme/shared/components/card/card.component';
+import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 
 @Component({
   selector: 'app-payments',
@@ -34,7 +37,9 @@ import { PaymentService } from './payment.service';
     TextareaModule,
     DialogModule,
     ToastModule,
-    Tooltip
+    Tooltip,
+    CardComponent,
+    ButtonToolbarComponent
   ],
   providers: [MessageService],
   templateUrl: './payments.component.html',
@@ -45,6 +50,8 @@ export class PaymentsComponent implements OnInit {
   private paymentService = inject(PaymentService);
   private notificationService = inject(NotificationService);
 
+  formView = FormView.listView();
+
   paymentForm!: FormGroup;
   payments: any[] = [];
   loading = false;
@@ -52,8 +59,6 @@ export class PaymentsComponent implements OnInit {
   showPaymentDialog = false;
 
   formOfPaymentOptions = StaticDataService.formsOfPayment();
-
-
 
   ngOnInit() {
     this.initializeForm();
@@ -89,14 +94,11 @@ export class PaymentsComponent implements OnInit {
       try {
         this.loading = true;
         const formValue = this.paymentForm.value;
-
-
-         let response = await this.paymentService.savePayment(formValue);
-
-
+        const response = await this.paymentService.savePayment(formValue);
         if (response.success) {
-          this.closePaymentDialog();
+          this.paymentForm.reset();
           await this.loadPayments();
+          this.formView.resetToListView();
         }
       } catch (error) {
         this.notificationService.error(`Failed to ${this.editingPayment ? 'update' : 'create'} payment`);
@@ -112,8 +114,9 @@ export class PaymentsComponent implements OnInit {
 
   editPayment(payment: any) {
     this.editingPayment = payment;
+    this.paymentForm.reset();
     this.paymentForm.patchValue(payment);
-    this.showPaymentDialog = true;
+    this.formView.resetToCreateView();
   }
 
   async deletePayment(payment: any) {
@@ -122,7 +125,6 @@ export class PaymentsComponent implements OnInit {
         this.loading = true;
         const response = await this.paymentService.deletePayment(payment.id);
         if (response.success) {
-
           await this.loadPayments();
         }
       } catch (error) {
@@ -133,16 +135,21 @@ export class PaymentsComponent implements OnInit {
     }
   }
 
-  openNewPaymentDialog() {
+  openCreate() {
     this.editingPayment = null;
     this.paymentForm.reset();
-    this.showPaymentDialog = true;
+    this.formView.resetToCreateView();
   }
 
-  closePaymentDialog() {
-    this.showPaymentDialog = false;
+  backToList() {
+    this.formView.resetToListView();
     this.editingPayment = null;
     this.paymentForm.reset();
+  }
+
+  // Kept for backward compatibility with legacy dialog flow
+  closePaymentDialog() {
+    this.showPaymentDialog = false;
   }
 
   resetForm() {
