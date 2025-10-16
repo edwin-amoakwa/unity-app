@@ -19,6 +19,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import {PlainComponent} from './layouts/plain/plain.component';
+import {TestComponent} from './test/test.component';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,7 @@ export const routes: Routes = [
       { path: 'add-funds', component: PaymentsComponent },
 
       { path: 'providers', component: ProvidersComponent },
+      { path: 'test', component: TestComponent },
       { path: 'users', component: UsersComponent },
       { path: 'applications', component: ApplicationsComponent },
       { path: 'group-contacts', component: DistributionGroupsComponent },
