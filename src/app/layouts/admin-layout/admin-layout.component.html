@@ -56,15 +56,19 @@
     <button class="hamburger" (click)="toggleSidebar()" aria-label="Toggle sidebar">
       <i class="pi pi-bars" aria-hidden="true"></i>
     </button>
-    <div class="topbar-brand">
-      <span class="brand">Ecolink-MMS</span>
+    <div class="topbar-brand-container">
+      <div class="topbar-brand">
+        <span class="brand"><span class="brand-eco">Ecolink</span> <span class="brand-mms">MMS</span></span>
+      </div>
     </div>
+
     <div class="topbar-actions">
       <button class="theme-btn" (click)="toggleTheme()" [attr.aria-label]="'Switch to ' + (theme==='light' ? 'dark' : 'light') + ' theme'">
         <i class="pi" [ngClass]="theme==='light' ? 'pi-moon' : 'pi-sun'" aria-hidden="true"></i>
       </button>
       <div class="user" (click)="toggleUserMenu($event)" role="button" tabindex="0" aria-haspopup="true" [attr.aria-expanded]="showUserMenu">
-        <img src="https://i.pravatar.cc/40" alt="User avatar">
+        <img [src]="user.avatar" [alt]="user.memberName" />
+<!--        <img src="https://i.pravatar.cc/40" alt="User avatar">-->
         <span class="name">{{user.name}}</span>
       </div>
       <div class="user-menu" *ngIf="showUserMenu" (click)="$event.stopPropagation()">

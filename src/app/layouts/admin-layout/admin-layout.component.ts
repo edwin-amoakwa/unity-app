@@ -43,6 +43,15 @@ export class AdminLayoutComponent implements OnInit {
     if (this.isMobile) {
       this.sidebarOpen = false;
     }
+
+
+
+    this.user.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.user.accountName)}&background=6ee7ff&color=0b1020&size=64`
+
+
+
+
+
   }
 
   getFirstName(name: string): string {
