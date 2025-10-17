@@ -19,6 +19,9 @@ import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
 import { DistributionGroupsService } from './distribution-groups.service';
 import { GroupContactsComponent } from './group-contacts/group-contacts.component';
+import {ButtonToolbarComponent} from '../theme/shared/components/button-toolbar/button-toolbar.component';
+import {FormView} from '../core/form-view';
+import {CardComponent} from '../theme/shared/components/card/card.component';
 
 @Component({
   selector: 'app-distribution-groups',
@@ -36,7 +39,7 @@ import { GroupContactsComponent } from './group-contacts/group-contacts.componen
     ToastModule,
     Tooltip,
     GroupContactsComponent,
-    Textarea,ScrollPanelModule
+    Textarea, ScrollPanelModule, ButtonToolbarComponent, CardComponent
   ],
   templateUrl: './distribution-groups.component.html',
   styleUrls: ['./distribution-groups.component.scss']
@@ -50,8 +53,9 @@ export class DistributionGroupsComponent implements OnInit {
 
   groups: any[] = [];
   groupForm!: FormGroup;
+  formView = FormView.listView();
+
   showGroupDialog = false;
-  showDetailsPanel = false;
   editingGroup: any | null = null;
   selectedGroup: any | null = null;
   loading = false;
@@ -226,11 +230,11 @@ export class DistributionGroupsComponent implements OnInit {
     {
       // this.newFreeFormPhoneNos = this.selectedGroup.phoneNos;
     }
-    this.showDetailsPanel = true;
+    this.formView.resetToDetailView();
   }
 
   backToList(): void {
-    this.showDetailsPanel = false;
+    this.formView.resetToListView();
     this.selectedGroup = null;
   }
 

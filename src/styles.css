@@ -101,6 +101,12 @@ a { color: inherit; text-decoration: none; }
   .btn-primary:hover { filter: brightness(1.05); }
   .btn-secondary { background-color: #334155; color: var(--text); border-color: #465a78; }
 
+  /* PrimeNG buttons */
+  .p-button.p-button-primary { background: var(--primary); border-color: var(--primary); color: var(--primary-contrast); }
+  .p-button.p-button-primary:not(.p-disabled):hover { filter: brightness(1.05); }
+  .p-button.p-button-text.p-button-primary { background: transparent; color: var(--primary); border-color: transparent; }
+  .p-button.p-button-outlined.p-button-primary { background: transparent; color: var(--primary); border-color: var(--primary); }
+
   /* Tables */
   .table { color: var(--text); }
   .table > :not(caption) > * > * { background-color: var(--surface); border-bottom-color: var(--border); }

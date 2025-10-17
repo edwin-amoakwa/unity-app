@@ -13,6 +13,8 @@ import { Tooltip } from 'primeng/tooltip';
 import { NotificationService } from '../../core/notification.service';
 import { CollectionUtil, DateUtil, ObjectUtil } from '../../core/system.utils';
 import { DistributionGroupsService } from '../distribution-groups.service';
+import {ButtonToolbarComponent} from '../../theme/shared/components/button-toolbar/button-toolbar.component';
+import {CardComponent} from '../../theme/shared/components/card/card.component';
 
 @Component({
   selector: 'app-group-contacts',
@@ -25,7 +27,9 @@ import { DistributionGroupsService } from '../distribution-groups.service';
     TableModule,
     DialogModule,
     CalendarModule,
-    Tooltip
+    Tooltip,
+    ButtonToolbarComponent,
+    CardComponent
   ],
   templateUrl: './group-contacts.component.html',
   styleUrls: ['./group-contacts.component.scss']
