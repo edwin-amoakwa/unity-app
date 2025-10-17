@@ -75,7 +75,8 @@
 
 <div *ngIf="formView.detailView">
 
-  <app-card title="{{selectedGroup.groupName}}" subTitle="Number of Contact # {{ selectedGroup.contactCount | number }}">
+  <app-card title="{{selectedGroup.groupName}}"
+            subTitle="Number of Contact # {{ selectedGroup.contactCount | number }} | {{ selectedGroup.groupTypeName }}" >
 
     <button-toolbar>
       <p-button
@@ -89,18 +90,30 @@
 
         <div class="row p-3" *ngIf="selectedGroup.groupType === 'FREE_FORM'">
 
+          <div id="manageContact" class="col-lg-10">
+            <h4>Current Contact Numbers in this Group</h4>
+            <p-scrollpanel [style]="{ width: '100%', height: '200px' }" >
+
+              <textarea rows="10" style="width: 100%" pTextarea [(ngModel)]="selectedGroup.phoneNos" disabled></textarea>
+            </p-scrollpanel>
+          </div>
 
           <div class="row">
 
-            <div class="col-lg-6">
-              <textarea rows="5" cols="25" pTextarea [(ngModel)]="newFreeFormPhoneNos" (ngModelChange)="countContactsInTextBox()"></textarea>
+            <div class="col-lg-5">
+              <app-card title="Enter Numbers to Add or Remove from this Group">
 
+              </app-card>
+
+              <p>Enter phone numbers separated by commas to add to this contact group</p>
+
+              <textarea rows="10"  pTextarea [(ngModel)]="newFreeFormPhoneNos"
+                        style="width: 100%;"
+                        (ngModelChange)="countContactsInTextBox()">
+              </textarea>
             </div>
 
             <div class="col-lg-6">
-
-
-
               <p-scrollpanel [style]="{ width: '100%', height: '200px' }" >
 
                 <textarea rows="5" cols="25" pTextarea [(ngModel)]="selectedGroup.phoneNos" disabled></textarea>
