@@ -19,6 +19,7 @@ import { MessageBox } from '../message-helper';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsFormComponent } from './sms-form/sms-form.component';
 import { SmsService } from './sms.service';
+import {ButtonToolbarComponent} from '../theme/shared/components/button-toolbar/button-toolbar.component';
 
 @Component({
   selector: 'app-sms',
@@ -33,7 +34,8 @@ import { SmsService } from './sms.service';
     TooltipModule,
     DialogModule,
     ConfirmDialogModule,
-    SmsFormComponent
+    SmsFormComponent,
+    ButtonToolbarComponent
   ],
   providers: [ConfirmationService],
   templateUrl: './sms.component.html',

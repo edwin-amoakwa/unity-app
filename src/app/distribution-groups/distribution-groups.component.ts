@@ -56,6 +56,9 @@ export class DistributionGroupsComponent implements OnInit {
   formView = FormView.listView();
 
   showGroupDialog = false;
+  // Dialog for add/remove phone numbers
+  showPhoneDialog = false;
+  phoneDialogMode: 'add' | 'remove' | null = null;
   editingGroup: any | null = null;
   selectedGroup: any | null = null;
   loading = false;
@@ -137,6 +140,19 @@ export class DistributionGroupsComponent implements OnInit {
   }
 
 
+  // Opens the dialog and applies the requested operation on Apply
+  async addPhoneNumbers()
+  {
+    await this.mangeFreeFormContacts('add');
+    this.showPhoneDialog = false;
+  }
+
+  async removePhoneNumbers()
+  {
+    await this.mangeFreeFormContacts('remove');
+    this.showPhoneDialog = false;
+  }
+
   async mangeFreeFormContacts(operation: any): Promise<void> {
 
     let request:any = {};
@@ -192,6 +208,28 @@ export class DistributionGroupsComponent implements OnInit {
 
   resetForm(): void {
     this.groupForm.reset({});
+  }
+
+  // Helpers for phone numbers dialog
+  get phoneDialogTitle(): string {
+    return this.phoneDialogMode === 'add' ? 'Add Phone Numbers' : 'Remove Phone Numbers';
+  }
+
+  openPhoneDialog(mode: 'add' | 'remove'): void {
+    this.phoneDialogMode = mode;
+    this.showPhoneDialog = true;
+  }
+
+  closePhoneDialog(): void {
+    this.showPhoneDialog = false;
+  }
+
+  applyPhoneDialog(): void {
+    if (this.phoneDialogMode === 'add') {
+      this.addPhoneNumbers();
+    } else if (this.phoneDialogMode === 'remove') {
+      this.removePhoneNumbers();
+    }
   }
 
   isFieldInvalid(fieldName: string): boolean {

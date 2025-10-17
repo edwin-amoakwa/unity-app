@@ -1,22 +1,23 @@
 <h1 class="page-title">Send SMS</h1>
 
-<app-card title="SMS Management" >
+
+
+<button-toolbar>
+  <p-button
+    label="Create SMS"
+    icon="pi pi-plus"
+    (onClick)="createNewMessage()"
+    class="p-button-sm">
+  </p-button>
+</button-toolbar>
+
+<app-card title="SMS List" >
+
 
 
 
 
   <div class="card-body" *ngIf="formView.listView">
-    <!-- Header with Create Button -->
-    <div class="row mb-3">
-      <div class="col-12">
-        <p-button
-          label="Create SMS"
-          icon="pi pi-plus"
-          (onClick)="createNewMessage()"
-          class="p-button-sm">
-        </p-button>
-      </div>
-    </div>
 
     <!-- SMS Messages Table -->
     <p-table
@@ -61,7 +62,7 @@
 <!--          </td>-->
           <td>{{ sms.totalRecipient }}</td>
           <td>{{ sms.pagesCount }}</td>
-          <td>{{ sms.actualCost.toFixed(3) }}</td>
+          <td>{{ sms.actualCost.toFixed(2) }}</td>
           <td>
             <p-tag
               [value]="sms.dispatched ? 'Dispatched' : 'Pending'"
