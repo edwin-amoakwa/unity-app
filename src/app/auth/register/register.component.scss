@@ -108,6 +108,28 @@
   gap: 24px;
 }
 
+// Country select inline with phone input
+.country-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-right: 8px;
+  font-size: 14px;
+  color: #1a1a1a;
+  min-width: 160px;
+  height: 44px;
+}
+
+.input-container .country-select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

@@ -3,13 +3,15 @@ import { Component, OnInit, inject } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {AuthService} from '../../auth.service';
-import {UserSession} from '../../core/user-session';
+import { AuthService } from '../../auth.service';
+import { UserSession } from '../../core/user-session';
+import { DataLookupService } from '../../core/services/data-lookup.service';
+import {Select} from 'primeng/select';
 
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, Select],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
@@ -17,24 +19,39 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   isLoading = false;
 
+  countries: any[] = [];
+
   private authService = inject(AuthService);
   private router = inject(Router);
+  private dataLookup = inject(DataLookupService);
 
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.initializeForm();
+    this.loadCountries();
   }
 
   private initializeForm(): void {
     this.registerForm = this.formBuilder.group({
       companyName: ['', [Validators.required, Validators.minLength(2)]],
       contactPerson: ['', [Validators.required, Validators.minLength(2)]],
+      countryCode: [''],
       mobileNo: ['', [Validators.required, Validators.pattern(/^0\d{9}$/)]],
       emailAddress: ['', [Validators.required, Validators.email]],
       userPassword: ['', [Validators.required, Validators.minLength(8)]],
       agreeToTerms: [false, [Validators.requiredTrue]]
     });
+  }
+
+  private async loadCountries(): Promise<void> {
+    try {
+      let response = await this.dataLookup.getCountries();
+      this.countries = response.data;
+    } catch (e) {
+      console.error('Failed to load countries', e);
+      this.countries = [];
+    }
   }
 
   async onSubmit(): Promise<void> {

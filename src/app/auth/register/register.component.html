@@ -54,11 +54,36 @@
             </div>
           </div>
 
-          <!-- Mobile Number -->
+          <!-- Mobile Number with Country -->
           <div class="form-group">
             <label for="mobileNo" class="form-label">Mobile Number</label>
             <div class="input-container">
-              <i class="input-icon" aria-hidden="true" title="Ghana">🇬🇭</i>
+
+              <p-select [options]="countries" formControlName="countryCode" optionLabel="countryName" [filter]="true"
+                        filterBy="countryName"  placeholder="Select a Country" class="w-full md:w-56">
+                <ng-template #selectedItem let-selectedOption>
+                  <div class="flex items-center gap-2">
+                    <span class="fi" [ngClass]="'fi-' + selectedOption.countryCode"></span>
+<!--                    <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" />-->
+                    <div>{{ selectedOption.countryName }}</div>
+                  </div>
+                </ng-template>
+                <ng-template let-country #item>
+                  <div class="flex items-center gap-2">
+                    <span class="fi" [ngClass]="'fi-' + country.countryCode"></span>
+<!--                    <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" />-->
+                    <div>{{ country.countryName }}</div>
+                  </div>
+                </ng-template>
+              </p-select>
+
+
+<!--              <select class="country-select" formControlName="countryCode" aria-label="Country">-->
+<!--                <option value="" disabled selected>Select country</option>-->
+<!--                <option *ngFor="let c of countries" [value]="c.value">-->
+<!--                  {{ c.label }}-->
+<!--                </option>-->
+<!--              </select>-->
               <input
                 type="tel"
                 id="mobileNo"
@@ -69,7 +94,7 @@
                 minlength="10"
                 maxlength="10"
                 pattern="0[0-9]{9}"
-                aria-label="Ghana mobile number"
+                aria-label="mobile number"
               />
             </div>
             <div *ngIf="isFieldInvalid('mobileNo')" class="field-error">

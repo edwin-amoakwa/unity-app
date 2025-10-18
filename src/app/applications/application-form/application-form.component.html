@@ -38,6 +38,43 @@
       </div>
     </div>
 
+    <!-- Callback URL -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <label for="callBackUrl" class="form-label">Callback URL</label>
+        <input
+          pInputText
+          id="callBackUrl"
+          formControlName="callBackUrl"
+          [class.ng-invalid]="isFieldInvalid('callBackUrl')" />
+        <small
+          class="p-error block mt-1"
+          *ngIf="isFieldInvalid('callBackUrl')">
+          {{ getFieldError('callBackUrl') }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Enable IP Restriction -->
+    <div class="row mb-3">
+      <div class="col-12 flex align-items-center gap-2">
+        <p-inputSwitch formControlName="enableIpRestriction"></p-inputSwitch>
+        <label for="enableIpRestriction" class="form-label mb-0">Enable IP Restriction</label>
+      </div>
+    </div>
+
+    <!-- Allowed IP Addresses -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <label for="allowedIpAddresses" class="form-label">Allowed IP Addresses</label>
+        <input
+          pInputText
+          id="allowedIpAddresses"
+          formControlName="allowedIpAddresses"
+          placeholder="Comma-separated list e.g. 192.168.0.1, 10.0.0.5" />
+      </div>
+    </div>
+
   </div>
 
   <!-- Form Actions -->

@@ -27,6 +27,7 @@
             "assets": ["src/favicon.ico", "src/_redirects", "src/assets"],
             "styles": [
               "src/assets/bootstrap/bootstrap.min.css",
+              "node_modules/flag-icons/css/flag-icons.min.css",
               "src/styles.css"
             ],
             "scripts": [

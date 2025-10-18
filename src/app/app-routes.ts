@@ -41,6 +41,7 @@ export const routes: Routes = [
       { path: 'sms-records', component: SmsRecordsComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'update-password', component: UpdatePasswordComponent },
+      { path: 'notification-settings', loadComponent: () => import('./notification-settings/notification-settings.component').then(m => m.NotificationSettingsComponent) },
     ]
   },
   {

@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 import { ApplicationType } from '../../unity.model';
 
@@ -19,7 +20,8 @@ import { ApplicationType } from '../../unity.model';
     ButtonModule,
     InputTextModule,
     InputNumberModule,
-    DropdownModule
+    DropdownModule,
+    InputSwitchModule
   ],
   templateUrl: './application-form.component.html',
   styleUrls: ['./application-form.component.scss']
@@ -45,9 +47,12 @@ export class ApplicationFormComponent implements OnInit {
 
   private initializeForm() {
     this.applicationForm = this.fb.group({
-      id:"",
+      id: "",
       appName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      applicationType: [null, [Validators.required]]
+      applicationType: [null, [Validators.required]],
+      callBackUrl: [''],
+      allowedIpAddresses: [''],
+      enableIpRestriction: [false]
     });
 
     // Watch for application type changes to update type name
@@ -119,7 +124,10 @@ export class ApplicationFormComponent implements OnInit {
       currentPrice: 'Current Price',
       applicationType: 'Application Type',
       applicationTypeName: 'Application Type Name',
-      merchantId: 'Merchant ID'
+      merchantId: 'Merchant ID',
+      callBackUrl: 'Callback URL',
+      allowedIpAddresses: 'Allowed IP Addresses',
+      enableIpRestriction: 'Enable IP Restriction'
     };
     return labels[fieldName] || fieldName;
   }

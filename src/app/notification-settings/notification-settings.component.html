@@ -1,0 +1,40 @@
+<div class="ns-page">
+  <app-card title="Notification Settings">
+    <div class="card-body" *ngIf="listView">
+      <p-table [value]="items" [loading]="isLoading" [paginator]="true" [rows]="10" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>ID</th>
+            <th>Merchant</th>
+            <th>Recipient Number</th>
+            <th>Email</th>
+            <th>CC</th>
+            <th>BCC</th>
+            <th>Enabled</th>
+            <th style="width: 120px;">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.merchantId }}</td>
+            <td>{{ item.recipientNumber }}</td>
+            <td>{{ item.recipientEmail }}</td>
+            <td>{{ item.recipientEmailCc }}</td>
+            <td>{{ item.recipientEmailBcc }}</td>
+            <td>
+              <p-tag [value]="item.enabled ? 'Enabled' : 'Disabled'" [severity]="item.enabled ? 'success' : 'danger'"></p-tag>
+            </td>
+            <td>
+              <p-button label="Edit" icon="pi pi-pencil" class="p-button-sm" (onClick)="edit(item)"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="card-body" *ngIf="!listView">
+      <app-notification-settings-form [value]="current" (submitted)="onSave($event)" (cancelled)="onCancel()"></app-notification-settings-form>
+    </div>
+  </app-card>
+</div>

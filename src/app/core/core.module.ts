@@ -119,6 +119,7 @@ import {CardComponent} from '../theme/shared/components/card/card.component';
 
     CardComponent,
     NgbDropdownModule,
+    NgbDropdownModule,
     NgbNavModule,
     NgbModule,
     NgbCollapseModule,
