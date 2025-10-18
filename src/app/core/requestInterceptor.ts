@@ -69,6 +69,15 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
       // Check if it's an HTTP error response
       if (error.error && error.error.message) {
         errorMessage = error.error.message;
+
+        if(error.error.errors)
+        {
+          const validationErrors = error.error.errors;
+          validationErrors.forEach(error => {
+            notificationService.error(error.message, 'Validation Error');
+          })
+        }
+
       } else if (error.message) {
         errorMessage = error.message;
       }
