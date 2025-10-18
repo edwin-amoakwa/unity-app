@@ -59,19 +59,18 @@
             <label for="mobileNo" class="form-label">Mobile Number</label>
             <div class="input-container">
 
-              <p-select [options]="countries" formControlName="countryCode" optionLabel="countryName" [filter]="true"
-                        filterBy="countryName"  placeholder="Select a Country" class="w-full md:w-56">
+              <p-select [options]="countries" formControlName="countryId" optionLabel="countryName" [filter]="true"
+                        filterBy="countryName"  optionValue="id" placeholder="Select a Country" class="w-full md:w-56">
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
                     <span class="fi" [ngClass]="'fi-' + selectedOption.countryCode"></span>
-<!--                    <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" />-->
                     <div>{{ selectedOption.countryName }}</div>
                   </div>
                 </ng-template>
                 <ng-template let-country #item>
                   <div class="flex items-center gap-2">
                     <span class="fi" [ngClass]="'fi-' + country.countryCode"></span>
-<!--                    <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" />-->
+
                     <div>{{ country.countryName }}</div>
                   </div>
                 </ng-template>

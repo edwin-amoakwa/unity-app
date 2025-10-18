@@ -1,5 +1,5 @@
 // angular import
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {Router, RouterModule} from '@angular/router';
 import {UntypedFormBuilder, Validators, ReactiveFormsModule, FormGroup} from '@angular/forms';
 import {AuthService, RequestPasswordPayload} from '../../auth.service';
@@ -11,7 +11,7 @@ import {CommonModule} from '@angular/common';
   templateUrl: './password-reset.component.html',
   styleUrls: ['./password-reset.component.scss']
 })
-export class PasswordResetComponent {
+export class PasswordResetComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(UntypedFormBuilder);
@@ -20,11 +20,25 @@ export class PasswordResetComponent {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
+  private originalTheme: string | null = null;
 
   constructor() {
     this.resetForm = this.fb.group({
       username: ['', [Validators.required]]
     });
+  }
+
+  ngOnInit(): void {
+    this.originalTheme = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+
+  ngOnDestroy(): void {
+    if (this.originalTheme) {
+      document.documentElement.setAttribute('data-theme', this.originalTheme);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
   }
 
   async onSubmit() {

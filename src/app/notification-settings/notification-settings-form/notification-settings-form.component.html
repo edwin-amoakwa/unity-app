@@ -1,37 +1,61 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="ns-form">
-  <div class="row mb-3">
-    <div class="col-12">
-      <label class="form-label">Merchant ID</label>
-      <input pInputText formControlName="merchantId" readonly />
+  <!-- Type -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label class="form-label mb-0" for="notificationTypeName">Type</label>
+    </div>
+    <div class="col-md-8">
+      <input pInputText id="notificationTypeName" formControlName="notificationTypeName" readonly />
     </div>
   </div>
 
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label class="form-label" for="recipientNumber">Recipient Number</label>
+  <!-- Recipient Number -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label class="form-label mb-0" for="recipientNumber">Recipient Number</label>
+    </div>
+    <div class="col-md-8">
       <input pInputText id="recipientNumber" formControlName="recipientNumber" />
     </div>
   </div>
 
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label class="form-label" for="recipientEmail">Recipient Email</label>
+  <!-- Recipient Email -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label class="form-label mb-0" for="recipientEmail">Recipient Email</label>
+    </div>
+    <div class="col-md-8">
       <input pInputText id="recipientEmail" formControlName="recipientEmail" [class.ng-invalid]="isInvalid('recipientEmail')" />
     </div>
-    <div class="col-md-6">
-      <label class="form-label" for="recipientEmailCc">Recipient Email CC</label>
+  </div>
+
+  <!-- Recipient Email CC -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label class="form-label mb-0" for="recipientEmailCc">Recipient Email CC</label>
+    </div>
+    <div class="col-md-8">
       <input pInputText id="recipientEmailCc" formControlName="recipientEmailCc" [class.ng-invalid]="isInvalid('recipientEmailCc')" />
     </div>
   </div>
 
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label class="form-label" for="recipientEmailBcc">Recipient Email BCC</label>
+  <!-- Recipient Email BCC -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label class="form-label mb-0" for="recipientEmailBcc">Recipient Email BCC</label>
+    </div>
+    <div class="col-md-8">
       <input pInputText id="recipientEmailBcc" formControlName="recipientEmailBcc" [class.ng-invalid]="isInvalid('recipientEmailBcc')" />
     </div>
-    <div class="col-md-6 align-items-center d-flex gap-2">
-      <p-inputSwitch formControlName="enabled"></p-inputSwitch>
+  </div>
+
+  <!-- Enabled -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
       <label class="form-label mb-0" for="enabled">Enabled</label>
+    </div>
+    <div class="col-md-8 d-flex align-items-center">
+      <p-inputSwitch inputId="enabled" formControlName="enabled"></p-inputSwitch>
     </div>
   </div>
 

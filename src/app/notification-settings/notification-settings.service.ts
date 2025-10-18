@@ -17,7 +17,7 @@ export interface NotificationSetting {
 @Injectable({ providedIn: 'root' })
 export class NotificationSettingsService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.baseUrl}/notification-settings`;
+  private apiUrl = `${environment.baseUrl}/notifications/config`;
 
   async getNotificationSettings(): Promise<ApiResponse<any[]>> {
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl));

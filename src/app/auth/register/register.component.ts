@@ -1,5 +1,5 @@
 // angular import
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ import {Select} from 'primeng/select';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
   isLoading = false;
 
@@ -24,19 +24,32 @@ export class RegisterComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private dataLookup = inject(DataLookupService);
+  private originalTheme: string | null = null;
 
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    this.originalTheme = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', 'light');
+
     this.initializeForm();
     this.loadCountries();
   }
 
+  ngOnDestroy(): void {
+    if (this.originalTheme) {
+      document.documentElement.setAttribute('data-theme', this.originalTheme);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }
+
   private initializeForm(): void {
     this.registerForm = this.formBuilder.group({
+      "id": "",
       companyName: ['', [Validators.required, Validators.minLength(2)]],
       contactPerson: ['', [Validators.required, Validators.minLength(2)]],
-      countryCode: [''],
+      countryId: [''],
       mobileNo: ['', [Validators.required, Validators.pattern(/^0\d{9}$/)]],
       emailAddress: ['', [Validators.required, Validators.email]],
       userPassword: ['', [Validators.required, Validators.minLength(8)]],
@@ -59,17 +72,10 @@ export class RegisterComponent implements OnInit {
       this.isLoading = true;
       const formData = this.registerForm.value;
 
-      // Remove agreeToTerms from the payload as it's not needed by the API
-      const registerPayload: any = {
-        companyName: formData.companyName,
-        contactPerson: formData.contactPerson,
-        mobileNo: formData.mobileNo,
-        emailAddress: formData.emailAddress,
-        userPassword: formData.userPassword
-      };
+
 
       try {
-        const response = await this.authService.register(registerPayload);
+        const response = await this.authService.register(formData);
         console.log('Registration successful:', response);
         if(response.success)
         {
