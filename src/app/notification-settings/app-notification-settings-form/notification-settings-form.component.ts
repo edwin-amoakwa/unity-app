@@ -27,7 +27,7 @@ export class NotificationSettingsFormComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       id: [''],
-      merchantId: [{ value: '', disabled: true }],
+      notificationTypeName: [{ value: '', disabled: true }],
       recipientNumber: [''],
       recipientEmail: ['', [Validators.email]],
       recipientEmailCc: ['', [Validators.email]],

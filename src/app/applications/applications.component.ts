@@ -83,8 +83,6 @@ export class ApplicationsComponent implements OnInit {
       }
     } catch (error) {
       console.error('Error with application:', error);
-      const errorMessage = this.selectedApplication ? 'Failed to update application' : 'Failed to create application';
-      this.notificationService.error(errorMessage);
     }
   }
 
@@ -92,15 +90,7 @@ export class ApplicationsComponent implements OnInit {
     try {
       const response = await this.applicationService.renewApiKey(application.id);
       if (response.success) {
-        // Update the application in the list
-        // const index = this.applications.findIndex(a => a.id === application.id);
-        // if (index > -1) {
-        //   this.applications[index] = { ...this.applications[index], ...response.data };
-        // }
-        // // Update selected application if it's the same
-        // if (this.selectedApplication?.id === application.id) {
-        //   this.selectedApplication = { ...this.selectedApplication, ...response.data };
-        // }
+
 this.selectedApplication = response.data;
         CollectionUtil.add(this.applications, response.data);
 
