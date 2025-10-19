@@ -299,6 +299,36 @@
     <p>Configure this user's permissions and roles.</p>
   </div>
 
+  <div class="permissions-table">
+    <p-table [value]="permissionsData" styleClass="p-datatable-sm p-datatable-gridlines">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Page</th>
+          <th>URL</th>
+          <th style="width: 120px;">Enabled</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-page>
+        <tr>
+          <td>{{ page.pageName }}</td>
+          <td>{{ page.pageUrl }}</td>
+          <td class="text-center">
+            <p-toggleSwitch [(ngModel)]="page.enabled"></p-toggleSwitch>
+          </td>
+          <td>
+            <div class="flex align-items-center gap-3 flex-wrap">
+              <div *ngFor="let act of page.actions" class="flex align-items-center gap-2 mr-3">
+                <span class="text-sm">{{ act.name }}</span>
+                <p-toggleSwitch [(ngModel)]="act.enabled"></p-toggleSwitch>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
   <ng-template pTemplate="footer">
     <p-button
       type="button"

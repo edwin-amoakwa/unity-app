@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 
 // PrimNG imports
 import { MessageService } from 'primeng/api';
@@ -11,6 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 import { NotificationService } from '../core/notification.service';
 import { CollectionUtil } from '../core/system.utils';
@@ -19,12 +20,27 @@ import { UserService } from './user.service';
 import {ButtonToolbarComponent} from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import {CardComponent} from '../theme/shared/components/card/card.component';
 
+// Permissions model interfaces
+interface PermissionAction {
+  name: string;
+  enabled: boolean;
+}
+
+interface PermissionPage {
+  enabled: boolean;
+  pageName: string;
+  pageCode: string;
+  pageUrl: string;
+  actions: PermissionAction[];
+}
+
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     ButtonModule,
     InputTextModule,
     DropdownModule,
@@ -32,6 +48,7 @@ import {CardComponent} from '../theme/shared/components/card/card.component';
     CardModule,
     DialogModule,
     ToastModule,
+    ToggleSwitchModule,
     ButtonToolbarComponent,
     CardComponent
   ],
@@ -60,6 +77,31 @@ export class UsersComponent implements OnInit {
   // Permissions & Roles dialog properties
   showPermRolesDialog = false;
   permRolesUser: any | null = null;
+
+  // Permissions data model
+  permissionsData: PermissionPage[] = [];
+  private readonly defaultPermissions: PermissionPage[] = [
+    {
+      enabled: true,
+      pageName: 'Dashboard',
+      pageCode: 'DASH_001',
+      pageUrl: '/dashboard',
+      actions: [
+        { name: 'view', enabled: true },
+        { name: 'edit', enabled: false }
+      ]
+    },
+    {
+      enabled: false,
+      pageName: 'Settings',
+      pageCode: 'SET_002',
+      pageUrl: '/settings',
+      actions: [
+        { name: 'modify', enabled: false },
+        { name: 'delete', enabled: false }
+      ]
+    }
+  ];
 
   // Dropdown options
   accountCategoryOptions: any[] = StaticDataService.accountCategories();
@@ -322,6 +364,11 @@ export class UsersComponent implements OnInit {
   // Permissions & Roles dialog methods
   openPermRolesDialog(user: any) {
     this.permRolesUser = user;
+    // Deep clone default permissions so toggling in dialog doesn't mutate the defaults
+    this.permissionsData = this.defaultPermissions.map(p => ({
+      ...p,
+      actions: p.actions.map(a => ({ ...a }))
+    }));
     this.showPermRolesDialog = true;
   }
 
