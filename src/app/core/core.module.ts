@@ -48,6 +48,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ListboxModule } from 'primeng/listbox';
+import {ConfirmDialog, ConfirmDialogModule} from 'primeng/confirmdialog';
 
 
 
@@ -116,6 +117,10 @@ import {CardComponent} from '../theme/shared/components/card/card.component';
     ClipboardModule,
     ListboxModule,
 
+    ConfirmPopupModule,
+    DialogModule,
+    ConfirmDialog,
+    ConfirmDialogModule,
 
     CardComponent,
     NgbDropdownModule,
@@ -177,6 +182,10 @@ import {CardComponent} from '../theme/shared/components/card/card.component';
     ListboxModule,
 
 
+    ConfirmPopupModule,
+    DialogModule,
+    ConfirmDialog,
+    ConfirmDialogModule,
 
 
     CardComponent,

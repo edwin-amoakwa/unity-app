@@ -4,15 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { ApiResponse } from '../core/ApiResponse';
 import {environment} from '../../environments/environment';
 
-export interface NotificationSetting {
-  id?: string;
-  merchantId?: string;
-  recipientNumber?: string;
-  recipientEmail?: string;
-  recipientEmailCc?: string;
-  recipientEmailBcc?: string;
-  enabled: boolean;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class NotificationSettingsService {
@@ -23,7 +15,7 @@ export class NotificationSettingsService {
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl));
   }
 
-  async saveNotificationSetting(setting: NotificationSetting): Promise<ApiResponse<any>> {
+  async saveNotificationSetting(setting: any): Promise<ApiResponse<any>> {
     if (!setting.id) {
       return await firstValueFrom(this.http.post<ApiResponse<any>>(this.apiUrl, setting));
     }
