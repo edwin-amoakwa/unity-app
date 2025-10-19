@@ -16,6 +16,8 @@ import { NotificationService } from '../core/notification.service';
 import { CollectionUtil } from '../core/system.utils';
 import { StaticDataService } from '../static-data.service';
 import { UserService } from './user.service';
+import {ButtonToolbarComponent} from '../theme/shared/components/button-toolbar/button-toolbar.component';
+import {CardComponent} from '../theme/shared/components/card/card.component';
 
 @Component({
   selector: 'app-users',
@@ -29,7 +31,9 @@ import { UserService } from './user.service';
     TableModule,
     CardModule,
     DialogModule,
-    ToastModule
+    ToastModule,
+    ButtonToolbarComponent,
+    CardComponent
   ],
   providers: [MessageService],
   templateUrl: './users.component.html',
@@ -52,6 +56,10 @@ export class UsersComponent implements OnInit {
   showPasswordDialog = false;
   currentUser: any | null = null;
   passwordLoading = false;
+
+  // Permissions & Roles dialog properties
+  showPermRolesDialog = false;
+  permRolesUser: any | null = null;
 
   // Dropdown options
   accountCategoryOptions: any[] = StaticDataService.accountCategories();
@@ -309,5 +317,16 @@ export class UsersComponent implements OnInit {
       'confirmPassword': 'Confirm Password'
     };
     return labels[fieldName] || fieldName;
+  }
+
+  // Permissions & Roles dialog methods
+  openPermRolesDialog(user: any) {
+    this.permRolesUser = user;
+    this.showPermRolesDialog = true;
+  }
+
+  closePermRolesDialog() {
+    this.showPermRolesDialog = false;
+    this.permRolesUser = null;
   }
 }
