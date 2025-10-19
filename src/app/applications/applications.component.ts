@@ -15,6 +15,7 @@ import { ApplicationType } from '../unity.model';
 import { ApplicationService } from './application.service';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import {CoreModule} from '../core/core.module';
+import { ApplicationFormComponent } from './application-form/application-form.component';
 
 @Component({
   selector: 'app-applications',
@@ -22,7 +23,8 @@ import {CoreModule} from '../core/core.module';
   imports: [
     CoreModule,
     Tag,
-    ButtonToolbarComponent
+    ButtonToolbarComponent,
+    ApplicationFormComponent
   ],
   providers: [ConfirmationService],
   templateUrl: './applications.component.html',
