@@ -16,12 +16,12 @@
                         Bulk SMS
                     </label>
                 </div>
-                <div class="form-check">
+                <!-- <div class="form-check">
                     <input class="form-check-input" type="radio" name="smsMessageType" id="smsMessageType" formControlName="smsMessageType" value="CUSTOM_SMS">
                     <label class="form-check-label" for="custom">
                         Custom SMS
                     </label>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -150,6 +150,9 @@
                     <!-- <i class="pi pi-check-square"></i> Save as Template SMS -->
                     Save as Template SMS
                 </label>
+            </div>
+            <div *ngIf="smsForm?.value?.templateSms">
+              <input type="text" class="form-control" id="templateName" formControlName="templateName" placeholder="Template Name" >
             </div>
         </div>
     </div>

@@ -7,6 +7,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
@@ -14,12 +15,12 @@ import { TooltipModule } from 'primeng/tooltip';
 // Project imports
 import { FormView } from '../core/form-view';
 import { NotificationService } from '../core/notification.service';
-import { CollectionUtil } from '../core/system.utils';
+import { CollectionUtil, ObjectUtil } from '../core/system.utils';
 import { MessageBox } from '../message-helper';
+import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsFormComponent } from './sms-form/sms-form.component';
 import { SmsService } from './sms.service';
-import {ButtonToolbarComponent} from '../theme/shared/components/button-toolbar/button-toolbar.component';
 
 @Component({
   selector: 'app-sms',
@@ -29,6 +30,7 @@ import {ButtonToolbarComponent} from '../theme/shared/components/button-toolbar/
     FormsModule,
     CardComponent,
     TableModule,
+    DropdownModule,
     ButtonModule,
     TagModule,
     TooltipModule,
@@ -51,7 +53,12 @@ export class SmsComponent implements OnInit {
   smsMessages: any[] = [];
   isLoading: boolean = false;
   // showDialog: boolean = false;
-  selectedSms: any | null = null;
+  selectedSms: any = {};
+  selectedSmsId: string = null;
+
+  // selectedSms: any | null = null;
+  templateMsgs: any[] = [];
+  showTemplateDialog:boolean = false;
 
   ngOnInit() {
     this.loadSmsMessages();
@@ -60,8 +67,15 @@ export class SmsComponent implements OnInit {
   async loadSmsMessages() {
     this.isLoading = true;
     try {
+      this.templateMsgs = [];
       const response = await this.smsService.getSmsMessages();
       this.smsMessages = response.data;
+      this.smsMessages.forEach(item=>{
+        if(item.templateSms)
+        {
+          CollectionUtil.add(this.templateMsgs,item);
+        }
+      });
       this.isLoading = false;
     } catch (error) {
       console.error('Error loading SMS messages:', error);
@@ -71,6 +85,47 @@ export class SmsComponent implements OnInit {
     }
   }
 
+  closeTemplateDialog()
+  {
+    this.selectedSms = null;
+    this.showTemplateDialog = false;
+  }
+
+  createFromTemplateDialog()
+  {
+    this.selectedSms = null;
+    this.showTemplateDialog = true;
+  }
+
+  async createFromTemplate() {
+    try {
+
+      if(ObjectUtil.isNullOrUndefinedOrEmpty(this.selectedSmsId))
+      {
+        this.notificationService.error("Select A Template SMS");
+        return;
+
+      }
+        const response = await this.smsService.duplicateSmsMessage(this.selectedSmsId);
+        if(!response.success)
+        {
+          MessageBox.errorDetail(response.message,response.data)
+           const errorMessage = response.message;
+          this.notificationService.error(errorMessage);
+          return
+        }
+
+        // CollectionUtil.add(this.smsMessages, response.data);
+        // this.formView.resetToListView();
+
+        this.openEditDialog(response.data);
+
+    } catch (error) {
+      console.error('Error with SMS message:', error);
+      const errorMessage = this.selectedSms ? 'Failed to Generate SMS message' : 'Failed to Generate SMS message';
+      this.notificationService.error(errorMessage);
+    }
+  }
 
 
   createNewMessage() {
@@ -85,6 +140,7 @@ export class SmsComponent implements OnInit {
   openEditDialog(sms: any) {
     this.selectedSms = sms;
     this.formView.resetToCreateView();
+    this.showTemplateDialog = false;
   }
 
   async onSmsSubmitted(sms: any) {
@@ -100,6 +156,16 @@ export class SmsComponent implements OnInit {
         }
 
         CollectionUtil.add(this.smsMessages, response.data);
+        if(response.data.templateSms)
+        {
+          CollectionUtil.add(this.templateMsgs,response.data);
+        }
+        else
+        {
+          try {
+            CollectionUtil.remove(this.templateMsgs,response.data.id);
+          } catch (error) {}
+        }
 
         this.formView.resetToListView();
 

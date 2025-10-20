@@ -57,7 +57,7 @@ export class UserSession {
 // console.log("permissions",permissions)
     return permissions.some(
       (page) =>{
-        console.log(url,"page",page)
+        // console.log(url,"page",page)
        return page?.pageUrl?.toLowerCase() === url.toLowerCase() && page.enabled;
       }
     );

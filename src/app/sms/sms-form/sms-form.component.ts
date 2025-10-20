@@ -154,6 +154,7 @@ export class SmsFormComponent implements OnInit, OnChanges
       phoneNumbersSource: [null],
       groupId: [null],
       uploadedFile: [null],
+      templateName: [null],
       pagesCount: 0,
       totalRecipient: 0,
     });
