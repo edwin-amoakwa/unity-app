@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import {CoreModule} from '../../core/core.module';
@@ -11,13 +11,15 @@ import {UserSession} from '../../core/user-session';
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']
 })
-export class AdminLayoutComponent implements OnInit {
+export class AdminLayoutComponent implements OnInit, AfterViewInit {
   sidebarOpen = true;
   isMobile = false;
   theme: 'light' | 'dark' = 'light';
   showUserMenu = false;
   user:any
   // userName:anu;
+
+  @ViewChild('menuNav') menuNav?: ElementRef<HTMLElement>;
 
   constructor(private router: Router) {}
 
@@ -114,5 +116,30 @@ export class AdminLayoutComponent implements OnInit {
     this.theme = t;
     document.documentElement.setAttribute('data-theme', t);
     localStorage.setItem('theme', t);
+  }
+
+  ngAfterViewInit(): void {
+    // List and display all the <a> tags inside nav.menu and log their routerLink values (if any)
+    try {
+      const navEl = this.menuNav?.nativeElement;
+      if (!navEl) { return; }
+      const anchors = Array.from(navEl.querySelectorAll('a')) as HTMLAnchorElement[];
+      console.log('[AdminLayout] Found', anchors.length, '<a> tag(s) inside nav.menu');
+      anchors.forEach((a, idx) => {
+        // Attempt to read routerLink value. In dev mode Angular may expose ng-reflect-router-link.
+        // Fall back to the literal routerLink attribute (if present) or href for visibility.
+        const routerLinkValue = a.getAttribute('ng-reflect-router-link')
+          || a.getAttribute('routerLink')
+          || undefined;
+        console.log(`[AdminLayout] menu link #${idx + 1}:`, a);
+        if (routerLinkValue) {
+          console.log(`[AdminLayout] routerLink:`, routerLinkValue);
+        } else {
+          console.log('[AdminLayout] No routerLink attribute for this anchor.');
+        }
+      });
+    } catch (err) {
+      console.warn('[AdminLayout] Error while listing menu anchors:', err);
+    }
   }
 }
