@@ -219,16 +219,14 @@
   (onHide)="closeTemplateDialog()">
 
   <div class="mb-3">
-     <label for="sender_id" class="form-label font-weight-bold">Select Template*</label>
-      <p-dropdown
-        id="templateId"
-        [(ngModel)]="selectedSmsId"
+     <label  class="form-label font-weight-bold">Select Template*</label>
+      <p-select
+        [(ngModel)]="selectedTemplateSms"
         [options]="templateMsgs"
         optionLabel="templateName"
-        optionValue="id"
         class="w-100"
         appendTo="body">
-      </p-dropdown>
+      </p-select>
   </div>
 
   <ng-template pTemplate="footer">

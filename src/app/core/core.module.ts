@@ -52,6 +52,7 @@ import {ConfirmDialog, ConfirmDialogModule} from 'primeng/confirmdialog';
 
 
 
+
 // project import
 
 // third party
@@ -60,6 +61,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 // bootstrap import
 import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import {CardComponent} from '../theme/shared/components/card/card.component';
+import {TagModule} from 'primeng/tag';
 
 
 @NgModule({
@@ -116,7 +118,7 @@ import {CardComponent} from '../theme/shared/components/card/card.component';
     ToastrModule.forRoot(),
     ClipboardModule,
     ListboxModule,
-
+    TagModule,
     ConfirmPopupModule,
     DialogModule,
     ConfirmDialog,
@@ -180,7 +182,7 @@ import {CardComponent} from '../theme/shared/components/card/card.component';
     RouterLink,
     RouterOutlet,
     ListboxModule,
-
+    TagModule,
 
     ConfirmPopupModule,
     DialogModule,

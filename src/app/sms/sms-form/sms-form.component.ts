@@ -225,25 +225,7 @@ export class SmsFormComponent implements OnInit, OnChanges
 
   populateForm() {
     if (this.smsData && this.smsForm) {
-      this.smsForm.patchValue({
-        id: this.smsData.id,
-        applicationId: this.smsData.applicationId,
-        senderId: this.smsData.senderId,
-        messageText: this.smsData.messageText,
-        phoneNumbersSource: this.smsData.phoneNumbersSource,
-        phoneNos: this.smsData.phoneNos,
-        totalReceipient: this.smsData.totalReceipient,
-        actualCost: this.smsData.actualCost,
-        pagesCount: this.smsData.pagesCount,
-        dispatched: this.smsData.dispatched,
-        flashSms: this.smsData.flashSms,
-        scheduleSms: this.smsData.scheduleSms,
-        templateSms: this.smsData.templateSms,
-        smsMessageType: this.smsData.smsMessageType,
-        smsNature: this.smsData.smsNature,
-        smsNatureName: this.smsData.smsNatureName,
-        scheduledTime: this.smsData.scheduledTime ? new Date(this.smsData.scheduledTime) : null
-      });
+      this.smsForm.patchValue(this.smsData);
     }
   }
 
@@ -268,19 +250,19 @@ export class SmsFormComponent implements OnInit, OnChanges
       console.log("formvalue before = ",formValue);
       formValue.phoneNos = ObjectUtil.standardizeNewlines(formValue.phoneNos);
       console.log("formvalue after = ",formValue);
-      const smsData: any = {
-        ...formValue,
-        id: this.smsData?.id,
-        createdAt: this.smsData?.createdAt,
-        updatedAt: new Date()
-      };
+      // const smsData: any = {
+      //   ...formValue,
+      //   id: this.smsData?.id,
+      //   createdAt: this.smsData?.createdAt,
+      //   updatedAt: new Date()
+      // };
 
       try {
         // Apply the fix
-        smsData.scheduledTime = this.formatDateTimeForApi(smsData.scheduledTime);
+        formValue.scheduledTime = this.formatDateTimeForApi(formValue.scheduledTime);
       } catch (error) {console.log(error);}
 
-      this.smsSubmitted.emit(smsData);
+      this.smsSubmitted.emit(formValue);
     }
     else {
       console.log("--hereh herhe this.smsForm.invalid = ",this.smsForm.value);

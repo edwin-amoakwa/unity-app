@@ -21,21 +21,13 @@ import { ButtonToolbarComponent } from '../theme/shared/components/button-toolba
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsFormComponent } from './sms-form/sms-form.component';
 import { SmsService } from './sms.service';
+import {CoreModule} from '../core/core.module';
 
 @Component({
   selector: 'app-sms',
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
-    CardComponent,
-    TableModule,
-    DropdownModule,
-    ButtonModule,
-    TagModule,
-    TooltipModule,
-    DialogModule,
-    ConfirmDialogModule,
+   CoreModule,
     SmsFormComponent,
     ButtonToolbarComponent
   ],
@@ -54,7 +46,7 @@ export class SmsComponent implements OnInit {
   isLoading: boolean = false;
   // showDialog: boolean = false;
   selectedSms: any = {};
-  selectedSmsId: string = null;
+  selectedTemplateSms: any = null;
 
   // selectedSms: any | null = null;
   templateMsgs: any[] = [];
@@ -99,14 +91,13 @@ export class SmsComponent implements OnInit {
 
   async createFromTemplate() {
     try {
-
-      if(ObjectUtil.isNullOrUndefinedOrEmpty(this.selectedSmsId))
+console.log("selectedTemplateSms",this.selectedTemplateSms);
+      if(ObjectUtil.isNullOrUndefinedOrEmpty(this.selectedTemplateSms?.id))
       {
         this.notificationService.error("Select A Template SMS");
         return;
-
       }
-        const response = await this.smsService.duplicateSmsMessage(this.selectedSmsId);
+        const response = await this.smsService.duplicateSmsMessage(this.selectedTemplateSms.id);
         if(!response.success)
         {
           MessageBox.errorDetail(response.message,response.data)

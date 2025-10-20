@@ -124,18 +124,18 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
       const navEl = this.menuNav?.nativeElement;
       if (!navEl) { return; }
       const anchors = Array.from(navEl.querySelectorAll('a')) as HTMLAnchorElement[];
-      console.log('[AdminLayout] Found', anchors.length, '<a> tag(s) inside nav.menu');
+      // console.log('[AdminLayout] Found', anchors.length, '<a> tag(s) inside nav.menu');
       anchors.forEach((a, idx) => {
         // Attempt to read routerLink value. In dev mode Angular may expose ng-reflect-router-link.
         // Fall back to the literal routerLink attribute (if present) or href for visibility.
         const routerLinkValue = a.getAttribute('ng-reflect-router-link')
           || a.getAttribute('routerLink')
           || undefined;
-        console.log(`[AdminLayout] menu link #${idx + 1}:`, a);
+        // console.log(`[AdminLayout] menu link #${idx + 1}:`, a);
         if (routerLinkValue) {
-          console.log(`[AdminLayout] routerLink:`, routerLinkValue);
+          // console.log(`[AdminLayout] routerLink:`, routerLinkValue);
         } else {
-          console.log('[AdminLayout] No routerLink attribute for this anchor.');
+          // console.log('[AdminLayout] No routerLink attribute for this anchor.');
         }
       });
     } catch (err) {
