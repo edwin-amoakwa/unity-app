@@ -39,7 +39,18 @@ export class UserService {
   }
 
   async updatePasswordWithCurrent(data): Promise<ApiResponse<any>> {
-
     return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/users/change-password`, data));
+  }
+
+  // Permissions APIs
+  async getUserPermissions(userId: string): Promise<ApiResponse<any[]>> {
+    const url = `${environment.baseUrl}/user-permissions`;
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(url, { params: { userId } }));
+  }
+
+  async saveUserPermissions(userId: string, permissions: any[]): Promise<ApiResponse<any>> {
+    const url = `${environment.baseUrl}/user-permissions`;
+    const payload = { userId, permissions };
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(url, payload));
   }
 }

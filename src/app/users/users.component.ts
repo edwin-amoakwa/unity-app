@@ -77,6 +77,9 @@ export class UsersComponent implements OnInit {
   // Permissions & Roles dialog properties
   showPermRolesDialog = false;
   permRolesUser: any | null = null;
+  permLoading = false;
+  permSaveLoading = false;
+  permError: string | null = null;
 
   // Permissions data model
   permissionsData: PermissionPage[] = [];
@@ -362,18 +365,62 @@ export class UsersComponent implements OnInit {
   }
 
   // Permissions & Roles dialog methods
-  openPermRolesDialog(user: any) {
+  async openPermRolesDialog(user: any) {
     this.permRolesUser = user;
-    // Deep clone default permissions so toggling in dialog doesn't mutate the defaults
-    this.permissionsData = this.defaultPermissions.map(p => ({
-      ...p,
-      actions: p.actions.map(a => ({ ...a }))
-    }));
     this.showPermRolesDialog = true;
+    this.permLoading = true;
+    this.permError = null;
+    try {
+      const resp = await this.userService.getUserPermissions(String(user.id ?? user.userId ?? ''));
+      if (resp?.success) {
+        const data = (resp.data || []) as any[];
+        // Normalize to PermissionPage[] shape if backend differs
+        this.permissionsData = data.map((p: any) => ({
+          enabled: !!p.enabled,
+          pageName: p.pageName ?? p.name ?? '',
+          pageCode: p.pageCode ?? p.code ?? '',
+          pageUrl: p.pageUrl ?? p.url ?? '',
+          actions: (p.actions || []).map((a: any) => ({
+            name: a.name ?? a.action ?? '',
+            enabled: !!a.enabled
+          }))
+        }));
+      } else {
+        this.notificationService.error(resp?.message || 'Failed to load permissions');
+        // Fallback to defaults
+        this.permissionsData = this.defaultPermissions.map(p => ({...p, actions: p.actions.map(a => ({...a}))}));
+      }
+    } catch (e) {
+      this.notificationService.error('Failed to load permissions');
+      this.permissionsData = this.defaultPermissions.map(p => ({...p, actions: p.actions.map(a => ({...a}))}));
+    } finally {
+      this.permLoading = false;
+    }
+  }
+
+  async savePermissions() {
+    if (!this.permRolesUser) return;
+    try {
+      this.permSaveLoading = true;
+      const resp = await this.userService.saveUserPermissions(String(this.permRolesUser.id ?? this.permRolesUser.userId ?? ''), this.permissionsData);
+      if (resp?.success) {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Permissions saved' });
+        this.closePermRolesDialog();
+      } else {
+        this.notificationService.error(resp?.message || 'Failed to save permissions');
+      }
+    } catch (e) {
+      this.notificationService.error('Failed to save permissions');
+    } finally {
+      this.permSaveLoading = false;
+    }
   }
 
   closePermRolesDialog() {
     this.showPermRolesDialog = false;
+    this.permLoading = false;
+    this.permSaveLoading = false;
+    this.permError = null;
     this.permRolesUser = null;
   }
 }

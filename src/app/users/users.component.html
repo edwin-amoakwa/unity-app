@@ -290,7 +290,7 @@
   [draggable]="false"
   [resizable]="false"
   styleClass="p-fluid"
-  [style]="{width: '40vw'}"
+  [style]="{width: '60vw'}"
   [breakpoints]="{'960px': '60vw', '640px': '95vw'}"
   (onHide)="closePermRolesDialog()">
 
@@ -304,16 +304,15 @@
       <ng-template pTemplate="header">
         <tr>
           <th>Page</th>
-          <th>URL</th>
-          <th style="width: 120px;">Enabled</th>
+          <th>Enabled</th>
           <th>Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-page>
         <tr>
           <td>{{ page.pageName }}</td>
-          <td>{{ page.pageUrl }}</td>
-          <td class="text-center">
+<!--          <td>{{ page.pageUrl }}</td>-->
+          <td >
             <p-toggleSwitch [(ngModel)]="page.enabled"></p-toggleSwitch>
           </td>
           <td>
@@ -336,6 +335,15 @@
       icon="pi pi-times"
       (onClick)="closePermRolesDialog()"
       styleClass="p-button-text">
+    </p-button>
+    <p-button
+      type="button"
+      label="Save"
+      icon="pi pi-save"
+      (onClick)="savePermissions()"
+      [loading]="permSaveLoading"
+      [disabled]="permLoading || !permissionsData?.length"
+      styleClass="p-button-primary">
     </p-button>
   </ng-template>
 </p-dialog>
