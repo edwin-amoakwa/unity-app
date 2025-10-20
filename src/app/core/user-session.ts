@@ -59,7 +59,7 @@ export class UserSession {
     );
   }
 
-  static hasPermission(pageCode, action): boolean {
+  static hasPermission(pageCode, actionName): boolean {
     let permissions = UserSession.getAsJson(this.loginResponse).permissions;
 
     const page = permissions.find(
@@ -69,7 +69,7 @@ export class UserSession {
     return (
       page?.actions?.some(
         (action) =>
-          action.name?.toLowerCase() === action.toLowerCase() && action.enabled
+          action.name?.toLowerCase() === actionName.toLowerCase() && action.enabled
       ) ?? false
     );
   }
