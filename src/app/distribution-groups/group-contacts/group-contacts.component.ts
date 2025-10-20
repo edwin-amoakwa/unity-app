@@ -12,9 +12,9 @@ import { Tooltip } from 'primeng/tooltip';
 
 import { NotificationService } from '../../core/notification.service';
 import { CollectionUtil, DateUtil, ObjectUtil } from '../../core/system.utils';
+import { ButtonToolbarComponent } from '../../theme/shared/components/button-toolbar/button-toolbar.component';
+import { CardComponent } from '../../theme/shared/components/card/card.component';
 import { DistributionGroupsService } from '../distribution-groups.service';
-import {ButtonToolbarComponent} from '../../theme/shared/components/button-toolbar/button-toolbar.component';
-import {CardComponent} from '../../theme/shared/components/card/card.component';
 
 @Component({
   selector: 'app-group-contacts',
@@ -49,6 +49,7 @@ export class GroupContactsComponent implements OnInit, OnChanges {
   showContactDialog = false;
   editingContact: any | null = null;
 
+  downloadLink: string = '/assets/templates/group-contact-template.xls';
   constructor() {}
 
   ngOnInit(): void {

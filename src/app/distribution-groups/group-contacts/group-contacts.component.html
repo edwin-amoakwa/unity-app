@@ -67,6 +67,13 @@
 
     <div class="col-12">
       <div class="row">
+         <p>
+          <a [href]="downloadLink" download="group-contact-template.xls">
+            Download Contact Upload Template (Excel)
+          </a>
+         </p>
+      </div>
+      <div class="row">
         <div class="col-auto">
           <input (change)="onFileChange($event)" class="form-control" formControlName="selectedFile" type="file">
         </div>
