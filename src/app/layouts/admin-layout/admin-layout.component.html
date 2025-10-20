@@ -8,21 +8,21 @@
       </button>
     </div>
     <nav class="menu">
-      <a class="menu-item" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <a class="menu-item" *ngIf="allow('/dashboard')" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
         <i class="pi pi-home" aria-hidden="true"></i>
         <span>Dashboard</span>
       </a>
 
-      <a class="menu-item" routerLink="/applications" routerLinkActive="active">
+      <a class="menu-item" *ngIf="allow('/applications')" routerLink="/applications" routerLinkActive="active">
         <i class="pi pi-briefcase" aria-hidden="true"></i>
         <span>Applications</span>
       </a>
 
-      <a class="menu-item" routerLink="/sender-id" routerLinkActive="active">
+      <a class="menu-item" *ngIf="allow('/sender-id')" routerLink="/sender-id" routerLinkActive="active">
         <i class="pi pi-id-card" aria-hidden="true"></i>
         <span>Sender IDs</span>
       </a>
-      <a class="menu-item" routerLink="/add-funds" routerLinkActive="active">
+      <a class="menu-item" *ngIf="allow('/add-funds')" routerLink="/add-funds" routerLinkActive="active">
         <i class="pi pi-wallet" aria-hidden="true"></i>
         <span>Add Funds</span>
       </a>
@@ -34,26 +34,26 @@
 
 
 
-      <a class="menu-item" routerLink="/group-contacts" routerLinkActive="active">
+      <a class="menu-item" *ngIf="allow('/group-contacts')" routerLink="/group-contacts" routerLinkActive="active">
         <i class="pi pi-address-book" aria-hidden="true"></i>
         <span>Group Contacts</span>
       </a>
-      <a class="menu-item" routerLink="/send-sms" routerLinkActive="active">
+      <a class="menu-item" *ngIf="allow('/send-sms')" routerLink="/send-sms" routerLinkActive="active">
         <i class="pi pi-send" aria-hidden="true"></i>
         <span>Send SMS</span>
       </a>
-      <a class="menu-item" routerLink="/sms-records" routerLinkActive="active">
+      <a class="menu-item" *ngIf="allow('/sms-records')" routerLink="/sms-records" routerLinkActive="active">
         <i class="pi pi-inbox" aria-hidden="true"></i>
         <span>SMS Records</span>
       </a>
 
 
-      <a class="menu-item" routerLink="/users" routerLinkActive="active">
+      <a class="menu-item" *ngIf="allow('/users')" routerLink="/users" routerLinkActive="active">
         <i class="pi pi-user" aria-hidden="true"></i>
         <span>Users</span>
       </a>
 
-      <a class="menu-item" routerLink="/notification-settings" routerLinkActive="active">
+      <a class="menu-item" *ngIf="allow('/notification-settings')" routerLink="/notification-settings" routerLinkActive="active">
         <i class="pi pi-bell" aria-hidden="true"></i>
         <span>Notification Settings</span>
       </a>

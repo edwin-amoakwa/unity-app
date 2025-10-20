@@ -25,7 +25,7 @@ export class UserSession {
     localStorage.setItem('merchantId', user.merchantId);
     localStorage.setItem('userId', user.id);
     localStorage.setItem(this.SessionId, loginResponse.sessionId);
-    localStorage.setItem(this.SessionId, loginResponse.sessionId);
+    localStorage.setItem(this.loginResponse, JSON.stringify(loginResponse));
   }
 
   /**
@@ -51,11 +51,15 @@ export class UserSession {
     return userData ? JSON.parse(userData) : null;
   }
 
-  static allowUrl(url): boolean {
+  static allowRoute(url): boolean {
+    url = "/"+url.toLowerCase();
     let permissions = UserSession.getAsJson(this.loginResponse).permissions;
-
+// console.log("permissions",permissions)
     return permissions.some(
-      (page) => page?.pageUrl?.toLowerCase() === url.toLowerCase() && page.enabled
+      (page) =>{
+        console.log(url,"page",page)
+       return page?.pageUrl?.toLowerCase() === url.toLowerCase() && page.enabled;
+      }
     );
   }
 
@@ -63,7 +67,10 @@ export class UserSession {
     let permissions = UserSession.getAsJson(this.loginResponse).permissions;
 
     const page = permissions.find(
-      (p) => p.pageCode?.toLowerCase() === pageCode.toLowerCase() && p.enabled
+      (p) => {
+        // console.log("pageCode",pageCode, page)
+        return p.pageCode?.toLowerCase() === pageCode.toLowerCase() && p.enabled;
+      }
     );
 
     return (

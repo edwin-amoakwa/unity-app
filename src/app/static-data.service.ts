@@ -34,7 +34,6 @@ export class StaticDataService {
     let data = [
       { id: 'ADMIN', itemName: 'Administrator' },
       { id: 'VIEWER', itemName: 'Viewer' },
-      { id: 'ENTERPRISE', itemName: 'Enterprise' }
     ];
 
     return data;

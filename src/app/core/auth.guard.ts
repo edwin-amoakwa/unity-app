@@ -10,36 +10,47 @@ export class AuthGuard implements CanActivate {
   // Array of routes that should always allow routing without any check
   private allowedRoutes: string[] = [
     'login',
-    'password-reset'
+    'register',
+    'password-reset',
+    'denied'
   ];
 
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+
+    console.log('AuthGuard: canActivate .. ' +route.url);
     // const currentRoute = route.url.join('/');
     const currentRoute = state.url.replace(/^\/+|\/+$/g, ''); // Remove leading/trailing slashes
+    const routePath = currentRoute.split('?')[0]; // Remove query params for permission checks
 
-    // console.log(state);
-    // console.log(state.url);
-    // console.log(route);
-    // console.log(route.url, currentRoute);
-    //
-    // console.log(this.allowedRoutes);
-    // console.log(localStorage.getItem(UserSession.SessionId));
-    // console.log(this.allowedRoutes.includes(currentRoute))
-
-    // Check if current route is in the allowed routes array
-    if (this.allowedRoutes.includes(currentRoute)) {
+    if (this.allowedRoutes.includes(routePath)) {
       return true;
     }
 
     const sessionId = localStorage.getItem(UserSession.SessionId);
 
     if (sessionId) {
-      return true;
+      // When logged in, verify permission for the route
+      try {
+        const allowed = UserSession.allowRoute(routePath);
+        if (allowed) {
+          return true;
+        } else {
+          console.log('Access denied for route:', routePath);
+          this.router.navigate(['/denied']);
+          return false;
+        }
+      } catch (e) {
+        // If something goes wrong (e.g., missing permissions), be safe and redirect to denied
+        this.router.navigate(['/denied']);
+        return false;
+      }
     } else {
       this.router.navigate(['/login']);
       return false;
     }
   }
+
+
 }

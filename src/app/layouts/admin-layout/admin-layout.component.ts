@@ -1,13 +1,13 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import {CoreModule} from '../../core/core.module';
 import {UserSession} from '../../core/user-session';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CoreModule, RouterLink, NgClass, RouterLinkActive],
+  imports: [CoreModule, RouterLink, NgClass, RouterLinkActive, NgIf],
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']
 })
@@ -57,6 +57,16 @@ export class AdminLayoutComponent implements OnInit {
   getFirstName(name: string): string {
     const firstPart = name.trim().split(' ')[0];
     return firstPart;
+  }
+
+  // Checks if the current user is allowed to access the route represented by the given routerLink.
+  // Accepts values like '/dashboard' or 'dashboard' and normalizes them.
+  allow(link: string): boolean {
+    if (!link) { return false; }
+    // If the template passes an array or other types in future, handle string only here.
+    const str = (Array.isArray(link) ? link.join('/') : String(link)).trim();
+    const normalized = str.replace(/^\/+/, ''); // strip leading slashes
+    return UserSession.allowRoute(normalized);
   }
 
   @HostListener('window:resize')

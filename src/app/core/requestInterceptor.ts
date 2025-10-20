@@ -33,17 +33,17 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
       // Check if the response is an HTTP response
       if (httpEvent instanceof HttpResponse) {
         // Log all successful HTTP responses
-        console.log(`[HTTP Response] ${req.method} ${req.url} - Status: ${httpEvent.status}`, httpEvent);
+        // console.log(`[HTTP Response] ${req.method} ${req.url} - Status: ${httpEvent.status}`, httpEvent);
 
         // Log the request body
-        console.log(`[Request Body] ${req.method} ${req.url}`, req.body);
-        console.log(`[Request response] ${req.method} ${req.url}`, req.body);
+        // console.log(`[Request Body] ${req.method} ${req.url}`, req.body);
+        // console.log(`[Request response] ${req.method} ${req.url}`, req.body);
 
         let response: any = httpEvent;
 
         if (httpEvent.body && (httpEvent.body as any).success) {
 
-          console.log("response --> ",response)
+          // console.log("response --> ",response)
           if (response.status == 201) {
             notificationService.success("Data saved successfully");
           } else if (response.status == 200) {
@@ -64,7 +64,7 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
       let errorMessage = 'An unexpected error occurred';
 
       // Log error responses
-      console.log(`[HTTP Error Response] ${req.method} ${req.url} - Status: ${error.status}`, error);
+      // console.log(`[HTTP Error Response] ${req.method} ${req.url} - Status: ${error.status}`, error);
 
       // Check if it's an HTTP error response
       if (error.error && error.error.message) {

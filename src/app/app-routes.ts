@@ -20,6 +20,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import {PlainComponent} from './layouts/plain/plain.component';
 import {TestComponent} from './test/test.component';
+import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
 export const routes: Routes = [
   {
@@ -50,7 +51,8 @@ export const routes: Routes = [
     children: [
       { path: 'password-reset', component: PasswordResetComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent }
+      { path: 'register', component: RegisterComponent },
+      { path: 'denied', component: AccessDeniedComponent }
     ]
   }
 ];
