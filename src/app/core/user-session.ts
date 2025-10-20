@@ -1,11 +1,13 @@
-import {ObjectUtil} from './system.utils';
-
+import { ObjectUtil } from './system.utils';
 
 export class UserSession {
-  /**
-   * Handle successful login response
-   * Save the complete data to localStorage and also save merchantId and userId directly
-   */
+  public static readonly SessionId: string = 'sessionId';
+  public static readonly UserID: string = 'userId';
+  public static readonly MerchantId: string = 'merchantId';
+  public static readonly User: string = 'user';
+  public static readonly merchant: string = 'merchant';
+  public static readonly loginResponse: string = 'loginResponse';
+
   static login(loginResponse: any): void {
     // if (!loginResponse.success || !loginResponse.data) {
     //   throw new Error('Invalid login response');
@@ -23,6 +25,7 @@ export class UserSession {
     localStorage.setItem('merchantId', user.merchantId);
     localStorage.setItem('userId', user.id);
     localStorage.setItem(this.SessionId, loginResponse.sessionId);
+    localStorage.setItem(this.SessionId, loginResponse.sessionId);
   }
 
   /**
@@ -36,17 +39,39 @@ export class UserSession {
     return this.getAsJson(UserSession.merchant);
   }
 
-  static getAsJson(key): any | null {
+  static getAsJson(key: string): any | null {
     const userData = localStorage.getItem(key);
     if (!userData) {
-      return null
+      return null;
     }
 
-    if(ObjectUtil.noValue(userData))
-    {
+    if (ObjectUtil.noValue(userData)) {
       return null;
     }
     return userData ? JSON.parse(userData) : null;
+  }
+
+  static allowUrl(url): boolean {
+    let permissions = UserSession.getAsJson(this.loginResponse).permissions;
+
+    return permissions.some(
+      (page) => page?.pageUrl?.toLowerCase() === url.toLowerCase() && page.enabled
+    );
+  }
+
+  static hasPermission(pageCode, action): boolean {
+    let permissions = UserSession.getAsJson(this.loginResponse).permissions;
+
+    const page = permissions.find(
+      (p) => p.pageCode?.toLowerCase() === pageCode.toLowerCase() && p.enabled
+    );
+
+    return (
+      page?.actions?.some(
+        (action) =>
+          action.name?.toLowerCase() === action.toLowerCase() && action.enabled
+      ) ?? false
+    );
   }
 
   /**
@@ -76,10 +101,4 @@ export class UserSession {
   static isLoggedIn(): boolean {
     return this.getUser() !== null;
   }
-
-  public static readonly SessionId: string = "sessionId";
-  public static readonly UserID: string = "userId";
-  public static readonly MerchantId: string = "merchantId";
-  public static readonly User: string = "user";
-  public static readonly merchant: string = "merchant";
 }
