@@ -305,7 +305,7 @@
         <tr>
           <th>Page</th>
           <th>Enabled</th>
-          <th>Actions</th>
+          <th class="d-none">Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-page>
@@ -315,7 +315,7 @@
           <td >
             <p-toggleSwitch [(ngModel)]="page.enabled"></p-toggleSwitch>
           </td>
-          <td>
+          <td class="d-none">
             <div class="flex align-items-center gap-3 flex-wrap">
               <div *ngFor="let act of page.actions" class="flex align-items-center gap-2 mr-3">
                 <span class="text-sm">{{ act.name }}</span>

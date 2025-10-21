@@ -165,11 +165,136 @@
 
   <div class="card-body" *ngIf="formView.createView">
 
-    <app-sms-form
-      [smsData]="selectedSms"
-      (smsSubmitted)="onSmsSubmitted($event)"
-      (cancelled)="this.formView.resetToListView()">
-    </app-sms-form>
+    <form [formGroup]="smsForm" (ngSubmit)="onSubmit()" class="p-fluid">
+
+      <div class="row">
+        <div class="col-12 mb-3">
+          <div class="d-flex flex-row gap-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="smsMessageType" id="smsMessageType" formControlName="smsMessageType" value="SINGLE_SMS">
+              <label class="form-check-label" for="single">Single SMS</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="smsMessageType" id="smsMessageType2" formControlName="smsMessageType" value="BULK_SMS">
+              <label class="form-check-label" for="bulk">Bulk SMS</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="sender_id" class="form-label font-weight-bold">Sender ID *</label>
+        <p-dropdown id="senderId" formControlName="senderId" [options]="senderIds" optionLabel="senderId" optionValue="id"></p-dropdown>
+      </div>
+
+      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'SINGLE_SMS'">
+        <label for="phoneNos" class="form-label font-weight-bold">Phone Numbers*</label>
+        <input type="tel" class="form-control" id="phoneNos" formControlName="phoneNos" placeholder="">
+      </div>
+
+      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS'">
+        <label for="phone_numbers" class="form-label font-weight-bold">Phone Numbers *</label>
+        <div class="d-flex flex-row gap-3">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="phoneNumbersSource" formControlName="phoneNumbersSource" id="copy_paste" value="COPY_PASTE">
+            <label class="form-check-label" for="copy_paste">Copy and Paste</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="phoneNumbersSource" formControlName="phoneNumbersSource" id="upload_file" value="UPLOADED_FILE">
+            <label class="form-check-label" for="upload_file">Upload File</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="phoneNumbersSource" formControlName="phoneNumbersSource" id="groups" value="GROUP">
+            <label class="form-check-label" for="groups">Group</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource === 'UPLOADED_FILE'">
+        <label for="uploadedFile" class="form-label font-weight-bold">
+          Uploaded File:*
+          <span style="font-size:12px;"><i>for xls/xlxs/csv files: contacts must be in only first column of the spreadsheet</i></span>
+        </label>
+        <p-fileUpload #fileUploader mode="basic" name="uploadedFile" accept=".txt,.xlsx,.xls,.csv" [auto]="true" [customUpload]="true" (onSelect)="onFileSelect($event)" [showUploadButton]="false" [showCancelButton]="false" chooseLabel="Choose a .txt,.xlsx,.xls,.csv File" invalidFileTypeMessageSummary="Invalid File Type" invalidFileTypeMessageDetail="Please select a .txt,.xlsx,.xls,.csv file."></p-fileUpload>
+      </div>
+
+      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource !== 'GROUP'">
+        <label for="phoneNos" class="form-label font-weight-bold">Phone No.s*</label>
+        <textarea class="form-control" id="phoneNos2" formControlName="phoneNos" rows="5"></textarea>
+      </div>
+
+      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource === 'GROUP'">
+        <label for="group_select" class="form-label font-weight-bold">Group *</label>
+        <p-dropdown id="groupId" formControlName="groupId" [options]="groups" optionLabel="groupName" optionValue="id" (onChange)="onGroupSelected()"></p-dropdown>
+      </div>
+
+      <div class="mb-4">
+        <label for="message_text" class="form-label font-weight-bold">Message Text *</label>
+        <textarea class="form-control" id="message_text" formControlName="messageText" rows="5" required (input)="updateCount()"></textarea>
+        <div class="d-flex justify-content-between mt-2">
+          <span class="sms-count">Characters: {{ characterCount }} / {{ smsCount }} SMS</span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label font-weight-bold">SMS Options</label>
+        <div class="d-flex flex-row gap-3 flex-wrap">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="flash_sms" formControlName="flashSms">
+            <label class="form-check-label" for="flash_sms">Flash SMS</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="schedule_sms" formControlName="scheduleSms">
+            <label class="form-check-label" for="schedule_sms">Schedule SMS</label>
+          </div>
+          <div class="form-check form-check-custom-success">
+            <input class="form-check-input" type="checkbox" id="template_sms" formControlName="templateSms">
+            <label class="form-check-label" for="template_sms">Save as Template SMS</label>
+          </div>
+          <div *ngIf="smsForm?.value?.templateSms">
+            <input type="text" class="form-control" id="templateName" formControlName="templateName" placeholder="Template Name">
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4" *ngIf="smsForm?.value?.scheduleSms">
+        <div class="mb-4">
+          <label class="form-label font-weight-bold">SMS Nature *</label>
+          <div class="d-flex flex-row gap-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="onetime" value="ONE_TIME">
+              <label class="form-check-label" for="onetime">Onetime</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="recurring" value="RECURRING">
+              <label class="form-check-label" for="recurring">Recurring</label>
+            </div>
+          </div>
+        </div>
+
+        <label for="scheduledTime" class="form-label font-weight-bold w-100">Scheduled Time*</label>
+        <p-calendar id="scheduledTime" formControlName="scheduledTime" [showTime]="true" [showSeconds]="false" dateFormat="mm/dd/yy"></p-calendar>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <label for="pages_count" class="form-label font-weight-bold">Pages Count</label>
+          <input type="text" class="form-control" id="pages_count" formControlName="pagesCount" [readOnly]="true">
+        </div>
+        <div class="col-md-6 mb-4">
+          <label for="total_recipients" class="form-label font-weight-bold">Total Recipients</label>
+          <input type="text" class="form-control" id="total_recipients" formControlName="totalRecipient" [readOnly]="true">
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-3 mt-4">
+        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Close</button>
+        <button type="submit" class="btn btn-success">
+          <i class="pi pi-save me-2"></i>Save SMS
+        </button>
+      </div>
+
+    </form>
 
 <!--    <p-button-->
 <!--      label="Close" severity="contrast"-->
