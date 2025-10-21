@@ -20,10 +20,6 @@
 
 <app-card title="SMS List" >
 
-
-
-
-
   <div class="card-body" *ngIf="formView.listView">
 
     <!-- SMS Messages Table -->
@@ -220,13 +216,12 @@
 
   <div class="mb-3">
      <label  class="form-label font-weight-bold">Select Template*</label>
-      <p-select
-        [(ngModel)]="selectedTemplateSms"
-        [options]="templateMsgs"
-        optionLabel="templateName"
-        class="w-100"
-        appendTo="body">
-      </p-select>
+    <select
+      [(ngModel)]="selectedTemplateSms"
+      class="form-select w-100">
+      <option [ngValue]="null">-- Select Template --</option>
+      <option *ngFor="let t of templateMsgs" [ngValue]="t">{{ t.templateName }}</option>
+    </select>
   </div>
 
   <ng-template pTemplate="footer">

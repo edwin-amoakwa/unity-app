@@ -108,7 +108,7 @@ console.log("selectedTemplateSms",this.selectedTemplateSms);
 
         // CollectionUtil.add(this.smsMessages, response.data);
         // this.formView.resetToListView();
-
+      console.log("response.data",response.data);
         this.openEditDialog(response.data);
 
     } catch (error) {
@@ -182,6 +182,8 @@ console.log("selectedTemplateSms",this.selectedTemplateSms);
 
         // CollectionUtil.add(this.smsMessages, response.data);
         // this.formView.resetToListView();
+
+
 
         this.openEditDialog(response.data);
 
