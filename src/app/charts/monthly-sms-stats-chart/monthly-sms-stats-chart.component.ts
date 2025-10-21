@@ -1,9 +1,9 @@
 // angular import
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 
 // third party
-import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
-import {DashboardService} from '../../dashboard/dashboard.service';
+import { ApexOptions, ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
+import { DashboardService } from '../../dashboard/dashboard.service';
 
 @Component({
   selector: 'monthly-sms-chart-chart',
