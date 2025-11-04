@@ -388,13 +388,16 @@ export class SmsComponent implements OnInit {
     {
       this.smsForm.patchValue(this.selectedSms);
       try {
-        const scheduledTimeString: string = this.selectedSms.scheduledTime;
+        if(!ObjectUtil.isNullOrUndefined(this.selectedSms.scheduledTime))
+        {
+          const scheduledTimeString: string = this.selectedSms.scheduledTime;
 
-        // CRITICAL STEP: Convert the ISO string to a Date object
-        const scheduledDateObject: Date = new Date(scheduledTimeString);
+          // CRITICAL STEP: Convert the ISO string to a Date object
+          const scheduledDateObject: Date = new Date(scheduledTimeString);
 
-        // 3. Set the Date object value to the form control
-        this.smsForm.controls['scheduledTime'].setValue(scheduledDateObject);
+          // 3. Set the Date object value to the form control
+          this.smsForm.controls['scheduledTime'].setValue(scheduledDateObject);
+        }
       } catch (error) {console.log(error);}
     }
   }
