@@ -346,6 +346,7 @@ export class SmsComponent implements OnInit {
     this.setupFormSubscriptions();
   }
 
+
   setupFormSubscriptions() {
     this.smsForm.get('messageText')?.valueChanges.subscribe((value: string) => {
       if (value) {
@@ -507,6 +508,18 @@ export class SmsComponent implements OnInit {
 
   clearFile() {
     this.smsForm.patchValue({ uploadedFile: null });
+  }
+
+
+  countContactsInPhoneNoTextBox()
+  {
+    let newValue = this.smsForm.get('phoneNos').value;
+    const cleanedValue = newValue.replace(/[^0-9\s\-\n]/g, '');
+      if (cleanedValue !== newValue) {
+        newValue = ObjectUtil.standardizeNewlines(newValue);
+        this.smsForm.get('phoneNos')?.setValue(cleanedValue, { emitEvent: false });
+      }
+      this.countContactsInTextBox(newValue);
   }
 
   countContactsInTextBox(content: string) {
