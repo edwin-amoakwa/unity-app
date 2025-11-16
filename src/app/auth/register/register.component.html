@@ -82,9 +82,9 @@
                 class="form-input"
                 [class.error]="isFieldInvalid('mobileNo')"
                 placeholder="Enter mobile number"
-                minlength="10"
-                maxlength="10"
-                pattern="0[0-9]{9}"
+                [attr.minlength]="phoneNumberLength"
+                [attr.maxlength]="phoneNumberLength"
+                [attr.pattern]="mobilePattern"
                 aria-label="mobile number"
               />
             </div>
@@ -141,11 +141,15 @@
                 formControlName="agreeToTerms"
               />
               <label class="checkbox-label" for="agreeToTerms">
-                I agree with Terms & Conditions
+                I agree with
+                <a href="#" (click)="openTerms($event)">Read / View Terms & Conditions</a>
               </label>
             </div>
             <div *ngIf="isFieldInvalid('agreeToTerms')" class="field-error">
               <small>{{ getFieldError('agreeToTerms') }}</small>
+            </div>
+            <div class="terms-hint">
+              <small>Read / View Terms & Conditions to view the terms and conditions.</small>
             </div>
           </div>
 
@@ -174,6 +178,21 @@
           </div>
         </div>
       </form>
+
+      <!-- Terms & Conditions Dialog -->
+      <p-dialog
+        header="Terms & Conditions"
+        [(visible)]="displayTerms"
+        [modal]="true"
+        [draggable]="false"
+        [resizable]="false"
+        [style]="{ width: '650px', maxWidth: '95vw' }"
+        [breakpoints]="{ '960px': '95vw' }"
+      >
+        <div class="terms-content">
+          <app-terms-and-conditions></app-terms-and-conditions>
+        </div>
+      </p-dialog>
     </div>
   </div>
 </div>
