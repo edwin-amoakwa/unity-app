@@ -73,7 +73,6 @@ export class SentSmsChartComponent implements OnInit{
         fixed: {
           enabled: false
         },
-
         x: {
           show: false
         },
