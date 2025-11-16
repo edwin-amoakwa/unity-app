@@ -5,6 +5,7 @@ import {UntypedFormBuilder, Validators, ReactiveFormsModule, FormGroup} from '@a
 import {AuthService, LoginPayload} from '../../auth.service';
 import {UserSession} from '../../core/user-session';
 import {CommonModule} from '@angular/common';
+import {UnityConfig} from '../../app-config';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,7 @@ export class LoginComponent {
   constructor() {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
-      userPassword: ['', [Validators.required, Validators.minLength(6)]]
+      userPassword: ['', [Validators.required, Validators.minLength(UnityConfig.PasswordMinLength)]]
     });
   }
 

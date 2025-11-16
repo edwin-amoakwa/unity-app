@@ -63,26 +63,18 @@
                         filterBy="countryName"  optionValue="id" placeholder="Select a Country" class="w-full md:w-56">
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
-                    <span class="fi" [ngClass]="'fi-' + selectedOption.countryCode"></span>
-                    <div>{{ selectedOption.countryName }}</div>
+                    <i class="fi" [ngClass]="'fi-' + selectedOption.countryCode"></i>
+                    <span>{{ selectedOption.countryName }}</span>
                   </div>
                 </ng-template>
                 <ng-template let-country #item>
                   <div class="flex items-center gap-2">
-                    <span class="fi" [ngClass]="'fi-' + country.countryCode"></span>
-
-                    <div>{{ country.countryName }}</div>
+                    <i class="fi" [ngClass]="'fi-' + country.countryCode"></i>
+                    <span style="margin-left: 5px;">{{ country.countryName }}</span>
                   </div>
                 </ng-template>
               </p-select>
 
-
-<!--              <select class="country-select" formControlName="countryCode" aria-label="Country">-->
-<!--                <option value="" disabled selected>Select country</option>-->
-<!--                <option *ngFor="let c of countries" [value]="c.value">-->
-<!--                  {{ c.label }}-->
-<!--                </option>-->
-<!--              </select>-->
               <input
                 type="tel"
                 id="mobileNo"

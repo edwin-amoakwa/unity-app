@@ -7,13 +7,15 @@ import { AuthService } from '../../auth.service';
 import { UserSession } from '../../core/user-session';
 import { DataLookupService } from '../../core/services/data-lookup.service';
 import {Select} from 'primeng/select';
+import {UnityConfig} from '../../app-config';
+import {Button} from 'primeng/button';
 
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, Select],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, Select, Button],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
@@ -52,7 +54,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       countryId: [''],
       mobileNo: ['', [Validators.required, Validators.pattern(/^0\d{9}$/)]],
       emailAddress: ['', [Validators.required, Validators.email]],
-      userPassword: ['', [Validators.required, Validators.minLength(8)]],
+      userPassword: ['', [Validators.required, Validators.minLength(UnityConfig.PasswordMinLength)]],
       agreeToTerms: [false, [Validators.requiredTrue]]
     });
   }

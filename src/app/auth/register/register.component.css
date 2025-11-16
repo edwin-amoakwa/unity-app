@@ -1,4 +1,4 @@
-// Login container - full screen
+/* Login container - full screen */
 .login-container {
   position: relative;
   min-height: 100vh;
@@ -9,27 +9,25 @@
   overflow: hidden;
 }
 
-// Background with gradient
+/* Background with gradient */
 .login-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg,
-    #667eea 0%,
-    #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-    opacity: 0.3;
-  }
+.login-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
 }
 
 .background-overlay {
@@ -39,10 +37,10 @@
   width: 100%;
   height: 100%;
   background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
 }
 
-// Main content container
+/* Main content container */
 .login-content {
   position: relative;
   z-index: 10;
@@ -51,7 +49,7 @@
   padding: 20px;
 }
 
-// Glass effect container
+/* Glass effect container */
 .glass-container {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
@@ -59,27 +57,22 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 40px;
-  box-shadow:
-    0 25px 45px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.3) 50%,
-      transparent 100%);
-  }
 }
 
-// Header styling
+.glass-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+}
+
+/* Header styling */
 .login-header {
   text-align: center;
   margin-bottom: 32px;
@@ -101,34 +94,13 @@
   font-weight: 400;
 }
 
-// Form styling
+/* Form styling */
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-// Country select inline with phone input
-.country-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin-right: 8px;
-  font-size: 14px;
-  color: #1a1a1a;
-  min-width: 160px;
-  height: 44px;
-}
-
-.input-container .country-select:focus {
-  outline: none;
-  border-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
-}
 
 .form-group {
   display: flex;
@@ -143,7 +115,7 @@
   margin-bottom: 4px;
 }
 
-// Input container with icon
+/* Input container with icon */
 .input-container {
   position: relative;
   display: flex;
@@ -173,25 +145,25 @@
   transition: all 0.3s ease;
   outline: none;
   box-sizing: border-box;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  &:focus {
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
-    transform: translateY(-1px);
-  }
-
-  &.error {
-    border-color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.1);
-  }
 }
 
-// Checkbox styling
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-input:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-input.error {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+/* Checkbox styling */
 .checkbox-container {
   display: flex;
   align-items: center;
@@ -205,11 +177,11 @@
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.1);
   cursor: pointer;
+}
 
-  &:checked {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
-  }
+.checkbox-input:checked {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .checkbox-label {
@@ -219,16 +191,16 @@
   user-select: none;
 }
 
-// Field error messages
+/* Field error messages */
 .field-error {
   margin-top: 4px;
+}
 
-  small {
-    color: #ff9999;
-    font-size: 12px;
-    font-weight: 500;
-    display: block;
-  }
+.field-error small {
+  color: #ff9999;
+  font-size: 12px;
+  font-weight: 500;
+  display: block;
 }
 
 /* Two-column form layout */
@@ -248,7 +220,7 @@
   }
 }
 
-// Error message banner
+/* Error message banner */
 .error-message {
   padding: 12px 16px;
   background: rgba(255, 107, 107, 0.15);
@@ -267,7 +239,7 @@
   color: #ff6b6b;
 }
 
-// Login button
+/* Login button */
 .login-button {
   width: 100%;
   padding: 16px;
@@ -282,48 +254,45 @@
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
   position: relative;
   overflow: hidden;
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.2) 50%,
-      transparent 100%);
-    transition: left 0.5s ease;
-  }
+.login-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  transition: left 0.5s ease;
+}
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
 
-    &::before {
-      left: 100%;
-    }
-  }
+.login-button:hover::before {
+  left: 100%;
+}
 
-  &:active {
-    transform: translateY(0);
-  }
+.login-button:active {
+  transform: translateY(0);
+}
 
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
 
-    &:hover {
-      transform: none;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-  }
+.login-button:disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
 
-  &.loading {
-    pointer-events: none;
-  }
+.login-button.loading {
+  pointer-events: none;
 }
 
 .button-text,
@@ -351,7 +320,7 @@
   to { transform: rotate(360deg); }
 }
 
-// Footer
+/* Footer */
 .login-footer {
   text-align: center;
   margin-top: 16px;
@@ -363,14 +332,14 @@
   font-size: 14px;
   font-weight: 500;
   transition: color 0.3s ease;
-
-  &:hover {
-    color: white;
-    text-decoration: underline;
-  }
 }
 
-// Responsive design
+.forgot-password:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* Responsive design */
 @media (max-width: 480px) {
   .login-content {
     padding: 16px;
@@ -398,4 +367,12 @@
   .login-button {
     padding: 14px;
   }
+}
+
+/* Primeng select fix */
+.p-select .p-select-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
