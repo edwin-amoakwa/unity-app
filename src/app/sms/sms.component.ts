@@ -1,37 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
 
 // PrimNG imports
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
-import { TooltipModule } from 'primeng/tooltip';
-import { CheckboxModule } from 'primeng/checkbox';
-import { CalendarModule } from 'primeng/calendar';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
-import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
+import { TooltipModule } from 'primeng/tooltip';
 
 // Project imports
+import { ConfigService } from '../config.service';
+import { CoreModule } from '../core/core.module';
 import { FormView } from '../core/form-view';
 import { NotificationService } from '../core/notification.service';
 import { CollectionUtil, ObjectUtil } from '../core/system.utils';
-import { MessageBox } from '../message-helper';
-import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
-import { CardComponent } from '../theme/shared/components/card/card.component';
-import { SmsService } from './sms.service';
-import { CoreModule } from '../core/core.module';
-import { ConfigService } from '../config.service';
 import { DistributionGroupsService } from '../distribution-groups/distribution-groups.service';
+import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
+import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
+import { SmsService } from './sms.service';
 
 @Component({
   selector: 'app-sms',
@@ -129,7 +127,7 @@ export class SmsComponent implements OnInit {
 
   async createFromTemplate() {
     try {
-console.log("selectedTemplateSms",this.selectedTemplateSms);
+      console.log("selectedTemplateSms",this.selectedTemplateSms);
       if(ObjectUtil.isNullOrUndefinedOrEmpty(this.selectedTemplateSms?.id))
       {
         this.notificationService.error("Select A Template SMS");
@@ -348,6 +346,7 @@ console.log("selectedTemplateSms",this.selectedTemplateSms);
     this.setupFormSubscriptions();
   }
 
+
   setupFormSubscriptions() {
     this.smsForm.get('messageText')?.valueChanges.subscribe((value: string) => {
       if (value) {
@@ -386,8 +385,21 @@ console.log("selectedTemplateSms",this.selectedTemplateSms);
   }
 
   populateForm() {
-    if (this.selectedSms && this.smsForm) {
+    if (this.selectedSms && this.smsForm)
+    {
       this.smsForm.patchValue(this.selectedSms);
+      try {
+        if(!ObjectUtil.isNullOrUndefined(this.selectedSms.scheduledTime))
+        {
+          const scheduledTimeString: string = this.selectedSms.scheduledTime;
+
+          // CRITICAL STEP: Convert the ISO string to a Date object
+          const scheduledDateObject: Date = new Date(scheduledTimeString);
+
+          // 3. Set the Date object value to the form control
+          this.smsForm.controls['scheduledTime'].setValue(scheduledDateObject);
+        }
+      } catch (error) {console.log(error);}
     }
   }
 
@@ -498,6 +510,18 @@ console.log("selectedTemplateSms",this.selectedTemplateSms);
     this.smsForm.patchValue({ uploadedFile: null });
   }
 
+
+  countContactsInPhoneNoTextBox()
+  {
+    let newValue = this.smsForm.get('phoneNos').value;
+    const cleanedValue = newValue.replace(/[^0-9\s\-\n]/g, '');
+      if (cleanedValue !== newValue) {
+        newValue = ObjectUtil.standardizeNewlines(newValue);
+        this.smsForm.get('phoneNos')?.setValue(cleanedValue, { emitEvent: false });
+      }
+      this.countContactsInTextBox(newValue);
+  }
+
   countContactsInTextBox(content: string) {
     content = ObjectUtil.standardizeNewlines(content);
     let lines = content.split(/\r?\n/);
@@ -546,7 +570,8 @@ console.log("selectedTemplateSms",this.selectedTemplateSms);
       const hours = pad(dateObj.getHours());
       const minutes = pad(dateObj.getMinutes());
       const seconds = pad(dateObj.getSeconds());
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      // const seconds = pad(dateObj.getSeconds());
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000`;
     } catch (error) {
       return dateObj;
     }

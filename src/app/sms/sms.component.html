@@ -220,7 +220,7 @@
 
       <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource !== 'GROUP'">
         <label for="phoneNos" class="form-label font-weight-bold">Phone No.s*</label>
-        <textarea class="form-control" id="phoneNos2" formControlName="phoneNos" rows="5"></textarea>
+        <textarea class="form-control" id="phoneNos2" formControlName="phoneNos" rows="5" (input)="countContactsInPhoneNoTextBox()"></textarea>
       </div>
 
       <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource === 'GROUP'">

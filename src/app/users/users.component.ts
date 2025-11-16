@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 // PrimNG imports
 import { MessageService } from 'primeng/api';
@@ -16,9 +16,9 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { NotificationService } from '../core/notification.service';
 import { CollectionUtil } from '../core/system.utils';
 import { StaticDataService } from '../static-data.service';
+import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
+import { CardComponent } from '../theme/shared/components/card/card.component';
 import { UserService } from './user.service';
-import {ButtonToolbarComponent} from '../theme/shared/components/button-toolbar/button-toolbar.component';
-import {CardComponent} from '../theme/shared/components/card/card.component';
 
 // Permissions model interfaces
 interface PermissionAction {
@@ -56,7 +56,8 @@ interface PermissionPage {
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit
+{
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private messageService = inject(MessageService);
@@ -402,6 +403,7 @@ export class UsersComponent implements OnInit {
     if (!this.permRolesUser) return;
     try {
       this.permSaveLoading = true;
+      console.log("this.permissionsData == ",this.permissionsData);
       const resp = await this.userService.saveUserPermissions(String(this.permRolesUser.id ?? this.permRolesUser.userId ?? ''), this.permissionsData);
       if (resp?.success) {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Permissions saved' });
