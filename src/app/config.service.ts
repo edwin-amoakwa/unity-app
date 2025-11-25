@@ -28,4 +28,8 @@ export class ConfigService {
   async getSenderIds(): Promise<ApiResponse<any[]>> {
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/sms-sender-ids`));
   }
+
+  async getSenderIdsApprovedList(): Promise<ApiResponse<any[]>> {
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/sms-sender-ids/approved`));
+  }
 }

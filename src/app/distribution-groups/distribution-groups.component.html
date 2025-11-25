@@ -1,7 +1,5 @@
 <h1 class="page-title">Group Contacts</h1>
 
-
-
 <div *ngIf="formView.listView" >
 
 
@@ -87,7 +85,6 @@
     </p-button>
     </button-toolbar>
 
-
         <div class="row p-3" *ngIf="selectedGroup.groupType === 'FREE_FORM'">
 
           <div id="manageContact" class="col-lg-10">
@@ -96,7 +93,7 @@
 
               <textarea rows="10" style="width: 100%" pTextarea [(ngModel)]="selectedGroup.phoneNos" disabled></textarea>
             </p-scrollpanel>
-            
+
             <br />
             <button-toolbar align="centre">
               <p-button
@@ -114,9 +111,7 @@
 
             </button-toolbar>
 
-
           </div>
-
 
         </div>
 

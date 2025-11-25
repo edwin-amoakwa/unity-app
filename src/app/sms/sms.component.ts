@@ -375,7 +375,7 @@ export class SmsComponent implements OnInit {
   }
 
   async loadDropdownData() {
-    this.configService.getSenderIds().then(response => {
+    this.configService.getSenderIdsApprovedList().then(response => {
       this.senderIds = response.data;
     });
 

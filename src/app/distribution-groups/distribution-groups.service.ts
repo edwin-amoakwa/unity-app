@@ -50,6 +50,13 @@ export class DistributionGroupsService {
     return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.contactsApiUrl}/${id}`));
   }
 
+  // Bulk delete group contacts
+  async bulkDeleteGroupContacts(ids: string[]): Promise<ApiResponse<any>> {
+    return await firstValueFrom(
+      this.http.post<ApiResponse<any>>(`${this.contactsApiUrl}/bulk-delete`, ids)
+    );
+  }
+
   async uploadContacts(groupId: string,dto: any): Promise<ApiResponse<any>>
   {
     return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.contactsApiUrl}/${groupId}/upload-contacts`,dto));

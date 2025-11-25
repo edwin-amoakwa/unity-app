@@ -184,7 +184,7 @@
 
       <div class="mb-4">
         <label for="sender_id" class="form-label font-weight-bold">Sender ID *</label>
-        <p-dropdown id="senderId" formControlName="senderId" [options]="senderIds" optionLabel="senderId" optionValue="id"></p-dropdown>
+        <p-dropdown id="senderId" placeholder="Select SenderID" formControlName="senderId" [options]="senderIds" optionLabel="senderId" optionValue="id"></p-dropdown>
       </div>
 
       <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'SINGLE_SMS'">

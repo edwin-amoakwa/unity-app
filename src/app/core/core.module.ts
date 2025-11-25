@@ -123,7 +123,7 @@ import {TagModule} from 'primeng/tag';
     DialogModule,
     ConfirmDialog,
     ConfirmDialogModule,
-
+    SelectModule,
     CardComponent,
     NgbDropdownModule,
     NgbDropdownModule,
@@ -158,6 +158,7 @@ import {TagModule} from 'primeng/tag';
     InputMaskModule,
     EditorModule,
     DatePickerModule,
+    SelectModule,
     // TabViewModule,
     ToggleSwitchModule,
     SelectButton,

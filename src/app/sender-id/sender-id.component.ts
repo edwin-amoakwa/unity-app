@@ -19,11 +19,12 @@ import { NotificationService } from '../core/notification.service';
 import { MessageBox } from '../message-helper';
 import { FormView } from '../core/form-view';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
+import {Select} from 'primeng/select';
 
 
 @Component({
   selector: 'app-sender-id',
-  imports: [CardComponent, ButtonToolbarComponent, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule, DropdownModule],
+  imports: [CardComponent, ButtonToolbarComponent, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule, DropdownModule, Select],
   templateUrl: './sender-id.component.html',
   styleUrls: ['./sender-id.component.css']
 })

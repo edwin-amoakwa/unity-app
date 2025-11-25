@@ -75,7 +75,7 @@ export class SmsRecordsComponent implements OnInit {
 
 
       // Load sender ID options
-      const senderIdResponse = await this.configService.getSenderIds();
+      const senderIdResponse = await this.configService.getSenderIdsApprovedList();
       this.senderIdOptions = senderIdResponse.data || [];
     } catch (error) {
       console.error('Error loading filter options:', error);

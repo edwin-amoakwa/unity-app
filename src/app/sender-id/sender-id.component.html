@@ -22,14 +22,13 @@
             <label for="application" class="form-label">Application</label>
           </div>
           <div class="col-md-9">
-            <p-dropdown
+            <p-select  placeholder="Select Application"
               id="application"
               formControlName="applicationId"
               [options]="applications"
               optionLabel="appName"
-              optionValue="id"
-              styleClass="w-full">
-            </p-dropdown>
+              optionValue="id">
+            </p-select>
           </div>
         </div>
         <div class="row mb-3">
@@ -76,7 +75,7 @@
         <div class="row">
           <div class="col-md-9 offset-md-3 d-flex gap-2">
             <button type="button" class="btn btn-secondary" (click)="backToList()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="!senderIdForm.valid">
+            <button id="saveEditButton" type="submit" class="btn btn-primary" [disabled]="isLoading">
               <span *ngIf="senderIdForm?.value?.id === null || senderIdForm?.value?.id === undefined">Create</span>
               <span *ngIf="senderIdForm?.value?.id !== null && senderIdForm?.value?.id !== undefined">Edit</span>
               Sender ID

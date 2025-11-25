@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, ViewChild, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 
 // PrimNG imports
@@ -15,6 +15,7 @@ import { CollectionUtil, DateUtil, ObjectUtil } from '../../core/system.utils';
 import { ButtonToolbarComponent } from '../../theme/shared/components/button-toolbar/button-toolbar.component';
 import { CardComponent } from '../../theme/shared/components/card/card.component';
 import { DistributionGroupsService } from '../distribution-groups.service';
+import {MessageBox} from '../../message-helper';
 
 @Component({
   selector: 'app-group-contacts',
@@ -44,10 +45,13 @@ export class GroupContactsComponent implements OnInit, OnChanges {
   @Input() loading = false;
   @Output() contactsChange = new EventEmitter<any[]>();
 
-  contacts: any[] = [];
+  contactsList: any[] = [];
+  selectedContacts: any[] = [];
   contactForm!: FormGroup;
   showContactDialog = false;
   editingContact: any | null = null;
+  // Loading flag for Save/Update button to prevent multiple clicks
+  savingContact = false;
 
   downloadLink: string = '/assets/templates/group-contact-template.xls';
   constructor() {}
@@ -80,7 +84,8 @@ export class GroupContactsComponent implements OnInit, OnChanges {
 
     try {
       const response = await this.distributionGroupsService.getGroupContacts(this.selectedGroup.id);
-      this.contacts = response.data || [];
+      this.contactsList = response.data || [];
+      this.selectedContacts = [];
       // this.contactsChange.emit(this.contacts);
       // this.contactsChange.emit(response.meta);
     } catch (error) {
@@ -109,7 +114,12 @@ export class GroupContactsComponent implements OnInit, OnChanges {
   }
 
   async saveContact(): Promise<void> {
+    if (this.savingContact) {
+      return; // prevent duplicate submissions
+    }
     if (this.contactForm.valid) {
+      // prevent multiple submissions while saving
+      this.savingContact = true;
       try {
         const formValue = this.contactForm.value;
         try {
@@ -124,7 +134,7 @@ export class GroupContactsComponent implements OnInit, OnChanges {
 
         if (response.success)
         {
-          CollectionUtil.add(this.contacts, response.data);
+          CollectionUtil.add(this.contactsList, response.data);
           // this.contactsChange.emit(this.contacts);
           this.contactsChange.emit(response.meta);
           this.closeContactDialog();
@@ -132,6 +142,8 @@ export class GroupContactsComponent implements OnInit, OnChanges {
         }
       } catch (error) {
         this.notificationService.error('An error occurred while saving the contact');
+      } finally {
+        this.savingContact = false;
       }
     } else {
       Object.keys(this.contactForm.controls).forEach(key => {
@@ -143,19 +155,54 @@ export class GroupContactsComponent implements OnInit, OnChanges {
   async deleteContact(contact: any): Promise<void> {
     if (!contact.id) return;
 
+    const confirm = await MessageBox.deleteConfirmDialog("Delete Contact?","Are you sure you want to delete Contact?");
+    if (!confirm.value) return;
+
     try {
       const response = await this.distributionGroupsService.deleteGroupContact(contact.id);
       if (response.success) {
         // CollectionUtil.remove(this.contacts, contact.id);
-        CollectionUtil.remove(this.contacts, response.data);
+        CollectionUtil.remove(this.contactsList, response.data);
         // this.contactsChange.emit(this.contacts);
         this.contactsChange.emit(response.meta);
-        this.notificationService.success('Contact deleted successfully');
+        // this.notificationService.success('Contact deleted successfully');
       } else {
         this.notificationService.error(response.message || 'Failed to delete contact');
       }
     } catch (error) {
       this.notificationService.error('An error occurred while deleting the contact');
+    }
+  }
+
+  async deleteSelectedContacts(): Promise<void> {
+    const count = this.selectedContacts?.length || 0;
+    if (count === 0) return;
+
+    const title = `Delete ${count} selected contact${count > 1 ? 's' : ''}?`;
+    const text = `Are you sure you want to delete ${count} selected contact${count > 1 ? 's' : ''}?`;
+    const confirm = await MessageBox.deleteConfirmDialog(title, text);
+    if (!confirm.value) return;
+
+    try {
+      const ids = this.selectedContacts
+        .map(c => c?.id)
+        .filter((id: any) => !!id);
+
+      if (!ids.length) return;
+
+      const response = await this.distributionGroupsService.bulkDeleteGroupContacts(ids);
+      if (response.success) {
+        // Remove deleted contacts locally
+        // ids.forEach(id => CollectionUtil.remove(this.contactsList, id));
+        // this.contactsChange.emit(response.meta);
+        this.loadContacts();
+        this.selectedContacts = [];
+        // this.notificationService.success('Selected contacts deleted successfully');
+      } else {
+        this.notificationService.error(response.message || 'Failed to delete selected contacts');
+      }
+    } catch (error) {
+      this.notificationService.error('An error occurred while deleting selected contacts');
     }
   }
 
@@ -199,6 +246,7 @@ export class GroupContactsComponent implements OnInit, OnChanges {
   uploadForm: UntypedFormGroup;
   fileString: any;
   fileName: any;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   initUploadForm() {
     this.uploadForm = this.fb.group({
@@ -234,6 +282,10 @@ export class GroupContactsComponent implements OnInit, OnChanges {
     this.uploadForm.controls['selectedFile'].reset();
     this.fileName = null;
     this.fileString = null;
+    // Also clear the native file input so the same file can be selected again
+    if (this.fileInput && this.fileInput.nativeElement) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   getFormValues(uploadFile: any) {
@@ -255,12 +307,14 @@ export class GroupContactsComponent implements OnInit, OnChanges {
       if (result.success)
       {
         result.data.forEach(element => {
-          CollectionUtil.add(this.contacts,element);
+          CollectionUtil.add(this.contactsList,element);
         });
       }
     } catch (error) {
     } finally {
       this.loading = false;
+      // Clear selected file after attempting upload to prevent duplicate re-uploads of the same file
+      this.clearUploadForm();
     }
   }
 

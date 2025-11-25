@@ -1,16 +1,39 @@
 <button-toolbar>
-  <p-button
-    label="Add Contact"
-    icon="pi pi-plus"
-    (onClick)="openNewContactDialog()"
-    styleClass="p-button-primary">
-  </p-button>
+  <div class="flex gap-2 align-items-center">
+    <p-button
+      label="Add Contact"
+      icon="pi pi-plus"
+      (onClick)="openNewContactDialog()"
+      styleClass="p-button-primary">
+    </p-button>
+
+    <p-button
+      *ngIf="selectedContacts?.length"
+      [label]="'Delete (' + selectedContacts.length + ') '"
+      icon="pi pi-trash"
+      (onClick)="deleteSelectedContacts()"
+      styleClass="p-button-danger"
+      pTooltip="Delete selected contacts">
+    </p-button>
+  </div>
 </button-toolbar>
 
 <div class="col-12">
-  <p-table [value]="contacts" [loading]="loading" styleClass="p-datatable-sm">
+  <p-table
+    [value]="contactsList"
+    [loading]="loading"
+    styleClass="p-datatable-sm"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10,25,50,100]"
+    selectionMode="multiple"
+    dataKey="id"
+    [(selection)]="selectedContacts">
     <ng-template pTemplate="header">
       <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
         <th>Mobile No</th>
         <th>First Name</th>
         <th>Surname</th>
@@ -21,6 +44,9 @@
     </ng-template>
     <ng-template pTemplate="body" let-contact>
       <tr>
+        <td>
+          <p-tableCheckbox [value]="contact"></p-tableCheckbox>
+        </td>
         <td>{{ contact.mobileNo }}</td>
         <td>{{ contact.firstName }}</td>
         <td>{{ contact.surname }}</td>
@@ -46,7 +72,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="6" class="text-center">No contacts found</td>
+        <td colspan="7" class="text-center">No contacts found</td>
       </tr>
     </ng-template>
   </p-table>
@@ -67,15 +93,21 @@
 
     <div class="col-12">
       <div class="row">
-         <p>
-          <a [href]="downloadLink" download="group-contact-template.xls">
-            Download Contact Upload Template (Excel)
-          </a>
-         </p>
+        <p>
+        <a
+          pButton
+          [href]="downloadLink"
+          download="group-contact-template.xls"
+          icon="pi pi-download"
+          label="Download Contact Upload Template (Excel)"
+          class="p-button-link"
+          title="Download the Excel template for uploading contacts"
+        ></a>
+        </p>
       </div>
       <div class="row">
         <div class="col-auto">
-          <input (change)="onFileChange($event)" class="form-control" formControlName="selectedFile" type="file">
+          <input #fileInput (change)="onFileChange($event)" class="form-control" formControlName="selectedFile" type="file">
         </div>
         <div class="col-auto">
           <button type="button" pButton (click)="upload()">upload</button>
@@ -202,6 +234,7 @@
         label="{{ editingContact ? 'Update' : 'Save' }}"
         icon="pi pi-check"
         type="submit"
+        [loading]="savingContact"
         styleClass="p-button-primary">
       </p-button>
     </div>

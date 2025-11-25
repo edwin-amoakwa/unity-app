@@ -4,6 +4,30 @@
 
 @import "app-common.css";
 
+
+:host ::ng-deep .p-select {
+  width: max-content !important; /* adapt to content */
+  min-width: 150px; /* fallback width when empty */
+}
+
+:host ::ng-deep .p-select-label {
+  width: max-content !important;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .p-select-panel {
+  width: max-content !important;
+  min-width: 150px; /* same fallback as select */
+}
+
+:host ::ng-deep .p-select-items {
+  width: max-content !important;
+  white-space: nowrap;
+}
+
+
+
+
 /* Global styles and theme variables */
 :root {
   --bg: #f6f7fb;

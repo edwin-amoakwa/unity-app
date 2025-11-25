@@ -23,6 +23,9 @@ export class ApplicationService {
     return await firstValueFrom(this.http.put<ApiResponse<any>>(`${this.apiUrl}`, application));
   }
 
+  async getActiveApplications(): Promise<ApiResponse<any[]>> {
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl));
+  }
 
   async deleteApplication(id: string): Promise<ApiResponse<any>> {
     return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`));

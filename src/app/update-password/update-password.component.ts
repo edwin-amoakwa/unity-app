@@ -71,8 +71,10 @@ export class UpdatePasswordComponent implements OnInit {
       const response = await this.userService.updatePasswordWithCurrent(formValue);
 
       if (response.success) {
-        this.notificationService.success('Password updated successfully');
+        this.notificationService.success('Password updated. You will be logged out, so you can login with your new password.');
         this.updatePasswordForm.reset();
+        localStorage.clear();
+        this.router.navigate(['/login']);
 
       }
     } catch (error: any) {
