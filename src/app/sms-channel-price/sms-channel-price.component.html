@@ -1,0 +1,36 @@
+<app-card title="SMS Channel Price List">
+  <p-table
+    [value]="prices"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10,25,50]"
+    styleClass="p-datatable-gridlines"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Country</th>
+        <th>Country Code</th>
+        <th>Channel</th>
+        <th class="text-right">Local Rate</th>
+        <th class="text-right">International Rate</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.countryName }}</td>
+        <td>{{ row.countryCode }}</td>
+        <td>{{ row.smsChannelName }}</td>
+        <td class="text-right">{{ row.localRate }}</td>
+        <td class="text-right">{{ row.internationalRate }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center">No price data available.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</app-card>

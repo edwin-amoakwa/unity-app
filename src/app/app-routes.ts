@@ -40,6 +40,7 @@ export const routes: Routes = [
       { path: 'group-contacts', component: DistributionGroupsComponent },
       { path: 'send-sms', component: SmsComponent },
       { path: 'sms-records', component: SmsRecordsComponent },
+      { path: 'sms-channel-price', loadComponent: () => import('./sms-channel-price/sms-channel-price.component').then(m => m.SmsChannelPriceComponent) },
       { path: 'profile', component: ProfileComponent },
       { path: 'update-password', component: UpdatePasswordComponent },
       { path: 'notification-settings', loadComponent: () => import('./notification-settings/notification-settings.component').then(m => m.NotificationSettingsComponent) },
