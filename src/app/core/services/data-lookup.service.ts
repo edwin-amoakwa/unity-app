@@ -14,4 +14,10 @@ export class DataLookupService {
     return await firstValueFrom(this.http.get<ApiResponse<any>>(`${environment.baseUrl}/data/countries`));
   }
 
+  async getIndustries() {
+    return await firstValueFrom(
+      this.http.get<ApiResponse<any>>(`${environment.baseUrl}/data/industries`)
+    );
+  }
+
 }

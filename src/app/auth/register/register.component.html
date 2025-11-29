@@ -2,7 +2,6 @@
 
 <div class="login-container">
   <div class="login-background">
-    <!-- Background gradient overlay -->
     <div class="background-overlay"></div>
   </div>
 
@@ -20,13 +19,12 @@
           <div class="form-group">
             <label for="companyName" class="form-label">Company Name</label>
             <div class="input-container">
-              <i class="input-icon">🏢</i>
+              <i class="pi pi-building"></i>
               <input
+                pInputText
                 type="text"
                 id="companyName"
                 formControlName="companyName"
-                class="form-input"
-                [class.error]="isFieldInvalid('companyName')"
                 placeholder="Enter company name"
               />
             </div>
@@ -39,13 +37,12 @@
           <div class="form-group">
             <label for="contactPerson" class="form-label">Contact Person</label>
             <div class="input-container">
-              <i class="input-icon">👤</i>
+              <i class="pi pi-user"></i>
               <input
+                pInputText
                 type="text"
                 id="contactPerson"
                 formControlName="contactPerson"
-                class="form-input"
-                [class.error]="isFieldInvalid('contactPerson')"
                 placeholder="Enter contact person name"
               />
             </div>
@@ -54,13 +51,44 @@
             </div>
           </div>
 
-          <!-- Mobile Number with Country -->
+
+          <div class="form-group">
+            <label for="industryId" class="form-label">Industry</label>
+            <div class="input-container">
+              <p-select
+                inputId="industryId"
+                [options]="industries"
+                formControlName="industryId"
+                optionLabel="name"
+                optionValue="id"
+                [filter]="true"
+                filterBy="name"
+                placeholder="Select an Industry"
+                >
+                <ng-template #selectedItem let-selectedOption>
+                  <div class="flex items-center gap-2">
+                    <span>{{ selectedOption?.name || selectedOption?.industryName }}</span>
+                  </div>
+                </ng-template>
+                <ng-template let-industry #item>
+                  <div class="flex items-center gap-2">
+                    <span>{{ industry?.name || industry?.industryName }}</span>
+                  </div>
+                </ng-template>
+              </p-select>
+            </div>
+            <div *ngIf="isFieldInvalid('industryId')" class="field-error">
+              <small>{{ getFieldError('industryId') }}</small>
+            </div>
+          </div>
+
+   
           <div class="form-group">
             <label for="mobileNo" class="form-label">Mobile Number</label>
             <div class="input-container">
 
               <p-select [options]="countries" formControlName="countryId" optionLabel="countryName" [filter]="true"
-                        filterBy="countryName"  optionValue="id" placeholder="Select a Country" class="w-full md:w-56">
+                        filterBy="countryName"  optionValue="id" placeholder="Select a Country">
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
                     <i class="fi" [ngClass]="'fi-' + selectedOption.countryCode"></i>
@@ -76,11 +104,10 @@
               </p-select>
 
               <input
+                pInputText
                 type="tel"
                 id="mobileNo"
                 formControlName="mobileNo"
-                class="form-input"
-                [class.error]="isFieldInvalid('mobileNo')"
                 placeholder="Enter mobile number"
                 [attr.minlength]="phoneNumberLength"
                 [attr.maxlength]="phoneNumberLength"
@@ -97,13 +124,12 @@
           <div class="form-group">
             <label for="emailAddress" class="form-label">Email Address</label>
             <div class="input-container">
-              <i class="input-icon">✉️</i>
+              <i class="pi pi-envelope"></i>
               <input
+                pInputText
                 type="email"
                 id="emailAddress"
                 formControlName="emailAddress"
-                class="form-input"
-                [class.error]="isFieldInvalid('emailAddress')"
                 placeholder="Enter email address"
               />
             </div>
@@ -116,15 +142,13 @@
           <div class="form-group full-width">
             <label for="userPassword" class="form-label">Password</label>
             <div class="input-container">
-              <i class="input-icon">🔒</i>
-              <input
-                type="password"
-                id="userPassword"
+              <i class="pi pi-lock"></i>
+              <p-password
+                inputId="userPassword"
                 formControlName="userPassword"
-                class="form-input"
-                [class.error]="isFieldInvalid('userPassword')"
+                [feedback]="false"
                 placeholder="Enter password"
-              />
+              ></p-password>
             </div>
             <div *ngIf="isFieldInvalid('userPassword')" class="field-error">
               <small>{{ getFieldError('userPassword') }}</small>
@@ -134,12 +158,11 @@
           <!-- Terms and Conditions -->
           <div class="form-group full-width">
             <div class="checkbox-container">
-              <input
-                class="checkbox-input"
-                type="checkbox"
-                id="agreeToTerms"
+              <p-checkbox
+                inputId="agreeToTerms"
                 formControlName="agreeToTerms"
-              />
+                [binary]="true"
+              ></p-checkbox>
               <label class="checkbox-label" for="agreeToTerms">
                 I agree with
                 <a href="#" (click)="openTerms($event)">Read / View Terms & Conditions</a>
@@ -160,11 +183,11 @@
               [disabled]="isLoading"
             >
               <span *ngIf="!isLoading" class="button-text">
-                <i class="button-icon">📝</i>
+                <i class="pi pi-user-plus"></i>
                 Sign Up
               </span>
               <span *ngIf="isLoading" class="loading-spinner">
-                <i class="spinner">⟳</i>
+                <i class="pi pi-spinner pi-spin"></i>
                 Signing up...
               </span>
             </button>

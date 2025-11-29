@@ -2,29 +2,33 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { AuthService } from '../../auth.service';
 import { UserSession } from '../../core/user-session';
 import { DataLookupService } from '../../core/services/data-lookup.service';
 import {Select} from 'primeng/select';
+import {InputText} from 'primeng/inputtext';
+import {Password} from 'primeng/password';
+import {Checkbox} from 'primeng/checkbox';
 import {UnityConfig} from '../../app-config';
-import {Button} from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { TermsAndConditionsComponent } from './terms-and-conditions.component';
 
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: []
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
   isLoading = false;
+  displayTerms = false;
 
   countries: any[] = [];
-  // Dynamic validators for mobile number based on selected country
+  industries: any[] = [];
+
   phoneNumberLength: number | null = null;
   mobilePattern: string | null = null;
   private countryChangeSub: any;
@@ -32,26 +36,36 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private dataLookup = inject(DataLookupService);
-  private originalTheme: string | null = null;
+  private document = inject(DOCUMENT);
+
+  private previousThemeAttr: string | null = null;
 
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    this.originalTheme = document.documentElement.getAttribute('data-theme');
-    document.documentElement.setAttribute('data-theme', 'light');
-
+    // Ensure Register page never uses dark mode: temporarily disable dark theme
+    const docEl = this.document?.documentElement;
+    if (docEl) {
+      this.previousThemeAttr = docEl.getAttribute('data-theme');
+      if (this.previousThemeAttr === 'dark') {
+        docEl.removeAttribute('data-theme');
+      }
+    }
     this.initializeForm();
     this.handleCountryChange();
-    this.loadCountries();
+    this.loadLookUps();
 
-    // Terms & Conditions are now a standalone component rendered in a dialog.
   }
 
   ngOnDestroy(): void {
-    if (this.originalTheme) {
-      document.documentElement.setAttribute('data-theme', this.originalTheme);
-    } else {
-      document.documentElement.removeAttribute('data-theme');
+    // Restore previous theme attribute when leaving Register page
+    const docEl = this.document?.documentElement;
+    if (docEl) {
+      if (this.previousThemeAttr === null) {
+        docEl.removeAttribute('data-theme');
+      } else {
+        docEl.setAttribute('data-theme', this.previousThemeAttr);
+      }
     }
     if (this.countryChangeSub?.unsubscribe) {
       this.countryChangeSub.unsubscribe();
@@ -60,11 +74,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   private initializeForm(): void {
     this.registerForm = this.formBuilder.group({
-      "id": "",
+      id: "",
       companyName: ['', [Validators.required, Validators.minLength(2)]],
       contactPerson: ['', [Validators.required, Validators.minLength(2)]],
       countryId: [''],
-      // Start with required only; will be updated dynamically when country changes
+      industryId: ['', [Validators.required]],
       mobileNo: ['', [Validators.required]],
       emailAddress: ['', [Validators.required, Validators.email]],
       userPassword: ['', [Validators.required, Validators.minLength(UnityConfig.PasswordMinLength)]],
@@ -72,20 +86,22 @@ export class RegisterComponent implements OnInit, OnDestroy {
     });
   }
 
-  private async loadCountries(): Promise<void> {
+  private async loadLookUps(): Promise<void> {
     try {
       let response = await this.dataLookup.getCountries();
       this.countries = response.data;
-      // If a country is already selected (e.g., from a previous state), apply validators now
-      const selectedId = this.registerForm.get('countryId')?.value;
-      if (selectedId) {
-        this.updateMobileValidators(selectedId);
-      }
+
+      const industryResponse = await this.dataLookup.getIndustries();
+      this.industries = industryResponse.data ;
+
     } catch (e) {
       console.error('Failed to load countries', e);
       this.countries = [];
     }
   }
+
+
+
 
   private handleCountryChange(): void {
     const countryControl = this.registerForm.get('countryId');
@@ -194,8 +210,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  // Terms & Conditions dialog state
-  displayTerms = false;
+
 
   openTerms(event?: Event): void {
     if (event) {
