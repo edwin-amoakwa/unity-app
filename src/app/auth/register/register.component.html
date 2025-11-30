@@ -13,7 +13,8 @@
         <p class="login-subtitle">Enter your company details to register as Merchant</p>
       </div>
 
-      <form [formGroup]="registerForm" (ngSubmit)="register()" class="login-form">
+      <!-- Step 1: Registration form -->
+      <form *ngIf="currentStep === 'form'" [formGroup]="registerForm" (ngSubmit)="startRegistration()" class="login-form">
         <div class="form-grid">
           <!-- Company Name -->
           <div class="form-group">
@@ -201,6 +202,32 @@
           </div>
         </div>
       </form>
+
+      <!-- Step 2: Email PIN verification -->
+      <div *ngIf="currentStep === 'verify'" class="login-form">
+        <div class="form-group">
+          <label class="form-label">Email Verification</label>
+          <p class="login-subtitle">
+            A verification PIN have been sent to your email {{ verifyEmail }}. Enter it to proceed with registration.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label for="pin" class="form-label">Verification PIN</label>
+          <div class="input-container">
+            <i class="pi pi-lock"></i>
+            <input pInputText id="pin" type="text" [(ngModel)]="pin" name="pin" placeholder="Enter PIN" />
+          </div>
+        </div>
+
+        <div *ngIf="verifyMessage" class="field-error" style="margin-top:8px;">
+          <small>{{ verifyMessage }}</small>
+        </div>
+
+        <button class="btn-primary w-full" (click)="proceedVerification()" [disabled]="isLoading">
+          {{ isLoading ? 'Please wait...' : 'Proceed' }}
+        </button>
+      </div>
 
       <!-- Terms & Conditions Dialog -->
       <p-dialog

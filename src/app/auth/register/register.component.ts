@@ -1,7 +1,7 @@
 // angular import
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { AuthService } from '../../auth.service';
 import { UserSession } from '../../core/user-session';
@@ -17,7 +17,7 @@ import { TermsAndConditionsComponent } from './terms-and-conditions.component';
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox],
+  imports: [RouterModule, ReactiveFormsModule, FormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox],
   templateUrl: './register.component.html',
   styleUrls: []
 })
@@ -25,6 +25,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
   isLoading = false;
   displayTerms = false;
+  currentStep: 'form' | 'verify' = 'form';
+  verifyEmail: string = '';
+  pin: string = '';
+  verifyMessage: string = '';
 
   // Map of form control names to human-friendly labels for error messages
   private readonly fieldLabels: Record<string, string> = {
@@ -151,31 +155,74 @@ export class RegisterComponent implements OnInit, OnDestroy {
     control.updateValueAndValidity({ emitEvent: false });
   }
 
-  async register(): Promise<void> {
+  async startRegistration(): Promise<void> {
     if (this.registerForm.valid) {
       this.isLoading = true;
       const formData = this.registerForm.value;
-
-
-
       try {
-        const response = await this.authService.register(formData);
-        console.log('Registration successful:', response);
-        if(response.success)
-        {
-          UserSession.login(response.data);
-          this.router.navigate(['/dashboard']);
+
+        const data:any = {email: this.verifyEmail, mobileNo: formData.mobileNo };
+        const resp = await this.authService.sendVerifyPin(data);
+        if (resp.success) {
+          this.verifyMessage = '';
+          this.currentStep = 'verify';
+        } else {
+          this.verifyMessage = resp.message || 'Failed to send verification PIN.';
         }
-        // Redirect to login page or show success message
 
       } catch (error) {
-        console.error('Registration failed:', error);
-        // Handle error - could show error message to user
+        console.error('Failed to send verification PIN:', error);
+        this.verifyMessage = 'Failed to send verification PIN.';
       } finally {
         this.isLoading = false;
       }
     } else {
       this.markFormGroupTouched();
+    }
+  }
+
+  async proceedVerification(): Promise<void> {
+    if (!this.verifyEmail || !this.pin) {
+      this.verifyMessage = 'Please enter the verification PIN.';
+      return;
+    }
+
+    this.isLoading = true;
+    this.verifyMessage = '';
+    try {
+      const resp = await this.authService.verifyPin({ email: this.verifyEmail, pin: this.pin });
+      if (resp.success) {
+        // Proceed with actual registration
+        await this.register();
+      } else {
+        this.verifyMessage = resp.message || 'Verification failed.';
+      }
+    } catch (e) {
+      console.error('PIN verification failed:', e);
+      this.verifyMessage = 'Verification failed.';
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async register(): Promise<void> {
+    // Called after successful PIN verification
+    this.isLoading = true;
+    const formData = this.registerForm.value;
+    try {
+      const response = await this.authService.register(formData);
+      console.log('Registration successful:', response);
+      if (response.success) {
+        UserSession.login(response.data);
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.verifyMessage = response.message || 'Registration failed.';
+      }
+    } catch (error) {
+      console.error('Registration failed:', error);
+      this.verifyMessage = 'Registration failed.';
+    } finally {
+      this.isLoading = false;
     }
   }
 
