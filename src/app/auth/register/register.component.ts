@@ -26,6 +26,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
   isLoading = false;
   displayTerms = false;
 
+  // Map of form control names to human-friendly labels for error messages
+  private readonly fieldLabels: Record<string, string> = {
+    companyName: 'Company name',
+    contactPerson: 'Contact person',
+    industryId: 'Industry',
+    countryId: 'Country',
+    mobileNo: 'Mobile number',
+    emailAddress: 'Email address',
+    userPassword: 'Password',
+    agreeToTerms: 'Terms and Conditions'
+  };
+
   countries: any[] = [];
   industries: any[] = [];
 
@@ -139,7 +151,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     control.updateValueAndValidity({ emitEvent: false });
   }
 
-  async onSubmit(): Promise<void> {
+  async register(): Promise<void> {
     if (this.registerForm.valid) {
       this.isLoading = true;
       const formData = this.registerForm.value;
@@ -181,8 +193,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   getFieldError(fieldName: string): string {
     const field = this.registerForm.get(fieldName);
+    const displayName = this.fieldLabels[fieldName] || fieldName;
     if (field?.errors) {
-      if (field.errors['required']) return `${fieldName} is required`;
+      if (field.errors['required']) return `${displayName} is required`;
       if (field.errors['email']) return 'Please enter a valid email address';
       if (field.errors['minlength']) {
         if (fieldName === 'userPassword') {
@@ -191,13 +204,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
         if (fieldName === 'mobileNo' && this.phoneNumberLength) {
           return `Mobile number must be exactly ${this.phoneNumberLength} digits`;
         }
-        return `${fieldName} must be at least ${field.errors['minlength'].requiredLength} characters`;
+        return `${displayName} must be at least ${field.errors['minlength'].requiredLength} characters`;
       }
       if (field.errors['maxlength']) {
         if (fieldName === 'mobileNo' && this.phoneNumberLength) {
           return `Mobile number must be exactly ${this.phoneNumberLength} digits`;
         }
-        return `${fieldName} must be at most ${field.errors['maxlength'].requiredLength} characters`;
+        return `${displayName} must be at most ${field.errors['maxlength'].requiredLength} characters`;
       }
       if (field.errors['pattern']) {
         if (fieldName === 'mobileNo' && this.phoneNumberLength) {

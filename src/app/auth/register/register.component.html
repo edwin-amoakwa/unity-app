@@ -1,11 +1,11 @@
 
 
-<div class="login-container">
-  <div class="login-background">
+<div class="auth-container">
+  <div class="auth-background">
     <div class="background-overlay"></div>
   </div>
 
-  <div class="login-content">
+  <div class="auth-content">
     <div class="glass-container">
       <div class="login-header">
         <h4 class="login-title">Ecolink</h4>
@@ -13,7 +13,7 @@
         <p class="login-subtitle">Enter your company details to register as Merchant</p>
       </div>
 
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
+      <form [formGroup]="registerForm" (ngSubmit)="register()" class="login-form">
         <div class="form-grid">
           <!-- Company Name -->
           <div class="form-group">
@@ -55,6 +55,7 @@
           <div class="form-group">
             <label for="industryId" class="form-label">Industry</label>
             <div class="input-container">
+              <i class="pi pi-briefcase"></i>
               <p-select
                 inputId="industryId"
                 [options]="industries"
@@ -82,10 +83,11 @@
             </div>
           </div>
 
-   
+
           <div class="form-group">
             <label for="mobileNo" class="form-label">Mobile Number</label>
             <div class="input-container">
+              <i class="pi pi-phone"></i>
 
               <p-select [options]="countries" formControlName="countryId" optionLabel="countryName" [filter]="true"
                         filterBy="countryName"  optionValue="id" placeholder="Select a Country">

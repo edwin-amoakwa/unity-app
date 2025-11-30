@@ -9,7 +9,7 @@ import {CommonModule} from '@angular/common';
   selector: 'app-password-reset',
   imports: [RouterModule, ReactiveFormsModule, CommonModule],
   templateUrl: './password-reset.component.html',
-  styleUrls: ['./password-reset.component.scss']
+  styleUrls: []
 })
 export class PasswordResetComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);

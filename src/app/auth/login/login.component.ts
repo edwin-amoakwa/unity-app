@@ -1,5 +1,5 @@
 // angular import
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {Router, RouterModule} from '@angular/router';
 import {UntypedFormBuilder, Validators, ReactiveFormsModule, FormGroup} from '@angular/forms';
 import {AuthService, LoginPayload} from '../../auth.service';
@@ -11,9 +11,9 @@ import {UnityConfig} from '../../app-config';
   selector: 'app-login',
   imports: [RouterModule, ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: []
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(UntypedFormBuilder);
@@ -21,12 +21,26 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+  private originalTheme: string | null = null;
 
   constructor() {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       userPassword: ['', [Validators.required, Validators.minLength(UnityConfig.PasswordMinLength)]]
     });
+  }
+
+  ngOnInit(): void {
+    this.originalTheme = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+
+  ngOnDestroy(): void {
+    if (this.originalTheme) {
+      document.documentElement.setAttribute('data-theme', this.originalTheme);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
   }
 
   async onSubmit() {

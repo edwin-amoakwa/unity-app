@@ -1,29 +1,33 @@
-/* Modern light design for Register page */
-
-:host {
-  display: block;
-}
+/* Shared light-theme auth styles for Login, Register, and Password Reset */
 
 /* Page background */
-.login-container {
+.auth-container {
   min-height: 100vh;
   display: grid;
   place-items: center;
   background: linear-gradient(180deg, #f7f9fc 0%, #f2f6ff 100%);
   padding: 24px;
+  position: relative; /* scope absolutely-positioned background and ensure proper centering */
 }
 
-.login-background { position: absolute; inset: 0; overflow: hidden; }
+.auth-background { position: absolute; inset: 0; overflow: hidden; }
 .background-overlay { display: none; }
 
 /* Card */
-.login-content { position: relative; width: 100%; max-width: 960px; }
+.auth-content { position: relative; width: 100%; max-width: 960px; }
 .glass-container {
   background: #ffffff;
   border: 1px solid #e9eef5;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(17, 24, 39, 0.08);
   padding: 28px;
+}
+
+/* Narrow variant for pages that should appear less wide (Login, Password Reset) */
+.glass-container.narrow {
+  width: 100%;
+  max-width: 560px; /* make card narrower than Register */
+  margin: 0 auto;   /* center inside auth-content */
 }
 
 /* Header */
@@ -52,6 +56,31 @@
 
 .full-width { grid-column: 1 / -1; }
 
+/* Two-column row for label + input layout (used by Login) */
+.form-row {
+  display: grid;
+  grid-template-columns: 180px 1fr; /* label column, input column */
+  align-items: start;
+  gap: 8px 16px;
+}
+
+.form-row .form-label {
+  margin: 10px 0 0 0; /* align vertically with input field */
+}
+
+.form-row .input-container,
+.form-row .form-input,
+.form-row .p-inputtext,
+.form-row .p-password input,
+.form-row .p-select {
+  width: 100%;
+}
+
+/* Place error message under the input column */
+.form-row .field-error {
+  grid-column: 2;
+}
+
 /* Form controls */
 .form-group { display: flex; flex-direction: column; }
 .form-label { font-weight: 600; color: #374151; margin-bottom: 8px; font-size: 13px; }
@@ -63,22 +92,24 @@
   gap: 10px;
 }
 
-.input-container i.pi {
+.input-container i.pi,
+.input-icon {
   color: #94a3b8;
   font-size: 1rem;
 }
 
-/* PrimeNG input widths inside the component */
-:host ::ng-deep .login-form .p-inputtext,
-:host ::ng-deep .login-form .p-password input,
-:host ::ng-deep .login-form .p-select,
-:host ::ng-deep .login-form .p-select .p-select-label {
+/* PrimeNG input widths */
+.login-form .p-inputtext,
+.login-form .p-password input,
+.login-form .p-select,
+.login-form .p-select .p-select-label {
   width: 100% !important;
 }
 
 /* Base input aesthetics */
-:host ::ng-deep .login-form .p-inputtext,
-:host ::ng-deep .login-form .p-password input {
+.login-form .p-inputtext,
+.login-form .p-password input,
+.login-form .form-input {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   color: #111827;
@@ -87,25 +118,28 @@
   box-shadow: 0 1px 0 rgba(17,24,39,0.02);
 }
 
-:host ::ng-deep .login-form .p-inputtext::placeholder,
-:host ::ng-deep .login-form .p-password input::placeholder { color: #9ca3af; }
+.login-form .p-inputtext::placeholder,
+.login-form .p-password input::placeholder,
+.login-form .form-input::placeholder { color: #9ca3af; }
 
 /* Select */
-:host ::ng-deep .login-form .p-select {
+.login-form .p-select {
   border-radius: 10px;
   border: 1px solid #e5e7eb;
   background: #ffffff;
 }
 
-:host ::ng-deep .login-form .p-select:not(.p-disabled):hover,
-:host ::ng-deep .login-form .p-inputtext:hover,
-:host ::ng-deep .login-form .p-password input:hover {
+.login-form .p-select:not(.p-disabled):hover,
+.login-form .p-inputtext:hover,
+.login-form .p-password input:hover,
+.login-form .form-input:hover {
   border-color: #d1d5db;
 }
 
-:host ::ng-deep .login-form .p-select.p-focus,
-:host ::ng-deep .login-form .p-inputtext:focus,
-:host ::ng-deep .login-form .p-password input:focus {
+.login-form .p-select.p-focus,
+.login-form .p-inputtext:focus,
+.login-form .p-password input:focus,
+.login-form .form-input:focus {
   outline: none;
   border-color: #93c5fd;
   box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
@@ -131,8 +165,8 @@
 
 /* Button */
 .login-button {
-  width: 100%;
-  display: inline-flex;
+  width: auto; /* buttons fit content across all auth pages */
+  display: flex; /* keep icon + text alignment */
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -146,12 +180,38 @@
   cursor: pointer;
   transition: transform 0.05s ease, filter 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 10px 20px rgba(99,102,241,0.25);
+  margin: 0 auto; /* center horizontally */
 }
 .login-button:hover { filter: brightness(1.03); box-shadow: 0 12px 24px rgba(99,102,241,0.28); }
 .login-button:active { transform: translateY(1px); }
 .login-button:disabled { opacity: 0.7; cursor: not-allowed; }
 
+/* Removed auto-width modifier as all auth buttons are now content-width by default */
+
 .loading-spinner { display: inline-flex; align-items: center; gap: 8px; }
+
+/* Alerts */
+.error-message,
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.error-message {
+  background: rgba(220, 38, 38, 0.08);
+  color: #b91c1c;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.success-message {
+  background: rgba(16, 185, 129, 0.08);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
 
 /* Footer */
 .login-footer { display: flex; justify-content: center; margin-top: 6px; }
@@ -164,5 +224,7 @@
 /* Responsive */
 @media (max-width: 900px) {
   .form-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .form-row .field-error { grid-column: 1; }
   .glass-container { padding: 20px; }
 }

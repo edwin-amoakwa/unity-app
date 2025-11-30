@@ -3,6 +3,7 @@
 
 
 @import "app-common.css";
+@import "auth-shared.css";
 
 
 :host ::ng-deep .p-select {
