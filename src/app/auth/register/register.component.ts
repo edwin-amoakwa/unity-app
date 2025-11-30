@@ -13,11 +13,12 @@ import {Checkbox} from 'primeng/checkbox';
 import {UnityConfig} from '../../app-config';
 import { Dialog } from 'primeng/dialog';
 import { TermsAndConditionsComponent } from './terms-and-conditions.component';
+import {ButtonDirective} from 'primeng/button';
 
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule, ReactiveFormsModule, FormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox],
+  imports: [RouterModule, ReactiveFormsModule, FormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox, ButtonDirective],
   templateUrl: './register.component.html',
   styleUrls: []
 })
@@ -159,6 +160,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (this.registerForm.valid) {
       this.isLoading = true;
       const formData = this.registerForm.value;
+      this.verifyEmail = formData.emailAddress;
       try {
 
         const data:any = {email: this.verifyEmail, mobileNo: formData.mobileNo };

@@ -32,4 +32,11 @@ export class ConfigService {
   async getSenderIdsApprovedList(): Promise<ApiResponse<any[]>> {
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/sms-sender-ids/approved`));
   }
+
+  // Fetches HTML content to display instructions/details for offline payments
+  async getOfflinePaymentDetails(): Promise<ApiResponse<string>> {
+    return await firstValueFrom(
+      this.http.get<ApiResponse<string>>(`${environment.baseUrl}/general/config/offline-payment-details`)
+    );
+  }
 }

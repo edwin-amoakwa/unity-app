@@ -204,9 +204,9 @@
       </form>
 
       <!-- Step 2: Email PIN verification -->
-      <div *ngIf="currentStep === 'verify'" class="login-form">
+      <div *ngIf="currentStep === 'verify'" id="verify-panel" class="login-form" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background: rgba(0, 0, 0, 0.03); padding: 16px; border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.12);">
         <div class="form-group">
-          <label class="form-label">Email Verification</label>
+          <h4 >Email Verification</h4>
           <p class="login-subtitle">
             A verification PIN have been sent to your email {{ verifyEmail }}. Enter it to proceed with registration.
           </p>
@@ -224,7 +224,7 @@
           <small>{{ verifyMessage }}</small>
         </div>
 
-        <button class="btn-primary w-full" (click)="proceedVerification()" [disabled]="isLoading">
+        <button pButton class="btn-primary w-full" (click)="proceedVerification()" [disabled]="isLoading">
           {{ isLoading ? 'Please wait...' : 'Proceed' }}
         </button>
       </div>

@@ -181,6 +181,7 @@
   transition: transform 0.05s ease, filter 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 10px 20px rgba(99,102,241,0.25);
   margin: 0 auto; /* center horizontally */
+  margin-top: 10px; /* add some space above the button */
 }
 .login-button:hover { filter: brightness(1.03); box-shadow: 0 12px 24px rgba(99,102,241,0.28); }
 .login-button:active { transform: translateY(1px); }

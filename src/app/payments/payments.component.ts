@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 
 // PrimNG imports
 import { MessageService } from 'primeng/api';
@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 import { Tooltip } from 'primeng/tooltip';
 import { NotificationService } from '../core/notification.service';
@@ -21,12 +22,14 @@ import { PaymentService } from './payment.service';
 import { FormView } from '../core/form-view';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
+import { ConfigService } from '../config.service';
 
 @Component({
   selector: 'app-payments',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
@@ -39,7 +42,8 @@ import { ButtonToolbarComponent } from '../theme/shared/components/button-toolba
     ToastModule,
     Tooltip,
     CardComponent,
-    ButtonToolbarComponent
+    ButtonToolbarComponent,
+    SelectButtonModule
   ],
   providers: [MessageService],
   templateUrl: './payments.component.html',
@@ -49,6 +53,7 @@ export class PaymentsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private paymentService = inject(PaymentService);
   private notificationService = inject(NotificationService);
+  private configService = inject(ConfigService);
 
   formView = FormView.listView();
 
@@ -59,6 +64,15 @@ export class PaymentsComponent implements OnInit {
   showPaymentDialog = false;
 
   formOfPaymentOptions = StaticDataService.formsOfPayment();
+
+  // Pay mode selectbutton state
+  paymentModeOptions = [
+    { label: 'Pay Online', value: 'ONLINE' },
+    { label: 'Pay Offline', value: 'OFFLINE' }
+  ];
+  selectedPaymentMode: 'ONLINE' | 'OFFLINE' = 'ONLINE';
+  offlineDetailsHtml: string | null = null;
+  loadingOfflineDetails = false;
 
   ngOnInit() {
     this.initializeForm();
@@ -73,6 +87,25 @@ export class PaymentsComponent implements OnInit {
       paymentNotes: [''],
       formOfPayment: [null, [Validators.required]]
     });
+  }
+
+  async onPaymentModeChange() {
+    if (this.selectedPaymentMode === 'OFFLINE' && this.offlineDetailsHtml === null && !this.loadingOfflineDetails) {
+      try {
+        this.loadingOfflineDetails = true;
+        const resp = await this.configService.getOfflinePaymentDetails();
+        if (resp.success ) {
+          this.offlineDetailsHtml = resp.data as any;
+        } else {
+          this.offlineDetailsHtml = '<p>No offline payment details available.</p>';
+        }
+      } catch (e) {
+        this.offlineDetailsHtml = '<p>Failed to load offline payment details.</p>';
+        this.notificationService.error('Failed to load offline payment details');
+      } finally {
+        this.loadingOfflineDetails = false;
+      }
+    }
   }
 
   async loadPayments() {

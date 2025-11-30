@@ -43,9 +43,11 @@
       </div>
     </app-card>
 
+    <br />
+    <br />
 
-    <app-card title="Merchant Profile">
-      <div *ngIf="merchant">
+    <app-card title="Merchant Profile" *ngIf="merchant">
+      <div >
         <div class="row mb-3">
           <div class="col-md-3">
             <strong>Merchant Name:</strong>
@@ -74,14 +76,7 @@
           </div>
         </div>
 
-        <div class="row mb-3">
-          <div class="col-md-3">
-            <strong>SMS Price</strong>
-          </div>
-          <div class="col-md-9">
-            <span class="badge bg-primary">{{ merchant.currentPrice }}</span>
-          </div>
-        </div>
+
 
         <div class="row mb-3">
           <div class="col-md-3">
@@ -94,6 +89,9 @@
 
       </div>
     </app-card>
+
+<br />
+    <app-sms-channel-price></app-sms-channel-price>
 
   </div>
 </div>

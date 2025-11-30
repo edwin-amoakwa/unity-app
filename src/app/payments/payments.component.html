@@ -12,6 +12,19 @@
   </button>
 </button-toolbar>
 
+<!-- Payment Mode Toggle -->
+<div class="mb-3">
+  <p-selectButton
+    [options]="paymentModeOptions"
+    [(ngModel)]="selectedPaymentMode"
+    (ngModelChange)="onPaymentModeChange()"
+    optionLabel="label"
+    optionValue="value">
+  </p-selectButton>
+</div>
+
+<!-- ONLINE MODE: show existing content -->
+<ng-container *ngIf="selectedPaymentMode === 'ONLINE'">
 <!-- Create Payment Form -->
 <div class="col-sm-12 mb-4" *ngIf="formView.createView">
   <app-card title="Create Payment">
@@ -294,6 +307,17 @@
       styleClass="p-button-primary">
     </p-button>
   </ng-template>
-</p-dialog>
+ </p-dialog>
 
-<p-toast></p-toast>
+ <p-toast></p-toast>
+</ng-container>
+
+<!-- OFFLINE MODE: load HTML content from ConfigService and display -->
+<ng-container *ngIf="selectedPaymentMode === 'OFFLINE'">
+  <div class="col-sm-12 mb-4">
+    <app-card title="Offline Payment Details">
+      <div *ngIf="loadingOfflineDetails" class="p-3">Loading offline payment details...</div>
+      <div *ngIf="!loadingOfflineDetails" [innerHTML]="offlineDetailsHtml || '<p>No offline payment details available.</p>'"></div>
+    </app-card>
+  </div>
+</ng-container>

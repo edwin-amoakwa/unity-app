@@ -1,80 +1,7 @@
-<!--<h1 class="page-title">Dashboard</h1>-->
-
-<h5>Daily Summary</h5>
-
-<div class="topbar">
-  <div class="price-pill">{{summary.creditBalance | currency}}</div>
-</div>
-
-<div class="row">
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Total</span>
-      <span class="value">{{smsStats.total | number}}</span>
-    </div>
-  </div>
+<h1 class="page-title">Dashboard</h1>
 
 
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Sent</span>
-      <span class="value">{{smsStats.sent | number}}</span>
-    </div>
-  </div>
 
-
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Queued</span>
-      <span class="value">{{smsStats.queued | number}}</span>
-    </div>
-  </div>
-
-
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Failed</span>
-      <span class="value">{{smsStats.failed | number}}</span>
-    </div>
-  </div>
-
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Rejected</span>
-      <span class="value">{{smsStats.rejected | number}}</span>
-    </div>
-  </div>
-
-</div>
-
-<br />
-
-<div class="date-range-filter">
-  <label for="dateRangeSelect" style="margin-right:8px; color:#444; font-size:14px;">Date Range:</label>
-  <p-select
-    inputId="dateRangeSelect"
-    [options]="dateRanges"
-    optionLabel="itemName"
-    optionValue="id"
-    [(ngModel)]="chartDataFilter.period"
-    (ngModelChange)="onFilterChange()"
-    placeholder="Select Range"
-  ></p-select>
-
-  <!-- Custom period inputs: only show when CUSTOM_PERIOD is selected -->
-  <div *ngIf="chartDataFilter.period === 'CUSTOM_PERIOD'" style="display:flex; align-items:center; gap:8px; margin-left:12px;">
-    <label for="fromDate" style="color:#444; font-size:14px;">From:</label>
-    <input id="fromDate" type="date" [(ngModel)]="chartDataFilter.fromDate" (ngModelChange)="onFilterChange()" style="padding:6px 10px; border-radius:6px; border:1px solid #ccc; background:#fff;" />
-    <label for="toDate" style="color:#444; font-size:14px;">To:</label>
-    <input id="toDate" type="date" [(ngModel)]="chartDataFilter.toDate" (ngModelChange)="onFilterChange()" style="padding:6px 10px; border-radius:6px; border:1px solid #ccc; background:#fff;" />
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-12">
-    <app-sent-sms-chart [dataFilter]="chartDataFilter" />
-  </div>
-</div>
 
 <!--<div *ngIf="merchant?.accountStatus == 'PENDING'" class="row">-->
 <!--  <div class="col-12 ">-->
@@ -98,7 +25,7 @@
 <!--  </div>-->
 <!--</div>-->
 
-<div class="row" *ngIf="false">
+<div class="row">
   <!-- Summary Section -->
 <!--  @if (summary) {-->
 <!--    <div class="col-12 mb-3">-->

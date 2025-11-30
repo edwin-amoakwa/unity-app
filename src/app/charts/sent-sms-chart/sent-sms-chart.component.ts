@@ -1,5 +1,5 @@
 // angular import
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnInit, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 // third party
 import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
@@ -11,7 +11,7 @@ import {DashboardService} from '../../dashboard/dashboard.service';
   templateUrl: './sent-sms-chart.component.html',
   styleUrl: './sent-sms-chart.component.scss'
 })
-export class SentSmsChartComponent implements OnInit{
+export class SentSmsChartComponent implements OnInit, OnChanges{
   // public props
   // @ViewChild('chart') chart!: ChartComponent;
   // chartOptions!: Partial<ApexOptions>;
@@ -20,6 +20,9 @@ export class SentSmsChartComponent implements OnInit{
   dashboardService = inject(DashboardService);
 
   chartData: any = [];
+
+  // Accept a dataFilter from parent to filter the chart data (e.g., date range)
+  @Input() dataFilter: any;
 
   // constructor
   constructor() {
@@ -30,8 +33,14 @@ export class SentSmsChartComponent implements OnInit{
     this.loadChartData();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['dataFilter'] && !changes['dataFilter'].firstChange) {
+      this.loadChartData();
+    }
+  }
+
   async loadChartData() {
-    let response = await this.dashboardService.getSentSms();
+    let response = await this.dashboardService.getSmsChart(this.dataFilter);
     this.chartData = response.data;
 
     // this.chartOptions.series[0].data = this.chartData;

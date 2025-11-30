@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../core/ApiResponse';
+import {HttpUtils} from '../core/HttpUtils';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,13 @@ export class DashboardService {
     return await firstValueFrom(this.http.get<ApiResponse<any>>(`${this.apiUrl}/summary`));
   }
 
-  async getSentSms(): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.get<ApiResponse<any>>(`${this.apiUrl}/sent-sms`));
+  async getSmsChart(dataFilter?: any): Promise<ApiResponse<any>> {
+
+    let params = HttpUtils.toUrlParam(dataFilter);
+    console.log(params, dataFilter);
+    return await firstValueFrom(
+      this.http.get<ApiResponse<any>>(`${this.apiUrl}/sent-sms?${params}`)
+    );
   }
 
   async getMonthlySMS(): Promise<ApiResponse<any>> {

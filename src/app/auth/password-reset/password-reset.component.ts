@@ -62,7 +62,7 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
         console.log('Password reset request successful:', response);
       } catch (error: any) {
         this.isLoading = false;
-        this.errorMessage = error.message || 'Failed to send password reset instructions. Please try again.';
+        this.errorMessage = error.error.message || 'Failed to send password reset instructions. Please try again.';
         console.error('Password reset error:', error);
       }
     } else {

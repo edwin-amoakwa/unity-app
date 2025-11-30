@@ -8,10 +8,12 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { MonthlySmsStatsChartComponent } from '../charts/monthly-sms-stats-chart/monthly-sms-stats-chart.component';
 import { UserSession } from '../core/user-session';
 import { DashboardService } from './dashboard.service';
+import { StaticDataService } from '../static-data.service';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [SentSmsChartComponent,  SharedModule, MonthlySmsStatsChartComponent, Badge],
+  imports: [SentSmsChartComponent,  SharedModule, MonthlySmsStatsChartComponent, Badge, SelectModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -27,6 +29,22 @@ export class DashboardComponent implements OnInit {
   latestSms:any[] = [];
 
   totalSmsSent: number = 0;
+
+
+  dateRanges = StaticDataService.dateRanges();
+
+  chartDataFilter: {
+    period: string;
+    fromDate?: string | null;
+    toDate?: string | null;
+  } = {
+    period: 'THIS_MONTH'
+  };
+
+  // Ensure reference changes so child OnChanges triggers when any field updates
+  onFilterChange() {
+    this.chartDataFilter = { ...this.chartDataFilter };
+  }
 
   async ngOnInit() {
     try {
