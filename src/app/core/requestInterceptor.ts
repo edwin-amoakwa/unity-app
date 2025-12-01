@@ -12,6 +12,7 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
 
   let merchantId = localStorage.getItem(UserSession.MerchantId);
   let userId = localStorage.getItem(UserSession.UserID);
+  let countryId = UserSession.getMerchant()?.countryId;
 
   let headers: any = {};
 
@@ -21,6 +22,9 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
 
   if (userId) {
     headers.userId = userId;
+  }
+  if (countryId) {
+    headers.countryId = countryId;
   }
 
   // console.log(" http heaers",headers);

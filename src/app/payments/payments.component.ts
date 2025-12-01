@@ -17,7 +17,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 
 import { Tooltip } from 'primeng/tooltip';
 import { NotificationService } from '../core/notification.service';
-import { StaticDataService } from '../static-data.service';
 import { PaymentService } from './payment.service';
 import { FormView } from '../core/form-view';
 import { CardComponent } from '../theme/shared/components/card/card.component';
@@ -63,7 +62,7 @@ export class PaymentsComponent implements OnInit {
   editingPayment: any | null = null;
   showPaymentDialog = false;
 
-  formOfPaymentOptions = StaticDataService.formsOfPayment();
+  paymentChannels: any[] = [];
 
   // Pay mode selectbutton state
   paymentModeOptions = [
@@ -74,9 +73,13 @@ export class PaymentsComponent implements OnInit {
   offlineDetailsHtml: string | null = null;
   loadingOfflineDetails = false;
 
+  // Calculated final amount after 20% tax is deducted
+  finalAmount: number = 0;
+
   ngOnInit() {
     this.initializeForm();
     this.loadPayments();
+    this.loadPaymentChannels();
   }
 
   private initializeForm() {
@@ -85,8 +88,43 @@ export class PaymentsComponent implements OnInit {
       amount: [null, [Validators.required, Validators.min(0.01)]],
       paymentRefNo: "",
       paymentNotes: [''],
-      formOfPayment: [null, [Validators.required]]
+      paymentChannel: [null, [Validators.required]],
+      mobileNo: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(10)
+        ]
+      ]
     });
+
+    // Recalculate final amount whenever the amount changes
+    this.paymentForm.get('amount')?.valueChanges.subscribe((val) => {
+      this.updateFinalAmount(val);
+    });
+
+    // Also recompute when the payment channel (and thus tax rate) changes
+    this.paymentForm.get('paymentChannel')?.valueChanges.subscribe(() => {
+      const currentAmount = this.paymentForm.get('amount')?.value;
+      this.updateFinalAmount(currentAmount);
+    });
+
+    // Initial calculation in case an amount is pre-filled (e.g., edit mode)
+    const initialAmount = this.paymentForm.get('amount')?.value;
+    this.updateFinalAmount(initialAmount);
+  }
+
+  private async loadPaymentChannels() {
+    try {
+      const resp = await this.configService.getPaymentChannels();
+
+        this.paymentChannels = resp.data;
+
+    } catch (e) {
+      this.paymentChannels = [];
+      this.notificationService.error('Failed to load payment channels');
+    }
   }
 
   async onPaymentModeChange() {
@@ -127,6 +165,7 @@ export class PaymentsComponent implements OnInit {
       try {
         this.loading = true;
         const formValue = this.paymentForm.value;
+        formValue.paymentChannelId = formValue.paymentChannel.id;
         const response = await this.paymentService.savePayment(formValue);
         if (response.success) {
           this.paymentForm.reset();
@@ -204,6 +243,9 @@ export class PaymentsComponent implements OnInit {
       if (field.errors['minlength']) {
         return `${this.getFieldLabel(fieldName)} must be at least ${field.errors['minlength'].requiredLength} characters`;
       }
+      if (field.errors['maxlength']) {
+        return `${this.getFieldLabel(fieldName)} must be at most ${field.errors['maxlength'].requiredLength} characters`;
+      }
       if (field.errors['min']) {
         return `${this.getFieldLabel(fieldName)} must be at least ${field.errors['min'].min}`;
       }
@@ -216,9 +258,46 @@ export class PaymentsComponent implements OnInit {
       amount: 'Amount',
       paymentRefNo: 'Payment Reference No',
       paymentNotes: 'Payment Notes',
-      formOfPayment: 'Form of Payment',
-      initiationSource: 'Initiation Source'
+      paymentChannel: 'Payment Channel',
+      initiationSource: 'Initiation Source',
+      mobileNo: 'Mobile Number'
     };
     return labels[fieldName] || fieldName;
+  }
+
+  private updateFinalAmount(amount: any) {
+    const num = typeof amount === 'number' ? amount : parseFloat(amount);
+    if (isNaN(num) || num <= 0) {
+      this.finalAmount = 0;
+      return;
+    }
+    const taxRate = this.selectedTaxRate; // dynamic tax rate based on selected channel
+    const tax = num * taxRate;
+    const final = num - tax;
+    // Round to 2 decimal places
+    this.finalAmount = Math.round(final * 100) / 100;
+  }
+
+  // Convenience getter: currently selected payment channel object
+  get selectedChannel(): any | null {
+    const value = this.paymentForm?.get('paymentChannel')?.value;
+    if (!value) return null;
+    if (typeof value === 'object') return value;
+    // If the control stores an id/code, try to resolve from list
+    return (
+      this.paymentChannels.find(
+        (ch: any) => ch?.id === value || ch?.code === value || ch?.channelName === value
+      ) || null
+    );
+  }
+
+  // Normalized tax rate as a fraction (e.g., 0.2 for 20%)
+  get selectedTaxRate(): number {
+    const rateRaw = this.selectedChannel?.taxRate;
+    if (rateRaw === undefined || rateRaw === null) return 0;
+    const rateNum = typeof rateRaw === 'string' ? parseFloat(rateRaw) : Number(rateRaw);
+    if (isNaN(rateNum) || rateNum < 0) return 0;
+    // If the API returns percentage (e.g., 20) convert to fraction
+    return rateNum > 1 ? rateNum / 100 : rateNum;
   }
 }

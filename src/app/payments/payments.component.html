@@ -4,48 +4,71 @@
   <button
     pButton
     type="button"
-    label="New Payment"
+    label="Top Up Balance"
     icon="pi pi-plus"
     class="p-button-primary"
-    (click)="openCreate()"
-    pTooltip="Create new payment">
+    (click)="openCreate()" >
   </button>
 </button-toolbar>
 
-<!-- Payment Mode Toggle -->
-<div class="mb-3">
-  <p-selectButton
-    [options]="paymentModeOptions"
-    [(ngModel)]="selectedPaymentMode"
-    (ngModelChange)="onPaymentModeChange()"
-    optionLabel="label"
-    optionValue="value">
-  </p-selectButton>
-</div>
-
-<!-- ONLINE MODE: show existing content -->
-<ng-container *ngIf="selectedPaymentMode === 'ONLINE'">
-<!-- Create Payment Form -->
 <div class="col-sm-12 mb-4" *ngIf="formView.createView">
-  <app-card title="Create Payment">
+  <app-card title="Merchant Top Up">
+
+    <div class="mb-3">
+      <p-selectButton
+        [options]="paymentModeOptions"
+        [(ngModel)]="selectedPaymentMode"
+        (ngModelChange)="onPaymentModeChange()"
+        optionLabel="label"
+        optionValue="value">
+      </p-selectButton>
+    </div>
+
+    <ng-container *ngIf="selectedPaymentMode === 'ONLINE'">
     <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label for="mobileNo" class="form-label">Mobile Number *</label>
+        </div>
+        <div class="col-md-9">
+          <input
+            pInputText
+            id="mobileNo"
+            type="tel"
+            formControlName="mobileNo"
+            maxlength="10"
+            inputmode="numeric"
+            class="w-full"
+            [ngClass]="{'ng-invalid': isFieldInvalid('mobileNo')}"
+          />
+          <small class="p-error" *ngIf="isFieldInvalid('mobileNo')">
+            {{ getFieldError('mobileNo') }}
+          </small>
+        </div>
+      </div>
+
+
       <!-- Form of Payment -->
       <div class="row mb-3">
         <div class="col-md-3">
-          <label for="formOfPayment" class="form-label">Form of Payment *</label>
+          <label for="paymentChannel" class="form-label">Payment Channel*</label>
         </div>
         <div class="col-md-9">
           <p-dropdown
-            id="formOfPayment"
-            optionValue="id" optionLabel="itemName"
-            placeholder="Select Form of Payment"
-            formControlName="formOfPayment"
-            [options]="formOfPaymentOptions"
-            [class.ng-invalid]="isFieldInvalid('formOfPayment')"
+            id="paymentChannel"
+            optionLabel="channelName"
+            placeholder="Select Payment Channel"
+            formControlName="paymentChannel"
+            [options]="paymentChannels"
+            [class.ng-invalid]="isFieldInvalid('paymentChannel')"
             styleClass="w-full">
           </p-dropdown>
-          <small class="p-error" *ngIf="isFieldInvalid('formOfPayment')">
-            {{ getFieldError('formOfPayment') }}
+          <div class="text-muted mt-1" *ngIf="paymentForm.get('paymentChannel')?.value as ch">
+            Tax rate: {{ selectedTaxRate | percent:'1.0-2' }}
+          </div>
+          <small class="p-error" *ngIf="isFieldInvalid('paymentChannel')">
+            {{ getFieldError('paymentChannel') }}
           </small>
         </div>
       </div>
@@ -73,33 +96,34 @@
         </div>
       </div>
 
-      <!-- Payment Notes -->
       <div class="row mb-3">
         <div class="col-md-3">
-          <label for="paymentNotes" class="form-label">Payment Notes</label>
         </div>
-        <div class="col-md-9">
-          <textarea
-            pInputTextarea
-            id="paymentNotes"
-            formControlName="paymentNotes"
-            rows="3"
-            class="w-full">
-          </textarea>
+        <div class="col-md-9" id="tip">
+          Tips: We will charge a {{ selectedTaxRate | percent:'1.0-2' }} tax from the payment, the final {{ finalAmount | number:'1.2-2' }} credit will be after tax
         </div>
       </div>
+
 
       <div class="row">
         <div class="col-md-9 offset-md-3 d-flex gap-2">
           <button type="button" class="btn btn-secondary" (click)="backToList()">Cancel</button>
           <button type="submit" class="btn btn-primary" [disabled]="paymentForm.invalid">
-            <span *ngIf="!editingPayment">Create</span>
+            <span *ngIf="!editingPayment">Top Up</span>
             <span *ngIf="editingPayment">Update</span>
             Payment
           </button>
         </div>
       </div>
     </form>
+    </ng-container>
+
+    <ng-container *ngIf="selectedPaymentMode === 'OFFLINE'">
+      <div class="col-sm-12 mb-4" style="border: 1px solid #ccc; padding: 1rem; background-color: #e0e0e0">
+          <div [innerHTML]="offlineDetailsHtml || '<p>No offline payment details available.</p>'"></div>
+      </div>
+    </ng-container>
+
   </app-card>
 </div>
 
@@ -122,10 +146,14 @@
           <tr>
             <th style="width: 5rem"></th>
             <th>Value Date</th>
-            <th>Amount</th>
+            <th>Payment Channel</th>
+            <th>Mobile No</th>
+            <th>Top Up Amount</th>
+            <th>Tax Amount</th>
+            <th>Credit Amount</th>
             <th>Paid</th>
-            <th>Form of Payment</th>
-            <th>Actions</th>
+
+            <th class="d-none">Actions</th>
           </tr>
         </ng-template>
 
@@ -141,27 +169,26 @@
               </p-button>
             </td>
             <td>{{ payment.valueDate || '-' }}</td>
+            <td>{{ payment.paymentChannelName }}</td>
+            <td>{{ payment.mobileNo }}</td>
             <td>{{ payment.amount | currency:'GHS':'symbol':'1.2-2' }}</td>
+            <td>{{ payment.taxAmount | currency:'GHS':'symbol':'1.2-2' }}</td>
+            <td>{{ payment.creditAmount | currency:'GHS':'symbol':'1.2-2' }}</td>
             <td>
               <span [class]="payment.paid ? 'text-green-500' : 'text-red-500'">
                 {{ payment.paid ? 'Yes' : 'No' }}
               </span>
             </td>
 
-            <td>{{ payment.formOfPaymentName || payment.formOfPayment }}</td>
-
-            <td>
-
+            <td class="d-none">
 
               @if (!payment.paid) {
-
                 <p-button
                   icon="pi pi-pencil"
                   (onClick)="editPayment(payment)"
                   styleClass="p-button-rounded p-button-text p-button-info mr-1"
                   pTooltip="Edit">
                 </p-button>
-
 
                 <p-button
                   icon="pi pi-trash"
@@ -212,112 +239,9 @@
   </div>
 </div>
 
-<!-- Payment Form Dialog -->
-<p-dialog
-  [(visible)]="showPaymentDialog"
-  [header]="editingPayment ? 'Edit Payment' : 'Create Payment'"
-  [modal]="true"
-  [closable]="true"
-  [draggable]="false"
-  [resizable]="false"
-  styleClass="p-fluid"
-  [style]="{width: '50vw'}"
-  [breakpoints]="{'960px': '75vw', '640px': '90vw'}"
-  (onHide)="closePaymentDialog()">
-
-  <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
-
-    <!-- Form of Payment -->
-    <div class="row mb-3">
-      <div class="col-md-3">
-        <label for="formOfPayment" class="form-label">Form of Payment *</label>
-      </div>
-      <div class="col-md-9">
-        <p-dropdown
-          id="formOfPayment"
-          optionValue="id"
-          optionLabel="itemName"
-          formControlName="formOfPayment"
-          [options]="formOfPaymentOptions"
-          [class.ng-invalid]="isFieldInvalid('formOfPayment')"
-          styleClass="w-full">
-        </p-dropdown>
-        <small class="p-error" *ngIf="isFieldInvalid('formOfPayment')">
-          {{ getFieldError('formOfPayment') }}
-        </small>
-      </div>
-    </div>
-
-    <!-- Amount -->
-    <div class="row mb-3">
-      <div class="col-md-3">
-        <label for="amount" class="form-label">Amount *</label>
-      </div>
-      <div class="col-md-9">
-        <p-inputNumber
-          id="amount"
-          formControlName="amount"
-          mode="decimal"
-          [minFractionDigits]="2"
-          [maxFractionDigits]="2"
-          currency="GHS"
-          locale="en-US"
-          styleClass="w-full"
-          [class.ng-invalid]="isFieldInvalid('amount')">
-        </p-inputNumber>
-        <small class="p-error" *ngIf="isFieldInvalid('amount')">
-          {{ getFieldError('amount') }}
-        </small>
-      </div>
-    </div>
-
-
-
-    <!-- Payment Notes -->
-    <div class="row mb-3">
-      <div class="col-md-3">
-        <label for="paymentNotes" class="form-label">Payment Notes</label>
-      </div>
-      <div class="col-md-9">
-        <textarea
-          pInputTextarea
-          id="paymentNotes"
-          formControlName="paymentNotes"
-          rows="3"
-          class="w-full">
-        </textarea>
-      </div>
-    </div>
-  </form>
-
-  <ng-template pTemplate="footer">
-    <p-button
-      type="button"
-      label="Cancel"
-      icon="pi pi-times"
-      (onClick)="closePaymentDialog()"
-      styleClass="p-button-text">
-    </p-button>
-    <p-button
-      type="button"
-      [label]="editingPayment ? 'Update Payment' : 'Create Payment'"
-      icon="pi pi-check"
-      (onClick)="onSubmit()"
-      [loading]="loading"
-      styleClass="p-button-primary">
-    </p-button>
-  </ng-template>
- </p-dialog>
 
  <p-toast></p-toast>
-</ng-container>
 
-<!-- OFFLINE MODE: load HTML content from ConfigService and display -->
-<ng-container *ngIf="selectedPaymentMode === 'OFFLINE'">
-  <div class="col-sm-12 mb-4">
-    <app-card title="Offline Payment Details">
-      <div *ngIf="loadingOfflineDetails" class="p-3">Loading offline payment details...</div>
-      <div *ngIf="!loadingOfflineDetails" [innerHTML]="offlineDetailsHtml || '<p>No offline payment details available.</p>'"></div>
-    </app-card>
-  </div>
-</ng-container>
+
+
+
