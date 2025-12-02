@@ -42,10 +42,17 @@
         <i class="pi pi-send" aria-hidden="true"></i>
         <span>Send SMS</span>
       </a>
+
+      <a class="menu-item"  routerLink="/sms-templates" routerLinkActive="active">
+        <i class="pi pi-inbox" aria-hidden="true"></i>
+        <span>SMS Templates</span>
+      </a>
+
       <a class="menu-item" *ngIf="allow('/sms-records')" routerLink="/sms-records" routerLinkActive="active">
         <i class="pi pi-inbox" aria-hidden="true"></i>
         <span>SMS Records</span>
       </a>
+
 
 
       <a class="menu-item" *ngIf="allow('/users')" routerLink="/users" routerLinkActive="active">

@@ -20,6 +20,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import {PlainComponent} from './layouts/plain/plain.component';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import {SmsTemplateComponent} from './sms-templates/sms-template.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,7 @@ export const routes: Routes = [
       { path: 'group-contacts', component: DistributionGroupsComponent },
       { path: 'send-sms', component: SmsComponent },
       { path: 'sms-records', component: SmsRecordsComponent },
+      { path: 'sms-templates', component: SmsTemplateComponent },
       { path: 'sms-channel-price', loadComponent: () => import('./sms-channel-price/sms-channel-price.component').then(m => m.SmsChannelPriceComponent) },
       { path: 'profile', component: ProfileComponent },
       { path: 'update-password', component: UpdatePasswordComponent },

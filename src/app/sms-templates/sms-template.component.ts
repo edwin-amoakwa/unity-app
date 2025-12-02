@@ -29,7 +29,7 @@ import { DistributionGroupsService } from '../distribution-groups/distribution-g
 import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
-import { SmsService } from './sms.service';
+import {SmsService} from '../sms/sms.service';
 
 @Component({
   selector: 'app-sms',
@@ -55,10 +55,10 @@ import { SmsService } from './sms.service';
     FileUploadModule
   ],
   providers: [ConfirmationService],
-  templateUrl: './sms.component.html',
-  styleUrls: ['./sms.component.css']
+  templateUrl: './sms-template.component.html',
+  styleUrls: ['./sms-template.component.css']
 })
-export class SmsComponent implements OnInit {
+export class SmsTemplateComponent implements OnInit {
   private smsService = inject(SmsService);
   private notificationService = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
@@ -96,13 +96,15 @@ export class SmsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.loadSmsMessages();
+    let params:any = {};
+    params.templateSms = true;
+    this.loadSmsMessages(params);
   }
 
-  async loadSmsMessages(filters?: { status?: string | null; fromDate?: Date | string | null; toDate?: Date | string | null; }) {
+  async loadSmsMessages(filters?) {
     this.isLoading = true;
     try {
-      this.templateMsgs = [];
+      // this.templateMsgs = [];
       const response = await this.smsService.getSmsMessages(filters);
       this.smsMessages = response.data;
       this.smsMessages.forEach(item=>{

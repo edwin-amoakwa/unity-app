@@ -1,8 +1,8 @@
-<h1 class="page-title">Send SMS</h1>
+<h1 class="page-title">SMS Templates</h1>
 
 
 
-<button-toolbar>
+<button-toolbar *ngIf="false">
   <p-button
     label="Create SMS"
     icon="pi pi-plus"
@@ -18,12 +18,12 @@
 </button-toolbar>
 
 
-<app-card title="SMS List" >
+<app-card  >
 
   <div class="card-body" *ngIf="formView.listView">
 
     <!-- Filters -->
-    <div class="filters d-flex flex-wrap align-items-end gap-2 mb-3">
+    <div class="filters d-flex flex-wrap align-items-end gap-2 mb-3" *ngIf="false">
       <!-- SMS Status -->
       <div class="field me-2 mb-2">
         <label class="block text-sm mb-1">SMS Status</label>

@@ -105,4 +105,12 @@ export class StaticDataService {
     ];
   }
 
+  public static groupSmsStatus():any[]
+  {
+    return [
+      { id: 'SENT', itemName: 'Sent' },
+      { id: 'PENDING', itemName: 'Pending' },
+    ];
+  }
+
 }

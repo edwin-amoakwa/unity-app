@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../core/ApiResponse';
 import { } from './sms.model';
+import {HttpUtils} from '../core/HttpUtils';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,29 @@ export class SmsService {
 
   constructor(private http: HttpClient) {}
 
-  async getSmsMessages(): Promise<ApiResponse<any[]>> {
-    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl));
+  async getSmsMessages(filters): Promise<ApiResponse<any[]>> {
+    let params: any = Object.assign({}, filters);
+
+    if (filters) {
+      const { status, fromDate, toDate } = filters;
+      if (status) {
+        params.status = status;
+      }
+      if (fromDate) {
+        // Send ISO string date-time to backend
+        const f = fromDate instanceof Date ? fromDate.toISOString() : fromDate;
+        params.fromDate = f;
+      }
+      if (toDate) {
+        const t = toDate instanceof Date ? toDate.toISOString() : toDate;
+        params.toDate = t;
+      }
+    }
+    const urlParams = HttpUtils.toUrlParam(params);
+    console.log(filters)
+    console.log(params)
+    console.log(urlParams);
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.apiUrl}?${urlParams}`));
   }
 
 
@@ -36,7 +58,7 @@ export class SmsService {
   }
 
   async sendSmsMessage(id: string): Promise<ApiResponse<any>> {
-    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}`,{}));
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}/send`,{}));
   }
 
   async duplicateSmsMessage(id: string): Promise<ApiResponse<any>> {
