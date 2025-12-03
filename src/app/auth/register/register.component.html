@@ -61,20 +61,20 @@
                 inputId="industryId"
                 [options]="industries"
                 formControlName="industryId"
-                optionLabel="name"
+                optionLabel="industryName"
                 optionValue="id"
                 [filter]="true"
-                filterBy="name"
+                filterBy="industryName"
                 placeholder="Select an Industry"
                 >
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
-                    <span>{{ selectedOption?.name || selectedOption?.industryName }}</span>
+                    <span>{{ selectedOption?.industryName }}</span>
                   </div>
                 </ng-template>
                 <ng-template let-industry #item>
                   <div class="flex items-center gap-2">
-                    <span>{{ industry?.name || industry?.industryName }}</span>
+                    <span>{{industry?.industryName }}</span>
                   </div>
                 </ng-template>
               </p-select>
@@ -138,6 +138,23 @@
             </div>
             <div *ngIf="isFieldInvalid('emailAddress')" class="field-error">
               <small>{{ getFieldError('emailAddress') }}</small>
+            </div>
+          </div>
+
+          <!-- Billing Address -->
+          <div class="form-group full-width">
+            <label for="billingAddress" class="form-label">Billing Address</label>
+            <div class="input-container">
+              <i class="pi pi-map-marker"></i>
+              <textarea pTextarea
+                id="billingAddress"
+                formControlName="billingAddress"
+                rows="2"
+                style="width: 45%"
+              ></textarea>
+            </div>
+            <div *ngIf="isFieldInvalid('billingAddress')" class="field-error">
+              <small>{{ getFieldError('billingAddress') }}</small>
             </div>
           </div>
 

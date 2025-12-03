@@ -131,40 +131,12 @@
               [severity]="getStatusSeverity(sms.smsStatus)">
             </p-tag>
           </td>
-<!--          <td>-->
-<!--            <p-tag-->
-<!--              [value]="sms.smsNatureLabel"-->
-<!--              [severity]="getSmsNatureSeverity(sms.smsNatureLabel)">-->
-<!--            </p-tag>-->
-<!--          </td>-->
-<!--          <td>-->
-<!--            <div class="flex gap-1">-->
-<!--              <p-tag-->
-<!--                *ngIf="sms.flashSms"-->
-<!--                value="Flash"-->
-<!--                severity="danger"-->
-<!--                class="text-xs">-->
-<!--              </p-tag>-->
-<!--              <p-tag-->
-<!--                *ngIf="sms.scheduleSms"-->
-<!--                value="Scheduled"-->
-<!--                severity="info"-->
-<!--                class="text-xs">-->
-<!--              </p-tag>-->
-<!--              <p-tag-->
-<!--                *ngIf="sms.templateSms"-->
-<!--                value="Template"-->
-<!--                severity="warning"-->
-<!--                class="text-xs">-->
-<!--              </p-tag>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td>{{ formatScheduledTime(sms.scheduledTime) }}</td>-->
+
           <td>
             <div class="flex gap-1">
               <p-button
                 icon="pi pi-pencil"
-                size="small" *ngIf="sms.smsStatus === 'Pending'"
+                size="small" *ngIf="false"
                 severity="info"
                 [text]="true"
                 pTooltip="Edit"
@@ -193,17 +165,6 @@
               </p-button>
 
             </div>
-          </td>
-          <td>
-            <p-button
-              icon="pi pi-send"
-              size="small" *ngIf="sms.smsStatus === 'Pending'"
-              severity="success"
-              [text]="true"
-              pTooltip="Initiate/Send"
-                tooltipPosition="left"
-              (onClick)="initiateSms(sms)">
-            </p-button>
           </td>
         </tr>
       </ng-template>

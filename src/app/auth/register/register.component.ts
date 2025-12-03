@@ -14,11 +14,12 @@ import {UnityConfig} from '../../app-config';
 import { Dialog } from 'primeng/dialog';
 import { TermsAndConditionsComponent } from './terms-and-conditions.component';
 import {ButtonDirective} from 'primeng/button';
+import {Textarea} from 'primeng/textarea';
 
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule, ReactiveFormsModule, FormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox, ButtonDirective],
+  imports: [RouterModule, ReactiveFormsModule, FormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox, ButtonDirective, Textarea],
   templateUrl: './register.component.html',
   styleUrls: []
 })
@@ -40,7 +41,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     mobileNo: 'Mobile number',
     emailAddress: 'Email address',
     userPassword: 'Password',
-    agreeToTerms: 'Terms and Conditions'
+    agreeToTerms: 'Terms and Conditions',
+    billingAddress: 'Billing address'
   };
 
   countries: any[] = [];
@@ -98,6 +100,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       industryId: ['', [Validators.required]],
       mobileNo: ['', [Validators.required]],
       emailAddress: ['', [Validators.required, Validators.email]],
+      billingAddress: ['', [Validators.required, Validators.minLength(5)]],
       userPassword: ['', [Validators.required, Validators.minLength(UnityConfig.PasswordMinLength)]],
       agreeToTerms: [false, [Validators.requiredTrue]]
     });
