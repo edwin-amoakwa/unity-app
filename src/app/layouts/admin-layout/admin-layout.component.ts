@@ -19,6 +19,8 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
   user:any
   // userName:anu;
 
+  merchant = UserSession.getMerchant();
+
   @ViewChild('menuNav') menuNav?: ElementRef<HTMLElement>;
 
   constructor(private router: Router) {}

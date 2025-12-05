@@ -95,10 +95,16 @@
         <span class="name">{{user.name}}</span>
       </div>
       <div class="user-menu" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
-        <a class="user-menu-item" routerLink="/profile" routerLinkActive="active" (click)="showUserMenu=false">
+        <a class="user-menu-item" routerLink="/user-profile" routerLinkActive="active" (click)="showUserMenu=false">
           <i class="pi pi-user" aria-hidden="true"></i>
-          <span>Profile</span>
+          <span>User Profile</span>
         </a>
+
+        <a class="user-menu-item" routerLink="/merchant-profile" routerLinkActive="active" (click)="showUserMenu=false">
+          <i class="pi pi-user" aria-hidden="true"></i>
+          <span>Merchant Profile</span>
+        </a>
+
         <a class="user-menu-item" routerLink="/update-password" routerLinkActive="active" (click)="showUserMenu=false">
           <i class="pi pi-key" aria-hidden="true"></i>
           <span>Update Password</span>

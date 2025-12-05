@@ -12,10 +12,10 @@ import {SmsChannelPriceComponent} from '../sms-channel-price/sms-channel-price.c
 @Component({
   selector: 'app-account-profile',
   imports: [CardComponent, CommonModule, SmsChannelPriceComponent],
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit {
   user:any = UserSession.getUser();
   merchant:any = UserSession.getMerchant();
 

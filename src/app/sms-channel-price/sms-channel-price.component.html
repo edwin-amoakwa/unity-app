@@ -24,8 +24,8 @@
         <td>{{ row.countryCode }}</td>
         <td>{{ row.callingCode }}</td>
         <td>{{ row.smsChannelName }}</td>
-        <td class="text-right">{{ row.localRate }}</td>
-        <td class="text-right">{{ row.internationalRate }}</td>
+        <td class="text-right">{{ row.localRate | number:'1.4-4' }}</td>
+        <td class="text-right">{{ row.internationalRate | number:'1.4-4' }}</td>
       </tr>
     </ng-template>
 

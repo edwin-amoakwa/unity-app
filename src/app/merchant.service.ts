@@ -9,9 +9,20 @@ import { ApiResponse } from './core/ApiResponse';
 })
 export class MerchantService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.baseUrl}/merchants/price-list`;
+  private apiUrl = `${environment.baseUrl}/merchants`;
 
   async getPriceList(): Promise<ApiResponse<any[]>> {
-    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl));
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/price-list`));
   }
+
+
+  async updateMerchant(merchantData): Promise<ApiResponse<any[]>> {
+    return await firstValueFrom(this.http.put<ApiResponse<any[]>>(this.apiUrl,merchantData));
+  }
+
+
+  async getMerchant(merchantId): Promise<ApiResponse<any[]>> {
+    return await firstValueFrom(this.http.get<ApiResponse<any[]>>(this.apiUrl +"/" +merchantId));
+  }
+
 }

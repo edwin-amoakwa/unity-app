@@ -10,15 +10,19 @@ import { UserSession } from '../core/user-session';
 import { DashboardService } from './dashboard.service';
 import { StaticDataService } from '../static-data.service';
 import { SelectModule } from 'primeng/select';
+import {RouterLink} from '@angular/router';
+import {MerchantService} from '../merchant.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [SentSmsChartComponent,  SharedModule, MonthlySmsStatsChartComponent, Badge, SelectModule],
+  imports: [SentSmsChartComponent, SharedModule, MonthlySmsStatsChartComponent, Badge, SelectModule, RouterLink],
   templateUrl: './dashboard.component.html',
+  standalone: true,
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
+  private merchantService = inject(MerchantService);
 
   merchant = UserSession.getMerchant();
   user = UserSession.getUser();
@@ -58,6 +62,17 @@ export class DashboardComponent implements OnInit {
 
       const latestSmsResponse = await this.dashboardService.getLatestSms();
       this.latestSms = latestSmsResponse.data;
+
+      if(this.merchant?.accountStatus == 'PENDING')
+      {
+        const response = await this.merchantService.getMerchant(this.merchant.id);
+        this.merchant = response.data;
+        if(this.merchant.accountStatus != 'PENDING')
+        {
+          localStorage.setItem(UserSession.merchant, JSON.stringify(this.merchant));
+        }
+      }
+
     } catch (error) {
       console.error('Error fetching dashboard summary:', error);
     }

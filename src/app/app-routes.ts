@@ -15,12 +15,13 @@ import { ApplicationsComponent } from './applications/applications.component';
 import { DistributionGroupsComponent } from './distribution-groups/distribution-groups.component';
 import { SmsComponent } from './sms/sms.component';
 import { SmsRecordsComponent } from './sms-records/sms-records.component';
-import { ProfileComponent } from './profile/profile.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import {PlainComponent} from './layouts/plain/plain.component';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import {SmsTemplateComponent} from './sms-templates/sms-template.component';
+import {MerchantProfileComponent} from './merchant-profile/merchant-profile.component';
 
 export const routes: Routes = [
   {
@@ -41,7 +42,8 @@ export const routes: Routes = [
       { path: 'sms-records', component: SmsRecordsComponent },
       { path: 'sms-templates', component: SmsTemplateComponent },
       { path: 'sms-channel-price', loadComponent: () => import('./sms-channel-price/sms-channel-price.component').then(m => m.SmsChannelPriceComponent) },
-      { path: 'profile', component: ProfileComponent },
+      { path: 'user-profile', component: UserProfileComponent },
+      { path: 'merchant-profile', component: MerchantProfileComponent },
       { path: 'update-password', component: UpdatePasswordComponent },
       { path: 'notification-settings', loadComponent: () => import('./notification-settings/notification-settings.component').then(m => m.NotificationSettingsComponent) },
     ]

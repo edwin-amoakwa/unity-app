@@ -12,6 +12,8 @@ export class AuthGuard implements CanActivate {
     'login',
     'register',
     'password-reset',
+    'merchant-profile',
+    'user-profile',
     'denied'
   ];
 

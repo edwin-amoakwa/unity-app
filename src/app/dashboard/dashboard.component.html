@@ -1,5 +1,49 @@
 <!--<h1 class="page-title">Dashboard</h1>-->
 
+<!-- styles moved to dashboard.component.scss -->
+
+<div *ngIf="merchant?.accountStatus == 'PENDING'" id="pending-account" class="row">
+  <div class="col-12">
+    <div class="pending-banner">
+      <div class="d-flex flex-wrap justify-content-between align-items-center">
+        <div class="d-flex align-items-center mb-3 mb-md-0">
+          <span class="icon-wrap">
+            <!-- Inline SVG icon (shield-check) -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 3l7 3v6c0 5-3.5 9-7 9s-7-4-7-9V6l7-3z" stroke="white" stroke-opacity="0.85" stroke-width="1.5"/>
+              <path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <div>
+            <h5 style="margin:0; font-weight:700; letter-spacing:0.2px;">Complete your account setup</h5>
+            <p class="helper-text">Finish a few quick steps to unlock all features.</p>
+          </div>
+        </div>
+
+        <div class="cta">
+          <a class="btn-cta" routerLink="/merchant-profile">Complete Account Setup</a>
+        </div>
+      </div>
+
+      <div class="meta mt-3">
+        <div>
+          <span class="item-label">Account Status:</span>
+          <span class="status-badge">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#fde047;"></span>
+            {{ merchant.accountStatus }}
+          </span>
+        </div>
+        <div>
+          <span class="item-label">Merchant:</span>
+          <strong>{{ merchant.merchantName }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <h5>Daily Summary</h5>
 
 <div class="topbar">
@@ -76,27 +120,27 @@
   </div>
 </div>
 
-<!--<div *ngIf="merchant?.accountStatus == 'PENDING'" class="row">-->
-<!--  <div class="col-12 ">-->
-<!--    <div class="card">-->
-<!--      <div class="card-body">-->
-<!--        <div class="row">-->
+<div *ngIf="merchant?.accountStatus == 'PENDING'" class="row">
+  <div class="col-12 ">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
 
-<!--          <div class="col-md-6">-->
-<!--            <p><strong>Account Status:</strong>-->
-<!--              <span class="badge bg-warning">{{merchant.accountStatus}}</span>-->
-<!--            </p>-->
-<!--          </div>-->
+          <div class="col-md-6">
+            <p><strong>Account Status:</strong>
+              <span class="badge bg-warning">{{merchant.accountStatus}}</span>
+            </p>
+          </div>
 
-<!--          <div class="col-md-6">-->
-<!--            <p><strong>Merchant Name:</strong>{{merchant.merchantName}}</p>-->
-<!--          </div>-->
+          <div class="col-md-6">
+            <p><strong>Merchant Name:</strong>{{merchant.merchantName}}</p>
+          </div>
 
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="row" *ngIf="false">
   <!-- Summary Section -->

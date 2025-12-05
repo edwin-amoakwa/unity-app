@@ -1,6 +1,6 @@
 
 
-<div class="auth-container">
+<div class="auth-container1">
   <div class="auth-background">
     <div class="background-overlay"></div>
   </div>
@@ -8,29 +8,87 @@
   <div class="auth-content">
     <div class="glass-container">
       <div class="login-header">
-        <h4 class="login-title">Ecolink</h4>
-        <h1 class="login-title">Merchant Portal</h1>
-        <p class="login-subtitle">Enter your company details to register as Merchant</p>
+        <h1 class="login-title">{{ merchant?.accountStatus === 'PENDING' ? 'Edit Profile' : 'Merchant Profile' }}</h1>
+        <p class="login-subtitle">Update your registration details, get approved </p>
       </div>
 
-      <!-- Step 1: Registration form -->
-      <form *ngIf="currentStep === 'form'" [formGroup]="registerForm" (ngSubmit)="startRegistration()" class="login-form">
+
+      <!-- Read-only details when not pending -->
+      <div *ngIf="merchant && merchant.accountStatus !== 'PENDING'" class="details-view">
+        <div class="row mb-3">
+          <div class="col-md-3"><strong>Company Name:</strong></div>
+          <div class="col-md-9">{{ merchant.merchantName }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3"><strong>Contact Person:</strong></div>
+          <div class="col-md-9">{{ merchant.contactName || 'Not provided' }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3"><strong>Mobile Number:</strong></div>
+          <div class="col-md-9">{{ merchant.contactMobileNo || 'Not provided' }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3"><strong>Email Address:</strong></div>
+          <div class="col-md-9">{{ merchant.emailAddress }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3"><strong>Country:</strong></div>
+          <div class="col-md-9">{{ merchant.countryName || 'Not provided' }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3"><strong>Industry:</strong></div>
+          <div class="col-md-9">
+            <ng-container *ngIf="merchant.industryId as indId">
+              <ng-container *ngFor="let ind of industries">
+                <span *ngIf="ind.id === indId">{{ ind.industryName }}</span>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3"><strong>Billing Address:</strong></div>
+          <div class="col-md-9">{{ merchant.billingAddress || 'Not provided' }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-3"><strong>Account Status:</strong></div>
+          <div class="col-md-9"><span class="badge bg-primary">{{ merchant.accountStatus }}</span></div>
+        </div>
+
+        <div class="row mb-3" *ngIf="merchant?.businessDocUrl">
+          <div class="col-md-3"><strong>Business Document:</strong></div>
+          <div class="col-md-9">
+            <a class="doc-link" [href]="merchant.businessDocUrl" target="_blank" rel="noopener noreferrer">
+              View uploaded document
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editable form only when pending -->
+      <form *ngIf="merchant?.accountStatus === 'PENDING'" [formGroup]="registerForm" (ngSubmit)="updateProfile()" class="login-form">
         <div class="form-grid">
           <!-- Company Name -->
           <div class="form-group">
-            <label for="companyName" class="form-label">Company Name</label>
+            <label for="merchantName" class="form-label">Company Name</label>
             <div class="input-container">
               <i class="pi pi-building"></i>
               <input
                 pInputText
                 type="text"
-                id="companyName"
-                formControlName="companyName"
+                id="merchantName"
+                formControlName="merchantName"
                 placeholder="Enter company name"
               />
             </div>
-            <div *ngIf="isFieldInvalid('companyName')" class="field-error">
-              <small>{{ getFieldError('companyName') }}</small>
+            <div *ngIf="isFieldInvalid('merchantName')" class="field-error">
+              <small>{{ getFieldError('merchantName') }}</small>
             </div>
           </div>
 
@@ -42,13 +100,13 @@
               <input
                 pInputText
                 type="text"
-                id="contactPerson"
-                formControlName="contactPerson"
+                id="contactName"
+                formControlName="contactName"
                 placeholder="Enter contact person name"
               />
             </div>
-            <div *ngIf="isFieldInvalid('contactPerson')" class="field-error">
-              <small>{{ getFieldError('contactPerson') }}</small>
+            <div *ngIf="isFieldInvalid('contactName')" class="field-error">
+              <small>{{ getFieldError('contactName') }}</small>
             </div>
           </div>
 
@@ -90,7 +148,8 @@
             <div class="input-container">
               <i class="pi pi-phone"></i>
 
-              <p-select [options]="countries" formControlName="countryId" optionLabel="countryName" [filter]="true"
+              <p-select [options]="countries" formControlName="countryId" readonly
+                        optionLabel="countryName" [filter]="true"
                         filterBy="countryName"  optionValue="id" placeholder="Select a Country">
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
@@ -106,11 +165,16 @@
                 </ng-template>
               </p-select>
 
+<!--              <div class="flex items-center gap-2">-->
+<!--                <i class="fi" [ngClass]="'fi-' + merchant.countryCode"></i>-->
+<!--                <span style="margin-left: 5px;">{{ merchant.countryName }}</span>-->
+<!--              </div>-->
+
               <input
                 pInputText
                 type="tel"
-                id="mobileNo"
-                formControlName="mobileNo"
+                id="contactMobileNo"
+                formControlName="contactMobileNo"
                 placeholder="Enter mobile number"
                 [attr.minlength]="phoneNumberLength"
                 [attr.maxlength]="phoneNumberLength"
@@ -118,8 +182,8 @@
                 aria-label="mobile number"
               />
             </div>
-            <div *ngIf="isFieldInvalid('mobileNo')" class="field-error">
-              <small>{{ getFieldError('mobileNo') }}</small>
+            <div *ngIf="isFieldInvalid('contactMobileNo')" class="field-error">
+              <small>{{ getFieldError('contactMobileNo') }}</small>
             </div>
           </div>
 
@@ -159,41 +223,35 @@
             </div>
           </div>
 
-          <!-- Password -->
-          <div class="form-group full-width">
-            <label for="userPassword" class="form-label">Password</label>
+
+          <div class="row">
+            <div class="col-auto">
+              <input #fileInput (change)="onFileChange($event)" class="form-control" type="file">
+            </div>
+<!--            <div class="col-auto">-->
+<!--              <button type="button" pButton (click)="upload()">Upload</button>-->
+<!--            </div>-->
+<!--            <div class="col-auto">-->
+<!--              <button type="button" pButton class="p-button-success" (click)="clearUploadForm()">-->
+<!--                <i class="pi pi-times" aria-hidden="true"></i>-->
+<!--                <span>Clear</span>-->
+<!--              </button>-->
+<!--            </div>-->
+          </div>
+
+
+          <!-- Business Document Link -->
+          <div class="form-group full-width" *ngIf="merchant?.businessDocUrl">
+            <label class="form-label">Business Document</label>
             <div class="input-container">
-              <i class="pi pi-lock"></i>
-              <p-password
-                inputId="userPassword"
-                formControlName="userPassword"
-                [feedback]="false"
-                placeholder="Enter password"
-              ></p-password>
-            </div>
-            <div *ngIf="isFieldInvalid('userPassword')" class="field-error">
-              <small>{{ getFieldError('userPassword') }}</small>
+              <i class="pi pi-file doc-link-icon"></i>
+              <a class="doc-link" [href]="merchant.businessDocUrl" target="_blank" rel="noopener noreferrer">
+                View uploaded document
+              </a>
             </div>
           </div>
 
-          <!-- Terms and Conditions -->
-          <div class="form-group full-width">
-            <div class="checkbox-container">
-              <p-checkbox
-                inputId="agreeToTerms"
-                formControlName="agreeToTerms"
-                [binary]="true"
-              ></p-checkbox>
-              <label class="checkbox-label" for="agreeToTerms">
-                I agree with
-                <a href="#" (click)="openTerms($event)">Read / View Terms & Conditions</a>
-              </label>
-            </div>
-            <div *ngIf="isFieldInvalid('agreeToTerms')" class="field-error">
-              <small>{{ getFieldError('agreeToTerms') }}</small>
-            </div>
 
-          </div>
 
           <!-- Submit button -->
           <div class="full-width">
@@ -205,62 +263,26 @@
             >
               <span *ngIf="!isLoading" class="button-text">
                 <i class="pi pi-user-plus"></i>
-                Sign Up
+                Update Profile
               </span>
               <span *ngIf="isLoading" class="loading-spinner">
                 <i class="pi pi-spinner pi-spin"></i>
-                Signing up...
+                Updating Profile
               </span>
             </button>
           </div>
 
-          <!-- Additional options -->
-          <div class="login-footer full-width">
-            <a routerLink="/login" class="forgot-password">Already have an account? Sign In</a>
-          </div>
         </div>
       </form>
 
-      <!-- Step 2: Email PIN verification -->
-      <div *ngIf="currentStep === 'verify'" id="verify-panel" class="login-form" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background: rgba(0, 0, 0, 0.03); padding: 16px; border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.12);">
-        <div class="form-group">
-          <h4 >Email Verification</h4>
-          <p class="login-subtitle">
-            A verification PIN have been sent to your email {{ verifyEmail }}. Enter it to proceed with registration.
-          </p>
-        </div>
-
-        <div class="form-group">
-          <label for="pin" class="form-label">Verification PIN</label>
-          <div class="input-container">
-            <i class="pi pi-lock"></i>
-            <input pInputText id="pin" type="text" [(ngModel)]="pin" name="pin" placeholder="Enter PIN" />
-          </div>
-        </div>
-
-        <div *ngIf="verifyMessage" class="field-error" style="margin-top:8px;">
-          <small>{{ verifyMessage }}</small>
-        </div>
-
-        <button pButton class="btn-primary w-full" (click)="proceedVerification()" [disabled]="isLoading">
-          {{ isLoading ? 'Please wait...' : 'Proceed' }}
-        </button>
-      </div>
-
-      <!-- Terms & Conditions Dialog -->
-      <p-dialog
-        header="Terms & Conditions"
-        [(visible)]="displayTerms"
-        [modal]="true"
-        [draggable]="false"
-        [resizable]="false"
-        [style]="{ width: '650px', maxWidth: '95vw' }"
-        [breakpoints]="{ '960px': '95vw' }"
-      >
-        <div class="terms-content">
-          <app-terms-and-conditions></app-terms-and-conditions>
-        </div>
-      </p-dialog>
     </div>
   </div>
+
+
+
+  <br />
+  <app-sms-channel-price></app-sms-channel-price>
+
+
+
 </div>
