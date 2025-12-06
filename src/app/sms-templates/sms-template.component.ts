@@ -84,7 +84,6 @@ export class SmsTemplateComponent implements OnInit {
     smsForm!: FormGroup;
     senderIds: any[] = [];
     groups: any[] = [];
-    smsNatures: any[] = StaticDataService.smsNature();
     smsStatusList = StaticDataService.groupSmsStatus();
     characterCount: number = 0;
     smsCount: number = 1;
@@ -104,7 +103,7 @@ export class SmsTemplateComponent implements OnInit {
   async loadSmsMessages(filters?) {
     this.isLoading = true;
     try {
-      // this.templateMsgs = [];
+
       const response = await this.smsService.getSmsMessages(filters);
       this.smsMessages = response.data;
       this.smsMessages.forEach(item=>{

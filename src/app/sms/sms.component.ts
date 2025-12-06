@@ -24,7 +24,7 @@ import { ConfigService } from '../config.service';
 import { CoreModule } from '../core/core.module';
 import { FormView } from '../core/form-view';
 import { NotificationService } from '../core/notification.service';
-import { CollectionUtil, ObjectUtil } from '../core/system.utils';
+import {CollectionUtil, DateUtil, ObjectUtil} from '../core/system.utils';
 import { DistributionGroupsService } from '../distribution-groups/distribution-groups.service';
 import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
@@ -86,13 +86,11 @@ export class SmsComponent implements OnInit {
     groups: any[] = [];
     smsNatures: any[] = StaticDataService.smsNature();
     smsStatusList = StaticDataService.groupSmsStatus();
+    frequencyList = StaticDataService.frequency();
     characterCount: number = 0;
     smsCount: number = 1;
 
-    // Filters
-    filterSmsStatus: string | null = null;
-    fromDate: Date | null = null;
-    toDate: Date | null = null;
+    filterSms:any = {};
 
 
   ngOnInit() {
@@ -121,12 +119,10 @@ export class SmsComponent implements OnInit {
   }
 
   searchSms() {
-    // Request server-side filtering via API
-    this.loadSmsMessages({
-      status: this.filterSmsStatus,
-      fromDate: this.fromDate,
-      toDate: this.toDate
-    });
+    let formatted = Object.assign({}, this.filterSms);
+    formatted.fromDateTime = DateUtil.toLocalDateTimeString(formatted.fromDateTime);
+    formatted.toDateTime = DateUtil.toLocalDateTimeString(formatted.toDateTime);
+    this.loadSmsMessages(formatted);
   }
 
   closeTemplateDialog()
@@ -337,6 +333,8 @@ export class SmsComponent implements OnInit {
       templateSms: [false],
       smsNature: ['ONE_TIME', Validators.required],
       scheduledTime: [null],
+      recurringFrequency: [null],
+      recurringEndDateTime: [null],
       smsMessageType: [null],
       phoneNumbersSource: [null],
       groupId: [null],
@@ -387,6 +385,30 @@ export class SmsComponent implements OnInit {
       }
       scheduledTimeControl?.updateValueAndValidity();
     });
+
+    // Toggle validators for recurring fields based on scheduleSms and smsNature
+    const updateRecurringValidators = () => {
+      const isScheduled = !!this.smsForm.get('scheduleSms')?.value;
+      const isRecurring = this.smsForm.get('smsNature')?.value === 'RECURRING';
+      const freqCtrl = this.smsForm.get('recurringFrequency');
+      const endCtrl = this.smsForm.get('recurringEndDateTime');
+      if (isScheduled && isRecurring) {
+        freqCtrl?.setValidators([Validators.required]);
+        endCtrl?.setValidators([Validators.required]);
+      } else {
+        freqCtrl?.clearValidators();
+        endCtrl?.clearValidators();
+        freqCtrl?.setValue(null, { emitEvent: false });
+        endCtrl?.setValue(null, { emitEvent: false });
+      }
+      freqCtrl?.updateValueAndValidity({ emitEvent: false });
+      endCtrl?.updateValueAndValidity({ emitEvent: false });
+    };
+
+    this.smsForm.get('smsNature')?.valueChanges.subscribe(() => updateRecurringValidators());
+    this.smsForm.get('scheduleSms')?.valueChanges.subscribe(() => updateRecurringValidators());
+    // Initialize once
+    updateRecurringValidators();
   }
 
   async loadDropdownData() {
@@ -414,6 +436,12 @@ export class SmsComponent implements OnInit {
           // 3. Set the Date object value to the form control
           this.smsForm.controls['scheduledTime'].setValue(scheduledDateObject);
         }
+        if(!ObjectUtil.isNullOrUndefined(this.selectedSms.recurringEndDateTime))
+        {
+          const endTimeStr: string = this.selectedSms.recurringEndDateTime;
+          const endDateObj: Date = new Date(endTimeStr);
+          this.smsForm.controls['recurringEndDateTime'].setValue(endDateObj);
+        }
       } catch (error) {console.log(error);}
     }
   }
@@ -435,6 +463,7 @@ export class SmsComponent implements OnInit {
       formValue.phoneNos = ObjectUtil.standardizeNewlines(formValue.phoneNos);
       try {
         formValue.scheduledTime = this.formatDateTimeForApi(formValue.scheduledTime);
+        formValue.recurringEndDateTime = this.formatDateTimeForApi(formValue.recurringEndDateTime);
       } catch (error) {}
       this.onSmsSubmitted(formValue);
     } else {

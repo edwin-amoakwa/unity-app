@@ -145,6 +145,19 @@ export class CollectionUtil
 }
 
 export class DateUtil {
+
+  public static toLocalDateTimeString(date: Date): string {
+
+    if(ObjectUtil.isNullOrUndefined(date))
+    {
+      return null;
+    }
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+      + `T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  }
+
   public static getCurrentDate() {
     // new Date().toISOString().substring(0, 10);
     return formatDate(new Date(), 'yyyy-MM-dd', 'en');

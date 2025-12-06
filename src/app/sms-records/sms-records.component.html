@@ -4,8 +4,40 @@
   <div class="card-body">
     <!-- Filter Section -->
     <div class="row mb-3">
+
+
       <div class="col-md-3">
-        <label for="finalStatus" class="form-label">Final Status</label>
+        <label class="form-label">From</label>
+        <p-calendar
+          [(ngModel)]="filterParam.fromDateTime"
+          [showIcon]="true"
+          hourFormat="12"
+          [showTime]="true"
+          dateFormat="yy-mm-dd"
+          placeholder="Start date"
+          inputId="fromDate"
+          styleClass="w-100"
+          inputStyleClass="w-100 p-inputtext-sm"
+        ></p-calendar>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">To</label>
+        <p-calendar
+          [(ngModel)]="filterParam.toDateTime"
+          [showIcon]="true"
+          hourFormat="12"
+          [showTime]="true"
+          dateFormat="yy-mm-dd"
+          placeholder="End date"
+          inputId="toDate"
+          styleClass="w-100"
+          inputStyleClass="w-100 p-inputtext-sm"
+        ></p-calendar>
+      </div>
+
+      <div class="col-md-3">
+        <label for="finalStatus" class="form-label"> Status</label>
         <p-dropdown
           id="finalStatus"
           [options]="smsStatusList"
@@ -14,7 +46,6 @@
           optionValue="id"
           placeholder="Select Final Status"
           [showClear]="true"
-          (onChange)="onFilterChange()"
           styleClass="w-100">
         </p-dropdown>
       </div>
@@ -28,11 +59,26 @@
           optionValue="senderId"
           placeholder="Select Sender ID"
           [showClear]="true"
-          (onChange)="onFilterChange()"
           styleClass="w-100">
         </p-dropdown>
       </div>
-      <div class="col-md-3 d-flex align-items-end">
+      <div class="col-md-3">
+        <label for="mobileNo" class="form-label">Mobile No</label>
+        <input
+          id="mobileNo"
+          pInputText
+          type="text"
+          [(ngModel)]="filterParam.mobileNo"
+          placeholder="Enter mobile number"
+          class="w-100 p-inputtext-sm" />
+      </div>
+      <div class="col-md-3 d-flex align-items-end gap-2">
+        <p-button
+          label="Search"
+          icon="pi pi-search"
+          size="small"
+          (onClick)="doSearch()">
+        </p-button>
         <p-button
           label="Clear Filters"
           icon="pi pi-filter-slash"
@@ -41,6 +87,7 @@
           (onClick)="clearFilters()">
         </p-button>
       </div>
+
     </div>
 
     <!-- SMS Records Table -->

@@ -113,4 +113,13 @@ export class StaticDataService {
     ];
   }
 
+  public static frequency():any[]
+  {
+    return [
+      { id: 'DAILY', itemName: 'Daily' },
+      { id: 'WEEKLY', itemName: 'Weekly' },
+      { id: 'MONTHLY', itemName: 'Monthly' },
+    ];
+  }
+
 }

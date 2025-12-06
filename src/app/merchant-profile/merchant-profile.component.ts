@@ -11,6 +11,7 @@ import {DataLookupService} from '../core/services/data-lookup.service';
 import {UserSession} from '../core/user-session';
 import {MerchantService} from '../merchant.service';
 import {SmsChannelPriceComponent} from '../sms-channel-price/sms-channel-price.component';
+import {MessageBox} from '../message-helper';
 
 
 @Component({
@@ -179,6 +180,9 @@ export class MerchantProfileComponent implements OnInit, OnDestroy {
 
     try {
       const response = await this.merchantService.updateMerchant(formData);
+      if(response.success){
+        MessageBox.info("Profile updated successfully. Please wait for approval from Ecolink team. You will be notified once approved.");
+      }
       console.log('Registration successful:', response);
 
     } catch (error) {

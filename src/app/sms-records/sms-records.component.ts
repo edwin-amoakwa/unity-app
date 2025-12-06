@@ -16,6 +16,8 @@ import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsRecordsService } from './sms-records.service';
 import {StaticDataService} from '../static-data.service';
 import {ConfigService} from '../config.service';
+import {Calendar} from 'primeng/calendar';
+import {DateUtil} from '../core/system.utils';
 
 
 
@@ -31,7 +33,8 @@ import {ConfigService} from '../config.service';
     TagModule,
     TooltipModule,
     DropdownModule,
-    InputTextModule
+    InputTextModule,
+    Calendar
   ],
   templateUrl: './sms-records.component.html',
   styleUrls: ['./sms-records.component.scss']
@@ -58,7 +61,10 @@ export class SmsRecordsComponent implements OnInit {
     this.isLoading = true;
     try {
 
-      const response = await this.smsRecordsService.getSmsRecords(this.filterParam);
+      const filters = Object.assign({},this.filterParam);
+      filters.fromDateTime = DateUtil.toLocalDateTimeString(this.filterParam.fromDateTime);
+      filters.toDateTime = DateUtil.toLocalDateTimeString(this.filterParam.toDateTime);
+      const response = await this.smsRecordsService.getSmsRecords(filters);
       this.smsRecords = response.data || [];
     } catch (error) {
       console.error('Error loading SMS records:', error);
@@ -82,7 +88,7 @@ export class SmsRecordsComponent implements OnInit {
     }
   }
 
-  onFilterChange() {
+  doSearch() {
     this.loadSmsRecords();
   }
 
