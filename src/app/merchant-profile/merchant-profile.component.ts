@@ -39,7 +39,7 @@ export class MerchantProfileComponent implements OnInit, OnDestroy {
     industryId: 'Industry',
     countryId: 'Country',
     contactMobileNo: 'Mobile number',
-    emailAddress: 'Email address',
+    contactEmailAddress: 'Email address',
     userPassword: 'Password',
     agreeToTerms: 'Terms and Conditions',
     billingAddress: 'Billing address'
@@ -90,7 +90,7 @@ export class MerchantProfileComponent implements OnInit, OnDestroy {
       countryId: [{ value: '', disabled: true }],
       industryId: ['', [Validators.required]],
       contactMobileNo: ['', [Validators.required]],
-      emailAddress: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
+      contactEmailAddress: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
       userPassword: ['', [Validators.required, Validators.minLength(5)]],
       billingAddress: ['', [Validators.required, Validators.minLength(5)]],
       agreeToTerms: [false, [Validators.requiredTrue]]

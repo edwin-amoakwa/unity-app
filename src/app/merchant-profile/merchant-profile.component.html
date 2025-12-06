@@ -32,7 +32,7 @@
 
         <div class="row mb-3">
           <div class="col-md-3"><strong>Email Address:</strong></div>
-          <div class="col-md-9">{{ merchant.emailAddress }}</div>
+          <div class="col-md-9">{{ merchant.contactEmailAddress }}</div>
         </div>
 
         <div class="row mb-3">
@@ -189,19 +189,19 @@
 
           <!-- Email Address -->
           <div class="form-group">
-            <label for="emailAddress" class="form-label">Email Address</label>
+            <label for="contactEmailAddress" class="form-label">Email Address</label>
             <div class="input-container">
               <i class="pi pi-envelope"></i>
               <input
                 pInputText
                 type="email"
-                id="emailAddress"
-                formControlName="emailAddress"
+                id="contactEmailAddress"
+                formControlName="contactEmailAddress"
                 placeholder="Enter email address"
               />
             </div>
-            <div *ngIf="isFieldInvalid('emailAddress')" class="field-error">
-              <small>{{ getFieldError('emailAddress') }}</small>
+            <div *ngIf="isFieldInvalid('contactEmailAddress')" class="field-error">
+              <small>{{ getFieldError('contactEmailAddress') }}</small>
             </div>
           </div>
 
