@@ -9,7 +9,7 @@
     <div class="glass-container">
       <div class="login-header">
         <h1 class="login-title">{{ merchant?.accountStatus === 'PENDING' ? 'Edit Profile' : 'Merchant Profile' }}</h1>
-        <p class="login-subtitle">Update your registration details, get approved </p>
+        <p  *ngIf="merchant && merchant.accountStatus == 'PENDING'" class="login-subtitle">Update your registration details, get approved </p>
       </div>
 
 
