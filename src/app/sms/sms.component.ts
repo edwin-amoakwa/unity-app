@@ -220,8 +220,8 @@ export class SmsComponent implements OnInit {
 
     } catch (error) {
       console.error('Error with SMS message:', error);
-      const errorMessage = this.selectedSms ? 'Failed to update SMS message' : 'Failed to create SMS message';
-      this.notificationService.error(errorMessage);
+      // const errorMessage = this.selectedSms ? 'Failed to update SMS message' : 'Failed to create SMS message';
+      // this.notificationService.error(errorMessage);
     }
   }
 
