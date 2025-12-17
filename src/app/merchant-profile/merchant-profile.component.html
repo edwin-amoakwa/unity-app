@@ -226,7 +226,8 @@
 
           <div class="row">
             <div class="col-auto">
-              <input #fileInput (change)="onFileChange($event)" class="form-control" type="file">
+              <label class="form-label">Business Registration Document</label>
+              <input #fileInput (change)="onFileChange($event)" class="form-control" type="file" accept="application/pdf,image/*">
             </div>
 <!--            <div class="col-auto">-->
 <!--              <button type="button" pButton (click)="upload()">Upload</button>-->
@@ -281,7 +282,7 @@
 
 
   <br />
-  <app-sms-channel-price></app-sms-channel-price>
+  <app-sms-channel-price *ngIf=" merchant?.accountStatus != 'PENDING'"></app-sms-channel-price>
 
 
 

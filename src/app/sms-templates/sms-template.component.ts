@@ -65,7 +65,7 @@ export class SmsTemplateComponent implements OnInit {
 
   formView = FormView.listView();
 
-  smsMessages: any[] = [];
+  templateMessageList: any[] = [];
   isLoading: boolean = false;
   // showDialog: boolean = false;
   selectedSms: any = {};
@@ -95,18 +95,17 @@ export class SmsTemplateComponent implements OnInit {
 
 
   ngOnInit() {
-    let params:any = {};
-    params.templateSms = true;
-    this.loadSmsMessages(params);
+
+    this.loadSmsMessages();
   }
 
-  async loadSmsMessages(filters?) {
+  async loadSmsMessages() {
     this.isLoading = true;
     try {
 
-      const response = await this.smsService.getSmsMessages(filters);
-      this.smsMessages = response.data;
-      this.smsMessages.forEach(item=>{
+      const response = await this.smsService.getTemplateSMS();
+      this.templateMessageList = response.data;
+      this.templateMessageList.forEach(item=>{
         if(item.templateSms)
         {
           CollectionUtil.add(this.templateMsgs,item);
@@ -117,17 +116,13 @@ export class SmsTemplateComponent implements OnInit {
       console.error('Error loading SMS messages:', error);
       this.notificationService.error('Failed to load SMS messages');
       this.isLoading = false;
-      this.smsMessages = [];
+      this.templateMessageList = [];
     }
   }
 
   searchSms() {
     // Request server-side filtering via API
-    this.loadSmsMessages({
-      status: this.filterSmsStatus,
-      fromDate: this.fromDate,
-      toDate: this.toDate
-    });
+    this.loadSmsMessages();
   }
 
   closeTemplateDialog()
@@ -208,7 +203,7 @@ export class SmsTemplateComponent implements OnInit {
           return
         }
 
-        CollectionUtil.add(this.smsMessages, response.data);
+        CollectionUtil.add(this.templateMessageList, response.data);
         if(response.data.templateSms)
         {
           CollectionUtil.add(this.templateMsgs,response.data);
@@ -262,7 +257,7 @@ export class SmsTemplateComponent implements OnInit {
            const response = await this.smsService.deleteSmsMessage(sms.id);
            if(response.success)
            {
-             CollectionUtil.remove(this.smsMessages, sms.id);
+             CollectionUtil.remove(this.templateMessageList, sms.id);
            }
 
           } catch (error) {
@@ -286,7 +281,7 @@ export class SmsTemplateComponent implements OnInit {
             const response = await this.smsService.sendSmsMessage(sms.id);
             if(response.success)
             {
-              CollectionUtil.add(this.smsMessages, response.data);
+              CollectionUtil.add(this.templateMessageList, response.data);
             }
 
           } catch (error) {

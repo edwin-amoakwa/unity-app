@@ -83,17 +83,33 @@
     </div>
 
     <p-table
-      [value]="smsMessages"
+      #dt
+      [value]="templateMessageList"
       [loading]="isLoading"
       [paginator]="true"
       [rows]="10"
       [responsive]="true"
       styleClass="p-datatable-sm"
-      [globalFilterFields]="['senderId', 'applicationId', 'messageText', 'smsNatureName']">
+      [globalFilterFields]="['templateName', 'senderName', 'messageText', 'smsStatus', 'valueDate']">
+
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-end">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              class="p-inputtext-sm"
+              placeholder="Search..."
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
+          </span>
+        </div>
+      </ng-template>
 
       <ng-template pTemplate="header">
         <tr>
-          <th >Date</th>
+          <th >Created Date</th>
+          <th >Name</th>
           <th >Sender ID</th>
           <th >Message</th>
 <!--          <th >Phone Numbers</th>-->
@@ -111,6 +127,7 @@
       <ng-template pTemplate="body" let-sms>
         <tr>
           <td>{{ sms.valueDate }}</td>
+          <td>{{ sms.templateName }}</td>
           <td>{{ sms.senderName }}</td>
           <td>
             <div class="text-truncate" style="max-width: 200px;" [pTooltip]="sms.messageText">

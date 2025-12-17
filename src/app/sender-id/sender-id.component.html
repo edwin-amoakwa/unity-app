@@ -76,9 +76,9 @@
           <div class="col-md-9 offset-md-3 d-flex gap-2">
             <button type="button" class="btn btn-secondary" (click)="backToList()">Cancel</button>
             <button id="saveEditButton" type="submit" class="btn btn-primary" [disabled]="isLoading">
-              <span *ngIf="senderIdForm?.value?.id === null || senderIdForm?.value?.id === undefined">Create</span>
-              <span *ngIf="senderIdForm?.value?.id !== null && senderIdForm?.value?.id !== undefined">Edit</span>
-              Sender ID
+              <span *ngIf="senderIdForm?.value?.id === null || senderIdForm?.value?.id === undefined">Submit Request for new SenderID</span>
+              <span *ngIf="senderIdForm?.value?.id !== null && senderIdForm?.value?.id !== undefined">Update Request Details</span>
+
             </button>
           </div>
         </div>
@@ -117,7 +117,12 @@
               </p-tag>
             </td>
             <td>
-              <p-button icon="pi pi-pencil" severity="info" pTooltip="Edit" (click)="editSenderId(sender)"/>
+              <p-button
+                icon="pi pi-pencil"
+                severity="info"
+                pTooltip="{{ sender.idStatus === 'PENDING' ? 'Edit' : 'Approved Sender ID cannot be edited. Request new one' }}"
+                [disabled]="sender.idStatus !== 'PENDING'"
+                (click)="editSenderId(sender)"/>
               <p-button icon="pi pi-trash" severity="danger" class="mx-1" pTooltip="Delete" (click)="deleteSenderId(sender)"/>
             </td>
           </tr>

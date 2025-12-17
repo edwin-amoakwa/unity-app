@@ -1,18 +1,16 @@
 import { CollectionUtil } from './../core/system.utils';
-// angular import
+
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 
-// primeng imports
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 
-// project import
 import { ApplicationService } from '../applications/application.service';
 import { ConfigService } from '../config.service';
 import { NotificationService } from '../core/notification.service';
@@ -167,7 +165,7 @@ export class SenderIdComponent implements OnInit {
         this.formView.resetToListView();
       } catch (error: any) {
         console.error('Error creating sender ID:', error);
-        this.notificationService.error(error.message || 'Failed to create sender ID');
+        // this.notificationService.error(error.message || 'Failed to create sender ID');
         this.isLoading = false;
       }
     }

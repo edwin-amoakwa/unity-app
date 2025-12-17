@@ -102,7 +102,7 @@
           <th >Cost</th>
           <th >Status</th>
 <!--          <th >Nature</th>-->
-
+          <th>Scheduled</th>
           <th style="width: 120px;">Actions</th>
           <th ></th>
         </tr>
@@ -159,7 +159,12 @@
 <!--              </p-tag>-->
 <!--            </div>-->
 <!--          </td>-->
-<!--          <td>{{ formatScheduledTime(sms.scheduledTime) }}</td>-->
+          <!-- Scheduled indicator: show only when scheduleSms is true; show scheduledTime via tooltip -->
+          <td>
+            <span *ngIf="sms.scheduleSms" class="flex align-items-center">
+              <p-tag value="Scheduled" severity="info" class="text-xs" [pTooltip]="formatScheduledTime(sms.scheduledTime)" tooltipPosition="top"></p-tag>
+            </span>
+          </td>
           <td>
             <div class="flex gap-1">
               <p-button
@@ -442,7 +447,7 @@
       [(ngModel)]="selectedTemplateSms"
       class="form-select w-100">
       <option [ngValue]="null">-- Select Template --</option>
-      <option *ngFor="let t of templateMsgs" [ngValue]="t">{{ t.templateName }}</option>
+      <option *ngFor="let t of templateList" [ngValue]="t">{{ t.templateName }}</option>
     </select>
   </div>
 

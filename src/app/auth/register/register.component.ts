@@ -187,12 +187,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   async proceedVerification(): Promise<void> {
+    this.isLoading = true;
     if (!this.verifyEmail || !this.pin) {
       this.verifyMessage = 'Please enter the verification PIN.';
+      this.isLoading = false;
       return;
     }
 
-    this.isLoading = true;
+
     this.verifyMessage = '';
     try {
       const resp = await this.authService.verifyPin({ email: this.verifyEmail, pin: this.pin });

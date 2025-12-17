@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
@@ -67,12 +68,11 @@ export class SmsComponent implements OnInit {
 
   smsMessages: any[] = [];
   isLoading: boolean = false;
-  // showDialog: boolean = false;
+
   selectedSms: any = {};
   selectedTemplateSms: any = null;
 
-  // selectedSms: any | null = null;
-  templateMsgs: any[] = [];
+  templateList: any[] = [];
   showTemplateDialog:boolean = false;
 
 
@@ -100,19 +100,14 @@ export class SmsComponent implements OnInit {
   async loadSmsMessages(filters?: { status?: string | null; fromDate?: Date | string | null; toDate?: Date | string | null; }) {
     this.isLoading = true;
     try {
-      this.templateMsgs = [];
+      this.templateList = [];
       const response = await this.smsService.getSmsMessages(filters);
       this.smsMessages = response.data;
-      this.smsMessages.forEach(item=>{
-        if(item.templateSms)
-        {
-          CollectionUtil.add(this.templateMsgs,item);
-        }
-      });
+
+
       this.isLoading = false;
     } catch (error) {
       console.error('Error loading SMS messages:', error);
-      this.notificationService.error('Failed to load SMS messages');
       this.isLoading = false;
       this.smsMessages = [];
     }
@@ -131,10 +126,13 @@ export class SmsComponent implements OnInit {
     this.showTemplateDialog = false;
   }
 
-  createFromTemplateDialog()
+  async createFromTemplateDialog()
   {
     this.selectedSms = null;
     this.showTemplateDialog = true;
+
+    const templateResponse = await this.smsService.getTemplateSMS();
+    this.templateList = templateResponse?.data;
   }
 
   async createFromTemplate() {
@@ -154,9 +152,8 @@ export class SmsComponent implements OnInit {
           return
         }
 
-        // CollectionUtil.add(this.smsMessages, response.data);
-        // this.formView.resetToListView();
       console.log("response.data",response.data);
+        response.data.templateSms = false;
         this.openEditDialog(response.data);
 
     } catch (error) {
@@ -206,12 +203,12 @@ export class SmsComponent implements OnInit {
         CollectionUtil.add(this.smsMessages, response.data);
         if(response.data.templateSms)
         {
-          CollectionUtil.add(this.templateMsgs,response.data);
+          CollectionUtil.add(this.templateList,response.data);
         }
         else
         {
           try {
-            CollectionUtil.remove(this.templateMsgs,response.data.id);
+            CollectionUtil.remove(this.templateList,response.data.id);
           } catch (error) {}
         }
 
@@ -220,8 +217,6 @@ export class SmsComponent implements OnInit {
 
     } catch (error) {
       console.error('Error with SMS message:', error);
-      // const errorMessage = this.selectedSms ? 'Failed to update SMS message' : 'Failed to create SMS message';
-      // this.notificationService.error(errorMessage);
     }
   }
 
@@ -241,8 +236,8 @@ export class SmsComponent implements OnInit {
 
     } catch (error) {
       console.error('Error with SMS message:', error);
-      const errorMessage = this.selectedSms ? 'Failed to Duplicate SMS message' : 'Failed to Duplicate SMS message';
-      this.notificationService.error(errorMessage);
+      // const errorMessage = this.selectedSms ? 'Failed to Duplicate SMS message' : 'Failed to Duplicate SMS message';
+      // this.notificationService.error(errorMessage);
     }
   }
 
@@ -262,7 +257,7 @@ export class SmsComponent implements OnInit {
 
           } catch (error) {
             console.error('Error deleting SMS message:', error);
-            this.notificationService.error('Failed to delete SMS message');
+            // this.notificationService.error('Failed to delete SMS message');
           }
         }
       }
@@ -286,7 +281,7 @@ export class SmsComponent implements OnInit {
 
           } catch (error) {
             console.error('Error deleting SMS message:', error);
-            this.notificationService.error('Failed to Initiate/Send SMS message');
+            // this.notificationService.error('Failed to Initiate/Send SMS message');
           }
         }
       }
@@ -308,7 +303,13 @@ export class SmsComponent implements OnInit {
 
   formatScheduledTime(scheduledTime: Date | undefined): string {
     if (!scheduledTime) return 'Not scheduled';
-    return new Date(scheduledTime).toLocaleString();
+    try {
+      const dt = new Date(scheduledTime);
+      // Ensure AM/PM using Angular format pattern
+      return formatDate(dt, 'dd-MMM-yyyy hh:mm:ss a', 'en');
+    } catch {
+      return 'Not scheduled';
+    }
   }
 
   // ================= Migrated Form Methods =================

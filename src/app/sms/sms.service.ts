@@ -39,7 +39,12 @@ export class SmsService {
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.apiUrl}?${urlParams}`));
   }
 
+  async getTemplateSMS(): Promise<ApiResponse<any[]>> {
 
+    let params:any = {};
+    params.templateSms = true;
+    return this.getSmsMessages(params);
+  }
 
   async saveSmsMessage(sms: any): Promise<ApiResponse<any>> {
     if(sms.id)
