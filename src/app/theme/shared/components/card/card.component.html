@@ -1,5 +1,5 @@
 <div class="card" [ngClass]="[variantClass, elevationClass, paddingClass]">
-  <div class="card-header" [ngClass]="headerAlignClass">
+  <div class="card-header" [ngClass]="headerAlignClass" *ngIf="title  || subtitle">
     @if (!customHeader) {
       <h5>{{ title }}</h5>
       @if (subtitle) {

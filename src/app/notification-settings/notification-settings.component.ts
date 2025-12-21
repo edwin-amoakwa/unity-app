@@ -62,7 +62,8 @@ export class NotificationSettingsComponent implements OnInit {
       recipientEmail: ['', [Validators.email]],
       recipientEmailCc: ['', [Validators.email]],
       recipientEmailBcc: ['', [Validators.email]],
-      enabled: [false]
+      enabled: [false],
+      threshold: [null]
     });
     if (this.current) {
       this.form.patchValue(this.current);
@@ -79,7 +80,8 @@ export class NotificationSettingsComponent implements OnInit {
         recipientEmail: raw.recipientEmail,
         recipientEmailCc: raw.recipientEmailCc,
         recipientEmailBcc: raw.recipientEmailBcc,
-        enabled: raw.enabled
+        enabled: raw.enabled,
+        threshold: (this.current && (this.current as any).hasThreshold) ? raw.threshold : undefined
       };
       this.onSave(updated);
     } else {

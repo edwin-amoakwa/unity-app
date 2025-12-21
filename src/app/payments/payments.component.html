@@ -65,7 +65,7 @@
             styleClass="w-full">
           </p-dropdown>
           <div class="text-muted mt-1" *ngIf="paymentForm.get('paymentChannel')?.value as ch">
-            Tax rate: {{ selectedTaxRate | percent:'1.0-2' }}
+            Tax rate: {{ selectedTaxRate | number:'1.0-2' }} %
           </div>
           <small class="p-error" *ngIf="isFieldInvalid('paymentChannel')">
             {{ getFieldError('paymentChannel') }}
@@ -100,7 +100,7 @@
         <div class="col-md-3">
         </div>
         <div class="col-md-9" id="tip">
-          Tips: We will charge a {{ selectedTaxRate | percent:'1.0-2' }} tax from the payment, the final {{ finalAmount | number:'1.2-2' }} credit will be after tax
+          Tips: We will charge a {{ selectedTaxRate | number:'1.0-2' }}% tax from the payment, the final {{ finalAmount | number:'1.2-2' }} credit will be after tax
         </div>
       </div>
 

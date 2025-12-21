@@ -272,7 +272,7 @@ export class PaymentsComponent implements OnInit {
       return;
     }
     const taxRate = this.selectedTaxRate; // dynamic tax rate based on selected channel
-    const tax = num * taxRate;
+    const tax = num * taxRate / 100.0;
     const final = num - tax;
     // Round to 2 decimal places
     this.finalAmount = Math.round(final * 100) / 100;

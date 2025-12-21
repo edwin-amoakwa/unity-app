@@ -1,6 +1,6 @@
 <h1 class="page-title">SMS Records</h1>
 
-<app-card title="SMS Records">
+<app-card >
   <div class="card-body">
     <!-- Filter Section -->
     <div class="row mb-3">
@@ -86,6 +86,13 @@
           size="small"
           (onClick)="clearFilters()">
         </p-button>
+        <p-button
+          label="Download"
+          icon="pi pi-download"
+          severity="success"
+          size="small"
+          (onClick)="downloadFileAsExcel()">
+        </p-button>
       </div>
 
     </div>
@@ -105,7 +112,7 @@
       <ng-template #header>
         <tr>
           <th ></th>
-          <th >Mobile No</th>
+          <th >Sent Date Time</th>
           <th >Sender ID</th>
           <th >Application</th>
           <th >Recipient</th>
@@ -114,6 +121,7 @@
           <th >SMS Status</th>
           <th > Cost</th>
           <th >Pages</th>
+          <th >Sms Channel</th>
         </tr>
       </ng-template>
 
@@ -130,24 +138,25 @@
               [text]="true">
             </p-button>
           </td>
-          <td>{{ record.mobileNo }}</td>
+          <td>{{ record.createdDate | date:'dd-MMM-yyyy hh:mm:ss a'  }}</td>
           <td>{{ record.senderId }}</td>
           <td>{{ record.application }}</td>
-          <td>{{ record.receipient }}</td>
+          <td>{{ record.mobileNo }}</td>
           <td>
             <div class="text-truncate" style="max-width: 200px;" [pTooltip]="record.smsText">
               {{ truncateText(record.smsText, 50) }}
             </div>
           </td>
-<!--          <td>{{ record.smsProviderLabel }}</td>-->
+
           <td>
             <p-tag
               [value]="record.smsStatusLabel"
               [severity]="getSmsStatusSeverity(record.smsStatusLabel)">
             </p-tag>
           </td>
-          <td>{{ formatCurrency(record.buyPrice) }}</td>
+          <td>{{ formatCurrency(record.actualCost) }}</td>
           <td>{{ record.pageCount }}</td>
+          <td>{{ record.smsChannel }}</td>
         </tr>
       </ng-template>
 

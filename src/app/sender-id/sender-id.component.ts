@@ -159,13 +159,11 @@ export class SenderIdComponent implements OnInit {
         CollectionUtil.add(this.senderIds,response.data);
         this.senderIdForm.reset();
         this.isLoading = false;
-        // ✅ Reset the input so the same file can be reselected
         this.authLetterInput.nativeElement.value = '';
         this.bizDocInput.nativeElement.value = '';
         this.formView.resetToListView();
       } catch (error: any) {
         console.error('Error creating sender ID:', error);
-        // this.notificationService.error(error.message || 'Failed to create sender ID');
         this.isLoading = false;
       }
     }

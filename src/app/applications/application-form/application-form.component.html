@@ -106,7 +106,8 @@
       [label]="application?.id ? 'Update' : 'Create'"
       [icon]="application?.id ? 'pi pi-check' : 'pi pi-plus'"
       class="p-button-primary"
-      [disabled]="applicationForm.invalid">
+      [disabled]="applicationForm.invalid || isSubmitting"
+      [loading]="isSubmitting">
     </button>
   </div>
 </form>

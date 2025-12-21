@@ -279,7 +279,7 @@ export class GroupContactsComponent implements OnInit, OnChanges {
   clearUploadForm()
   {
     this.uploadForm.reset();
-    this.uploadForm.controls['selectedFile'].reset();
+    this.uploadForm.controls['selectedFile']?.reset();
     this.fileName = null;
     this.fileString = null;
     // Also clear the native file input so the same file can be selected again

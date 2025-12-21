@@ -6,6 +6,7 @@ import {AuthService, LoginPayload} from '../../auth.service';
 import {UserSession} from '../../core/user-session';
 import {CommonModule} from '@angular/common';
 import {UnityConfig} from '../../app-config';
+import {MessageBox} from '../../message-helper';
 
 @Component({
   selector: 'app-login',
@@ -44,7 +45,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
-    if (this.loginForm.valid) {
+    if(this.loginForm.valid == false)
+    {
+      this.errorMessage = "Please enter valid username and password (min of 8 characters)";
+      MessageBox.error(this.errorMessage)
+      this.markFormGroupTouched();
+    }
+
+
       this.isLoading = true;
       this.errorMessage = '';
 
@@ -65,9 +73,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.errorMessage = error.message || 'Login failed. Please try again.';
         console.error('Login error:', error);
       }
-    } else {
-      this.markFormGroupTouched();
-    }
+
   }
 
   private markFormGroupTouched() {

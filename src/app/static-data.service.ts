@@ -99,8 +99,8 @@ export class StaticDataService {
       { id: 'LAST_WEEK', itemName: 'Last Week' },
       { id: 'THIS_MONTH', itemName: 'This Month' },
       { id: 'LAST_MONTH', itemName: 'Last Month' },
-      { id: 'THIS_QUARTER', itemName: 'This Quarter' },
-      { id: 'LAST_QUARTER', itemName: 'Last Quarter' },
+      // { id: 'THIS_QUARTER', itemName: 'This Quarter' },
+      // { id: 'LAST_QUARTER', itemName: 'Last Quarter' },
       // { id: 'CUSTOM_PERIOD', itemName: 'My Own Range' },
     ];
   }

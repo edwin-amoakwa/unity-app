@@ -39,6 +39,14 @@ export class ApplicationFormComponent implements OnInit {
     { label: 'SMS', value: ApplicationType.SMS },
   ];
 
+  // When true, disables the submit button until the save completes
+  isSubmitting = false;
+
+  // Allow parent component to control submitting state (e.g., when async save completes)
+  @Input() set submitting(value: boolean) {
+    this.isSubmitting = value;
+  }
+
   ngOnInit() {
     this.initializeForm();
     if (this.application) {
@@ -76,15 +84,21 @@ export class ApplicationFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.applicationForm.valid) {
-      const formValue = this.applicationForm.value;
-
-      this.applicationSubmitted.emit(formValue);
-    } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.applicationForm.controls).forEach(key => {
-        this.applicationForm.get(key)?.markAsTouched();
-      });
+    try {
+      if (this.applicationForm.valid) {
+        const formValue = this.applicationForm.value;
+        // disable submit while parent processes the submission
+        this.isSubmitting = true;
+        this.applicationSubmitted.emit(formValue);
+      } else {
+        // Mark all fields as touched to show validation errors
+        Object.keys(this.applicationForm.controls).forEach(key => {
+          this.applicationForm.get(key)?.markAsTouched();
+        });
+      }
+    }
+    finally {
+      this.isSubmitting = false;
     }
   }
 

@@ -22,6 +22,7 @@ import { GroupContactsComponent } from './group-contacts/group-contacts.componen
 import {ButtonToolbarComponent} from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import {FormView} from '../core/form-view';
 import {CardComponent} from '../theme/shared/components/card/card.component';
+import {UserSession} from '../core/user-session';
 
 @Component({
   selector: 'app-distribution-groups',
@@ -54,6 +55,7 @@ export class DistributionGroupsComponent implements OnInit {
   groups: any[] = [];
   groupForm!: FormGroup;
   formView = FormView.listView();
+  merchant = UserSession.getMerchant();
 
   showGroupDialog = false;
   // Dialog for add/remove phone numbers

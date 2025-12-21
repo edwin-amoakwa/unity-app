@@ -18,6 +18,7 @@ import {StaticDataService} from '../static-data.service';
 import {ConfigService} from '../config.service';
 import {Calendar} from 'primeng/calendar';
 import {DateUtil} from '../core/system.utils';
+import {ExcelService} from '../core/excel.service';
 
 
 
@@ -108,6 +109,20 @@ this.filterParam = {}
       default:
         return 'info';
     }
+  }
+
+  downloadFileAsExcel()
+  {
+    this.smsRecords.forEach(smsRecord => {
+      delete smsRecord.id;
+      delete smsRecord.batchId;
+      delete smsRecord.smsStatusLabel;
+      delete smsRecord.batchId;
+      delete smsRecord.smsProvider;
+      delete smsRecord.feedbackRequestCount;
+      delete smsRecord.urlReached;
+    })
+    ExcelService.exportAsExcelFile(this.smsRecords, "SMS_Records")
   }
 
   getSmsStatusSeverity(status: string): 'success' | 'warning' | 'danger' | 'info' {

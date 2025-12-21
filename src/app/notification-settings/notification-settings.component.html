@@ -12,6 +12,7 @@
             <th>CC</th>
             <th>BCC</th>
             <th>Enabled</th>
+            <th>Threshold</th>
             <th style="width: 120px;">Actions</th>
           </tr>
         </ng-template>
@@ -25,6 +26,7 @@
             <td>
               <p-tag [value]="item.enabled ? 'Enabled' : 'Disabled'" [severity]="item.enabled ? 'success' : 'danger'"></p-tag>
             </td>
+            <td>{{ item.hasThreshold ? (item.threshold | number:'1.2-2') : '' }}</td>
             <td>
               <p-button label="Edit" icon="pi pi-pencil" class="p-button-sm" (onClick)="edit(item)"></p-button>
             </td>
@@ -86,6 +88,15 @@
           </div>
           <div class="col-md-8 d-flex align-items-center">
             <p-inputSwitch inputId="enabled" formControlName="enabled"></p-inputSwitch>
+          </div>
+        </div>
+
+        <div class="row mb-3 align-items-center" *ngIf="current?.hasThreshold">
+          <div class="col-md-4">
+            <label class="form-label mb-0" for="threshold">Threshold</label>
+          </div>
+          <div class="col-md-8">
+            <input pInputText id="threshold" type="number" step="0.01" formControlName="threshold" />
           </div>
         </div>
 

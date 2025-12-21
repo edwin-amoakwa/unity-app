@@ -110,7 +110,13 @@
           <input #fileInput (change)="onFileChange($event)" class="form-control" formControlName="selectedFile" type="file">
         </div>
         <div class="col-auto">
-          <button type="button" pButton (click)="upload()">upload</button>
+          <button
+            type="button"
+            pButton
+            (click)="upload()"
+            [disabled]="loading"
+            [loading]="loading"
+          >upload</button>
         </div>
         <div class="col-auto d-none">
           <button type="button" pButton class="p-button-secondary" (click)="clearUploadForm()">Clear</button>

@@ -29,6 +29,7 @@
     "@popperjs/core": "2.11.8",
     "@primeng/themes": "^19.0.4",
     "apexcharts": "4.7.0",
+    "file-saver": "^2.0.5",
     "bootstrap": "5.3.7",
     "chart.js": "^4.4.6",
     "flag-icons": "^7.5.0",

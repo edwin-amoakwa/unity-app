@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
 
   merchant = UserSession.getMerchant();
   user = UserSession.getUser();
+  currentDate = new Date();
 
   // Summary data from API
   summary: any = {};
