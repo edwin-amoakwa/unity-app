@@ -336,56 +336,60 @@
         </div>
       </div>
 
-      <div class="mb-4" *ngIf="smsForm?.value?.scheduleSms || !smsForm?.value?.templateSms">
-        <div class="mb-4">
-          <label class="form-label font-weight-bold">SMS Nature *</label>
-          <div class="d-flex flex-row gap-3">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="onetime" value="ONE_TIME">
-              <label class="form-check-label" for="onetime">Onetime</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="recurring" value="RECURRING">
-              <label class="form-check-label" for="recurring">Recurring</label>
-            </div>
-          </div>
-        </div>
+      <div class="mb-4" *ngIf="!smsForm?.value?.templateSms">
+        <ng-container *ngIf="smsForm?.value?.scheduleSms">
 
-        <label for="scheduledTime" class="form-label font-weight-bold w-100">Scheduled Time*</label>
-        <p-calendar id="scheduledTime" formControlName="scheduledTime" [showTime]="true" [showSeconds]="false" dateFormat="mm/dd/yy"></p-calendar>
-
-        <!-- Recurring Options -->
-        <div class="mt-3" *ngIf="smsForm?.value?.smsNature === 'RECURRING'">
-          <div class="row g-3 align-items-end">
-            <div class="col-auto">
-              <div class="mb-0">
-                <label class="form-label font-weight-bold w-100">Recurring Frequency*</label>
-                <p-dropdown
-                  formControlName="recurringFrequency"
-                  [options]="frequencyList"
-                  optionLabel="itemName"
-                  optionValue="id"
-                  placeholder="Select frequency"
-                  styleClass="p-inputtext-sm"
-                ></p-dropdown>
-                <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('recurringFrequency')">{{ getFieldError('recurringFrequency') }}</div>
+          <div class="mb-4">
+            <label class="form-label font-weight-bold">SMS Nature *</label>
+            <div class="d-flex flex-row gap-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="onetime" value="ONE_TIME">
+                <label class="form-check-label" for="onetime">Onetime</label>
               </div>
-            </div>
-
-            <div class="col-auto">
-              <div class="mb-0">
-                <label class="form-label font-weight-bold w-100">Recurring End Date*</label>
-                <p-calendar
-                  formControlName="recurringEndDateTime"
-                  [showTime]="true"
-                  [showSeconds]="false"
-                  dateFormat="mm/dd/yy"
-                ></p-calendar>
-                <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('recurringEndDateTime')">{{ getFieldError('recurringEndDateTime') }}</div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="recurring" value="RECURRING">
+                <label class="form-check-label" for="recurring">Recurring</label>
               </div>
             </div>
           </div>
-        </div>
+
+          <label for="scheduledTime" class="form-label font-weight-bold w-100">Scheduled Time*</label>
+          <p-calendar id="scheduledTime" formControlName="scheduledTime" [showTime]="true" [showSeconds]="false" dateFormat="mm/dd/yy"></p-calendar>
+
+          <!-- Recurring Options -->
+          <div class="mt-3" *ngIf="smsForm?.value?.smsNature === 'RECURRING'">
+            <div class="row g-3 align-items-end">
+              <div class="col-auto">
+                <div class="mb-0">
+                  <label class="form-label font-weight-bold w-100">Recurring Frequency*</label>
+                  <p-dropdown
+                    formControlName="recurringFrequency"
+                    [options]="frequencyList"
+                    optionLabel="itemName"
+                    optionValue="id"
+                    placeholder="Select frequency"
+                    styleClass="p-inputtext-sm"
+                  ></p-dropdown>
+                  <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('recurringFrequency')">{{ getFieldError('recurringFrequency') }}</div>
+                </div>
+              </div>
+
+              <div class="col-auto">
+                <div class="mb-0">
+                  <label class="form-label font-weight-bold w-100">Recurring End Date*</label>
+                  <p-calendar
+                    formControlName="recurringEndDateTime"
+                    [showTime]="true"
+                    [showSeconds]="false"
+                    dateFormat="mm/dd/yy"
+                  ></p-calendar>
+                  <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('recurringEndDateTime')">{{ getFieldError('recurringEndDateTime') }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
       </div>
 
 
