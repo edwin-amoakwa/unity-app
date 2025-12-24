@@ -298,6 +298,6 @@ export class PaymentsComponent implements OnInit {
     const rateNum = typeof rateRaw === 'string' ? parseFloat(rateRaw) : Number(rateRaw);
     if (isNaN(rateNum) || rateNum < 0) return 0;
     // If the API returns percentage (e.g., 20) convert to fraction
-    return rateNum > 1 ? rateNum / 100 : rateNum;
+    return rateNum;
   }
 }

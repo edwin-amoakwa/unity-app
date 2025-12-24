@@ -320,7 +320,7 @@
 
       </div>
 
-      <div class="mb-4">
+      <div class="mb-4" *ngIf="!smsForm?.value?.templateSms">
         <label class="form-label font-weight-bold">SMS Options</label>
         <div class="d-flex flex-row gap-3 flex-wrap">
           <div class="form-check">
@@ -336,7 +336,7 @@
         </div>
       </div>
 
-      <div class="mb-4" *ngIf="smsForm?.value?.scheduleSms">
+      <div class="mb-4" *ngIf="smsForm?.value?.scheduleSms || !smsForm?.value?.templateSms">
         <div class="mb-4">
           <label class="form-label font-weight-bold">SMS Nature *</label>
           <div class="d-flex flex-row gap-3">
