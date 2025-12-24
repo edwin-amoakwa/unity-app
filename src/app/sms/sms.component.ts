@@ -292,14 +292,14 @@ export class SmsComponent implements OnInit {
     return smsStatus ==='Pending' ? 'success' : 'warning';
   }
 
-  formatPhoneNumbers(phoneNos: string): string {
-    if (!phoneNos) return '';
-    const phones = phoneNos.split(',');
-    if (phones?.length > 3) {
-      return `${phones.slice(0, 3).join(', ')} +${phones.length - 3} more`;
-    }
-    return phones.join(', ');
-  }
+  // formatPhoneNumbers(phoneNos: string): string {
+  //   if (!phoneNos) return '';
+  //   const phones = phoneNos.split(',');
+  //   if (phones?.length > 3) {
+  //     return `${phones.slice(0, 3).join(', ')} +${phones.length - 3} more`;
+  //   }
+  //   return phones.join(', ');
+  // }
 
   formatScheduledTime(scheduledTime: Date | undefined): string {
     if (!scheduledTime) return 'Not scheduled';
@@ -459,7 +459,14 @@ export class SmsComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.smsForm.valid) {
+    console.log(this.smsForm.value)
+    if (this.smsForm.invalid) {
+      ObjectUtil.logInvalidFields(this.smsForm);
+      this.markFormGroupTouched(this.smsForm);
+      this.notificationService.error('Please fill in all required fields correctly');
+
+      return;
+    }
       const formValue = this.smsForm.getRawValue();
       formValue.phoneNos = ObjectUtil.standardizeNewlines(formValue.phoneNos);
       try {
@@ -467,11 +474,7 @@ export class SmsComponent implements OnInit {
         formValue.recurringEndDateTime = this.formatDateTimeForApi(formValue.recurringEndDateTime);
       } catch (error) {}
       this.onSmsSubmitted(formValue);
-    } else {
-      ObjectUtil.logInvalidFields(this.smsForm);
-      this.markFormGroupTouched(this.smsForm);
-      this.notificationService.error('Please fill in all required fields correctly');
-    }
+
   }
 
   onCancel() {

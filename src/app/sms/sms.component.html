@@ -294,7 +294,7 @@
 
       <div class="mb-4">
         <label for="message_text" class="form-label font-weight-bold">Message Text *</label>
-        <textarea class="form-control" id="message_text" formControlName="messageText" rows="5" required (input)="updateCount()"></textarea>
+        <textarea class="form-control" id="message_text" formControlName="messageText" rows="5" required (input)="updateCount()" maxlength="1000"></textarea>
         <div class="d-flex justify-content-between mt-2">
           <span class="sms-count">Characters: {{ characterCount }} / {{ smsCount }} SMS</span>
           <span class="sms-count ms-3">Pages: {{ smsForm?.value?.pagesCount }}</span>
