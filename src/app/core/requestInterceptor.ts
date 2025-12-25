@@ -9,6 +9,7 @@ import {NotificationService} from './notification.service';
  */
 export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next) => {
 
+  let notificationsService = inject(NotificationService);
   let merchantId = localStorage.getItem(UserSession.MerchantId);
   let userId = localStorage.getItem(UserSession.UserID);
   let countryId = UserSession.getMerchant()?.countryId;
@@ -48,15 +49,15 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
 
           // console.log("response --> ",response)
           if (response.status == 201) {
-            NotificationService.success("Data saved successfully");
+            notificationsService.success("Data saved successfully");
           } else if (response.status == 200) {
             if (req.method === "PUT") {
-              NotificationService.success("Record updated successfully.")
+              notificationsService.success("Record updated successfully.")
             } else if (req.method === "DELETE") {
-              NotificationService.success("Data deleted successfully.");
+              notificationsService.success("Data deleted successfully.");
             } else if (req.method === "POST") {
               if (response.body.message) {
-                NotificationService.success(response.body.message);
+                notificationsService.success(response.body.message);
               }
             }
           }
@@ -77,7 +78,7 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
         {
           const validationErrors = error.error.errors;
           validationErrors.forEach(error => {
-            NotificationService.error(error.message, 'Error');
+            notificationsService.error(error.message, 'Error');
           })
         }
 
@@ -86,7 +87,7 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
       }
 
       // Show error notification
-      NotificationService.error(errorMessage, 'Error');
+      notificationsService.error(errorMessage, 'Error');
 
       // Re-throw the error so components can still handle it if needed
       return throwError(() => error);

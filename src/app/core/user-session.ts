@@ -52,7 +52,12 @@ export class UserSession {
   }
 
   static allowRoute(url): boolean {
+
+    if(url.toLowerCase().includes("dashboard"))
+      return true;
+
     url = "/"+url.toLowerCase();
+    // return true;
     let permissions = UserSession.getAsJson(this.loginResponse).permissions;
 // console.log("permissions",permissions)
     return permissions.some(
