@@ -16,6 +16,7 @@ import { ButtonToolbarComponent } from '../../theme/shared/components/button-too
 import { CardComponent } from '../../theme/shared/components/card/card.component';
 import { DistributionGroupsService } from '../distribution-groups.service';
 import {MessageBox} from '../../message-helper';
+import {DatePicker} from 'primeng/datepicker';
 
 @Component({
   selector: 'app-group-contacts',
@@ -30,7 +31,8 @@ import {MessageBox} from '../../message-helper';
     CalendarModule,
     Tooltip,
     ButtonToolbarComponent,
-    CardComponent
+    CardComponent,
+    DatePicker
   ],
   templateUrl: './group-contacts.component.html',
   styleUrls: ['./group-contacts.component.scss']
@@ -109,6 +111,7 @@ export class GroupContactsComponent implements OnInit, OnChanges {
 
   editContact(contact: any): void {
     this.editingContact = contact;
+    contact.birthDate = new Date(contact.birthDate);
     this.contactForm.patchValue(contact);
     this.showContactDialog = true;
   }

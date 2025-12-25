@@ -8,7 +8,6 @@ import {NotificationService} from './notification.service';
  * HTTP Interceptor that adds merchantId to all outgoing requests and handles errors centrally
  */
 export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next) => {
-  const notificationService = inject(NotificationService);
 
   let merchantId = localStorage.getItem(UserSession.MerchantId);
   let userId = localStorage.getItem(UserSession.UserID);
@@ -49,15 +48,15 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
 
           // console.log("response --> ",response)
           if (response.status == 201) {
-            notificationService.success("Data saved successfully");
+            NotificationService.success("Data saved successfully");
           } else if (response.status == 200) {
             if (req.method === "PUT") {
-              notificationService.success("Record updated successfully.")
+              NotificationService.success("Record updated successfully.")
             } else if (req.method === "DELETE") {
-              notificationService.success("Data deleted successfully.");
+              NotificationService.success("Data deleted successfully.");
             } else if (req.method === "POST") {
               if (response.body.message) {
-                notificationService.success(response.body.message);
+                NotificationService.success(response.body.message);
               }
             }
           }
@@ -78,7 +77,7 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
         {
           const validationErrors = error.error.errors;
           validationErrors.forEach(error => {
-            notificationService.error(error.message, 'Error');
+            NotificationService.error(error.message, 'Error');
           })
         }
 
@@ -87,7 +86,7 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
       }
 
       // Show error notification
-      notificationService.error(errorMessage, 'Error');
+      NotificationService.error(errorMessage, 'Error');
 
       // Re-throw the error so components can still handle it if needed
       return throwError(() => error);

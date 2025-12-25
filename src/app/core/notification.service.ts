@@ -7,32 +7,36 @@ import {MessageService} from 'primeng/api';
 })
 export class NotificationService
 {
+    private static instance: NotificationService;
+
   // messageService =  inject(MessageService)
-    constructor(private toastr: ToastrService, private messageService: MessageService) { }
-
-    public successMessage(message: string, title: string)
-    {
-        this.toastr.success(message, title);
+    constructor(private toastr: ToastrService, private messageService: MessageService) {
+        NotificationService.instance = this;
     }
 
-    public errorMessage(message: string, title: string)
+    public static successMessage(message: string, title: string)
     {
-        this.toastr.error(message, title);
+        NotificationService.instance.toastr.success(message, title);
     }
 
-    public infoMessage(message: string, title: string)
+    public static errorMessage(message: string, title: string)
     {
-        this.toastr.info(message, title);
+        NotificationService.instance.toastr.error(message, title);
     }
 
-    public warningMessage(message: string, title: string)
+    public static infoMessage(message: string, title: string)
     {
-        this.toastr.warning(message, title);
+        NotificationService.instance.toastr.info(message, title);
     }
 
-    public success(message: string, title?:string)
+    public static warningMessage(message: string, title: string)
     {
-      this.messageService.add({
+        NotificationService.instance.toastr.warning(message, title);
+    }
+
+    public static success(message: string, title?:string)
+    {
+      NotificationService.instance.messageService.add({
         severity: 'success',
         summary: title || 'Success',
         detail: message,
@@ -40,11 +44,11 @@ export class NotificationService
       });
     }
 
-    public error(message: string, title?:string)
+    public static error(message: string, title?:string)
     {
         // this.toastr.error(message,title);
 
-      this.messageService.add({
+      NotificationService.instance.messageService.add({
         severity: 'error',
         summary: title || 'Error',
         detail: message,
@@ -52,16 +56,23 @@ export class NotificationService
       });
     }
 
-
-
-    public warning(message: string)
+    public static warning(message: string)
     {
-        this.toastr.warning(message);
+        NotificationService.instance.toastr.warning(message);
     }
 
-    public info(message: string)
+    public static info(message: string)
     {
-        this.toastr.info(message);
+        NotificationService.instance.toastr.info(message);
     }
 
+    // Instance methods for backward compatibility
+    public successMessage(message: string, title: string) { NotificationService.successMessage(message, title); }
+    public errorMessage(message: string, title: string) { NotificationService.errorMessage(message, title); }
+    public infoMessage(message: string, title: string) { NotificationService.infoMessage(message, title); }
+    public warningMessage(message: string, title: string) { NotificationService.warningMessage(message, title); }
+    public success(message: string, title?:string) { NotificationService.success(message, title); }
+    public error(message: string, title?:string) { NotificationService.error(message, title); }
+    public warning(message: string) { NotificationService.warning(message); }
+    public info(message: string) { NotificationService.info(message); }
 }

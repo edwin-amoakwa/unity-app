@@ -31,6 +31,7 @@ import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { SmsService } from './sms.service';
+import {GenericFormValidator} from '../core/generic-form-validator';
 
 @Component({
   selector: 'app-sms',
@@ -89,6 +90,7 @@ export class SmsComponent implements OnInit {
     frequencyList = StaticDataService.frequency();
     characterCount: number = 0;
     smsCount: number = 1;
+    isSubmitting: boolean = false;
 
     filterSms:any = {};
 
@@ -140,7 +142,7 @@ export class SmsComponent implements OnInit {
       console.log("selectedTemplateSms",this.selectedTemplateSms);
       if(ObjectUtil.isNullOrUndefinedOrEmpty(this.selectedTemplateSms?.id))
       {
-        this.notificationService.error("Select A Template SMS");
+        NotificationService.error("Select A Template SMS");
         return;
       }
         const response = await this.smsService.duplicateSmsMessage(this.selectedTemplateSms.id);
@@ -148,7 +150,7 @@ export class SmsComponent implements OnInit {
         {
           MessageBox.errorDetail(response.message,response.data)
            const errorMessage = response.message;
-          this.notificationService.error(errorMessage);
+          NotificationService.error(errorMessage);
           return
         }
 
@@ -217,6 +219,8 @@ export class SmsComponent implements OnInit {
 
     } catch (error) {
       console.error('Error with SMS message:', error);
+    } finally {
+      this.isSubmitting = false;
     }
   }
 
@@ -463,10 +467,15 @@ export class SmsComponent implements OnInit {
     if (this.smsForm.invalid) {
       ObjectUtil.logInvalidFields(this.smsForm);
       this.markFormGroupTouched(this.smsForm);
-      this.notificationService.error('Please fill in all required fields correctly');
+
+      if(GenericFormValidator.errors(this.smsForm))
+      {
+        return;
+      }
 
       return;
     }
+      this.isSubmitting = true;
       const formValue = this.smsForm.getRawValue();
       formValue.phoneNos = ObjectUtil.standardizeNewlines(formValue.phoneNos);
       try {

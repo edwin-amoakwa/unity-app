@@ -395,8 +395,10 @@
 
       <div class="d-flex justify-content-end gap-3 mt-4">
         <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Close</button>
-        <button type="submit" class="btn btn-success">
-          <i class="pi pi-save me-2"></i>Save SMS
+        <button type="submit" class="btn btn-success" [disabled]="isSubmitting">
+          <i class="pi pi-save me-2" *ngIf="!isSubmitting"></i>
+          <i class="pi pi-spin pi-spinner me-2" *ngIf="isSubmitting"></i>
+          {{ isSubmitting ? 'Saving...' : 'Save SMS' }}
         </button>
       </div>
 

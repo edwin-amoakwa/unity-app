@@ -105,7 +105,7 @@
         ></a>
         </p>
       </div>
-      <div class="row">
+      <div class="row" [formGroup]="uploadForm">
         <div class="col-auto">
           <input #fileInput (change)="onFileChange($event)" class="form-control" formControlName="selectedFile" type="file">
         </div>
@@ -217,14 +217,14 @@
           <label for="birthDate" class="col-form-label">Birth Date</label>
         </div>
         <div class="col-sm-9">
-          <p-calendar
+          <p-datePicker
             id="birthDate"
             formControlName="birthDate"
             [showIcon]="true"
             appendTo="body"
             dateFormat="dd/mm/yy"
             class="w-100">
-          </p-calendar>
+          </p-datePicker>
         </div>
       </div>
     </div>
