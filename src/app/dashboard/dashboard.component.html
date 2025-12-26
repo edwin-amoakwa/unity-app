@@ -93,7 +93,7 @@
 
 <br />
 
-<div class="date-range-filter">
+<div class="date-range-filter" style="display:flex; align-items:center;">
   <label for="dateRangeSelect" style="margin-right:8px; color:#444; font-size:14px;">Date Range:</label>
   <p-select
     inputId="dateRangeSelect"
@@ -111,6 +111,39 @@
     <input id="fromDate" type="date" [(ngModel)]="chartDataFilter.fromDate" (ngModelChange)="onFilterChange()" style="padding:6px 10px; border-radius:6px; border:1px solid #ccc; background:#fff;" />
     <label for="toDate" style="color:#444; font-size:14px;">To:</label>
     <input id="toDate" type="date" [(ngModel)]="chartDataFilter.toDate" (ngModelChange)="onFilterChange()" style="padding:6px 10px; border-radius:6px; border:1px solid #ccc; background:#fff;" />
+  </div>
+
+  <div style="display:flex; align-items:center; gap:8px; margin-left: 12px;">
+    <button
+      type="button"
+      class="btn"
+      [style.background-color]="chartDataFilter.smsStatus === 'SENT' ? '#28a745' : 'transparent'"
+      [style.color]="chartDataFilter.smsStatus === 'SENT' ? '#fff' : '#28a745'"
+      [style.border-color]="'#28a745'"
+      (click)="chartDataFilter.smsStatus = 'SENT'; onFilterChange()"
+    >
+      SENT
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [style.background-color]="chartDataFilter.smsStatus === 'FAILED' ? '#dc3545' : 'transparent'"
+      [style.color]="chartDataFilter.smsStatus === 'FAILED' ? '#fff' : '#dc3545'"
+      [style.border-color]="'#dc3545'"
+      (click)="chartDataFilter.smsStatus = 'FAILED'; onFilterChange()"
+    >
+      FAILED
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [style.background-color]="chartDataFilter.smsStatus === 'REJECTED' ? '#ffc107' : 'transparent'"
+      [style.color]="chartDataFilter.smsStatus === 'REJECTED' ? '#fff' : '#ffc107'"
+      [style.border-color]="'#ffc107'"
+      (click)="chartDataFilter.smsStatus = 'REJECTED'; onFilterChange()"
+    >
+      REJECTED
+    </button>
   </div>
 </div>
 

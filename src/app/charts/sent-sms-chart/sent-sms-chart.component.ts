@@ -87,7 +87,7 @@ export class SentSmsChartComponent implements OnInit, OnChanges{
         },
         y: {
           title: {
-            formatter: () => 'Sent SMS '
+            formatter: () => 'SMS Count '
           }
         },
         marker: {
