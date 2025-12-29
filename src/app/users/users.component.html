@@ -228,13 +228,15 @@
         <label for="newPassword">New Password *</label>
       </div>
       <div class="col-8">
-        <input
-          pInputText
-          type="password"
+        <p-password
           id="newPassword"
           formControlName="newPassword"
+          [toggleMask]="true"
+          [feedback]="false"
           [class.ng-invalid]="isPasswordFieldInvalid('newPassword')"
-          class="w-full" />
+          styleClass="w-full"
+          inputStyleClass="w-full">
+        </p-password>
         <small class="p-error" *ngIf="isPasswordFieldInvalid('newPassword')">
           {{ getPasswordFieldError('newPassword') }}
         </small>
@@ -246,13 +248,15 @@
         <label for="confirmPassword">Confirm Password *</label>
       </div>
       <div class="col-8">
-        <input
-          pInputText
-          type="password"
+        <p-password
           id="confirmPassword"
           formControlName="confirmPassword"
+          [toggleMask]="true"
+          [feedback]="false"
           [class.ng-invalid]="isPasswordFieldInvalid('confirmPassword')"
-          class="w-full" />
+          styleClass="w-full"
+          inputStyleClass="w-full">
+        </p-password>
         <small class="p-error" *ngIf="isPasswordFieldInvalid('confirmPassword')">
           {{ getPasswordFieldError('confirmPassword') }}
         </small>

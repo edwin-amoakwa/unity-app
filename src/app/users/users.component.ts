@@ -19,6 +19,7 @@ import { StaticDataService } from '../static-data.service';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { UserService } from './user.service';
+import {Password} from 'primeng/password';
 
 // Permissions model interfaces
 interface PermissionAction {
@@ -50,7 +51,8 @@ interface PermissionPage {
     ToastModule,
     ToggleSwitchModule,
     ButtonToolbarComponent,
-    CardComponent
+    CardComponent,
+    Password
   ],
   providers: [MessageService],
   templateUrl: './users.component.html',
@@ -351,7 +353,7 @@ export class UsersComponent implements OnInit
         return `${this.getPasswordFieldLabel(fieldName)} is required`;
       }
       if (field.errors['minlength']) {
-        return `${this.getPasswordFieldLabel(fieldName)} must be at least 6 characters`;
+        return `${this.getPasswordFieldLabel(fieldName)} must be at least 8 characters`;
       }
     }
     return '';
