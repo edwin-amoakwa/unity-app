@@ -48,6 +48,7 @@ export class SenderIdComponent implements OnInit {
     this.senderIdForm = this.formBuilder.group({
       id:null,
       documentComments:null,
+      purpose: null,
       senderId: ['', [Validators.required, Validators.maxLength(11)]],
       applicationId: ['', Validators.required]
     });
@@ -148,6 +149,7 @@ export class SenderIdComponent implements OnInit {
       const payload = {
         id: formValues.id,
         senderId: formValues.senderId,
+        purpose: formValues.purpose,
         documentComments: formValues.documentComments,
         applicationId: formValues.applicationId,
         authLetter: this.fileResource_authLetter,

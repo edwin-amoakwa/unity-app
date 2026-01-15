@@ -46,6 +46,18 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-3">
+            <label for="purpose" class="form-label">Purpose</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              id="purpose"
+              formControlName="purpose">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3">
             <label for="authLetter" class="form-label">Authorization Letter<span style="font-size:12px"><i>(pdf)</i></span></label>
           </div>
           <div class="col-md-9">
@@ -97,6 +109,7 @@
             <th></th>
             <th>App</th>
             <th>Sender ID</th>
+            <th>Purpose</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -110,6 +123,7 @@
             </td>
             <td>{{ sender.appName }}</td>
             <td>{{ sender.senderId }}</td>
+            <td>{{ sender.purpose }}</td>
             <td>
               <p-tag
                 [value]="sender.idStatusName"
@@ -130,7 +144,7 @@
         <ng-template #expandedrow let-sender>
           <tr>
             <td colspan="1"></td>
-            <td colspan="8">
+            <td colspan="5">
               <div class="row">
                 <div class="col-auto">
                   <label class="field-label">Documents Content: </label>
@@ -142,7 +156,7 @@
       </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="5" class="text-center text-muted py-3">
+            <td colspan="6" class="text-center text-muted py-3">
               No sender IDs found.
             </td>
           </tr>
