@@ -160,7 +160,7 @@ export class PaymentsComponent implements OnInit {
     }
   }
 
-  async onSubmit() {
+  async initiatePayment() {
     if (this.paymentForm.valid) {
       try {
         this.loading = true;
@@ -170,7 +170,7 @@ export class PaymentsComponent implements OnInit {
         if (response.success) {
           this.paymentForm.reset();
           await this.loadPayments();
-          this.formView.resetToListView();
+          this.showPaymentDialog = true;
         }
       } catch (error) {
         this.notificationService.error(`Failed to ${this.editingPayment ? 'update' : 'create'} payment`);
@@ -222,6 +222,7 @@ export class PaymentsComponent implements OnInit {
   // Kept for backward compatibility with legacy dialog flow
   closePaymentDialog() {
     this.showPaymentDialog = false;
+    this.formView.resetToListView();
   }
 
   resetForm() {

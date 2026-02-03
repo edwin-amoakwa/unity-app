@@ -25,7 +25,7 @@
     </div>
 
     <ng-container *ngIf="selectedPaymentMode === 'ONLINE'">
-    <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="paymentForm" (ngSubmit)="initiatePayment()">
 
       <div class="row mb-3">
         <div class="col-md-3">
@@ -239,6 +239,25 @@
   </div>
 </div>
 
+
+ <p-dialog
+   id="paymentDialog"
+   [(visible)]="showPaymentDialog"
+   [modal]="true"
+   [closable]="false"
+   header="Payment Initiated"
+   [style]="{ width: '450px' }">
+   <div class="text-center p-4">
+     <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--primary-color)"></i>
+     <p class="mt-4">
+       Your will received a Mobile Money Prompt in on your phone. once payment is done. click I have finish payment
+     </p>
+   </div>
+   <ng-template pTemplate="footer">
+     <button pButton type="button" label="Cancel" class="p-button-text" (click)="closePaymentDialog()"></button>
+     <button pButton type="button" label="I have finish payment" (click)="closePaymentDialog()"></button>
+   </ng-template>
+ </p-dialog>
 
  <p-toast></p-toast>
 

@@ -43,8 +43,14 @@
 </div>
 
 
+<div id="top" class="d-flex justify-content-between align-items-center">
+  <h5>Daily Summary - {{currentDate | date}}</h5>
+  <div class="text-end">
+    <h4 style="color: #6366f1;">{{ merchant?.merchantName }}</h4>
+  </div>
+</div>
 
-<h5>Daily Summary - {{currentDate | date}}</h5>
+
 
 <div class="topbar">
   <div class="price-pill">{{summary.creditBalance | currency}}</div>
