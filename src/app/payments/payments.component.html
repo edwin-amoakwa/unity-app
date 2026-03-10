@@ -152,6 +152,7 @@
             <th>Tax Amount</th>
             <th>Credit Amount</th>
             <th>Paid</th>
+            <th>Actions</th>
 
             <th class="d-none">Actions</th>
           </tr>
@@ -168,7 +169,7 @@
                 [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
               </p-button>
             </td>
-            <td>{{ payment.valueDate || '-' }}</td>
+            <td>{{ payment.createdDate | date:'dd-MMM-yyyy hh:mm:ss a'  }}</td>
             <td>{{ payment.paymentChannelName }}</td>
             <td>{{ payment.mobileNo }}</td>
             <td>{{ payment.amount | currency:'GHS':'symbol':'1.2-2' }}</td>
@@ -178,6 +179,17 @@
               <span [class]="payment.paid ? 'text-green-500' : 'text-red-500'">
                 {{ payment.paid ? 'Yes' : 'No' }}
               </span>
+            </td>
+
+            <td>
+              @if (!payment.paid) {
+                <p-button
+                  icon="pi pi-check-circle"
+                  (onClick)="confirmPaymentById(payment)"
+                  styleClass="p-button-rounded p-button-text p-button-success mr-1"
+                  pTooltip="Confirm Payment">
+                </p-button>
+              }
             </td>
 
             <td class="d-none">
@@ -255,7 +267,7 @@
    </div>
    <ng-template pTemplate="footer">
      <button pButton type="button" label="Cancel" class="p-button-text" (click)="closePaymentDialog()"></button>
-     <button pButton type="button" label="I have finish payment" (click)="closePaymentDialog()"></button>
+     <button pButton type="button" label="I have finish payment" (click)="confirmPayment()"></button>
    </ng-template>
  </p-dialog>
 

@@ -25,6 +25,10 @@ export class PaymentService {
 
 
 
+  async confirmPayment(id: string): Promise<ApiResponse<any>> {
+    return await firstValueFrom(this.http.post<ApiResponse<any>>(`${this.apiUrl}/${id}/confirm`, {}));
+  }
+
   async deletePayment(id: string): Promise<ApiResponse<any>> {
     return await firstValueFrom(this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`));
   }

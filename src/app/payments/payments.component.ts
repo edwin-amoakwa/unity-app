@@ -22,6 +22,7 @@ import { FormView } from '../core/form-view';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { ConfigService } from '../config.service';
+import {CollectionUtil} from '../core/system.utils';
 
 @Component({
   selector: 'app-payments',
@@ -61,6 +62,8 @@ export class PaymentsComponent implements OnInit {
   loading = false;
   editingPayment: any | null = null;
   showPaymentDialog = false;
+
+  paymentInProgress: any = {}
 
   paymentChannels: any[] = [];
 
@@ -169,11 +172,13 @@ export class PaymentsComponent implements OnInit {
         const response = await this.paymentService.savePayment(formValue);
         if (response.success) {
           this.paymentForm.reset();
-          await this.loadPayments();
+          this.paymentInProgress = response.data;
+          CollectionUtil.add(this.payments, response.data);
+          // await this.loadPayments();
           this.showPaymentDialog = true;
         }
       } catch (error) {
-        this.notificationService.error(`Failed to ${this.editingPayment ? 'update' : 'create'} payment`);
+        // this.notificationService.error(`Failed to ${this.editingPayment ? 'update' : 'create'} payment`);
       } finally {
         this.loading = false;
       }
@@ -189,6 +194,23 @@ export class PaymentsComponent implements OnInit {
     this.paymentForm.reset();
     this.paymentForm.patchValue(payment);
     this.formView.resetToCreateView();
+  }
+
+  async confirmPaymentById(payment: any) {
+    // if (payment.id && confirm('Are you sure you want to confirm this payment?')) {
+      try {
+        this.loading = true;
+        const response = await this.paymentService.confirmPayment(payment.id);
+        if (response.success) {
+          // this.notificationService.success('Payment confirmed successfully');
+          await this.loadPayments();
+        }
+      } catch (error) {
+        // this.notificationService.error('Failed to confirm payment');
+      } finally {
+        this.loading = false;
+      }
+    // }
   }
 
   async deletePayment(payment: any) {
@@ -219,8 +241,17 @@ export class PaymentsComponent implements OnInit {
     this.paymentForm.reset();
   }
 
-  // Kept for backward compatibility with legacy dialog flow
+
   closePaymentDialog() {
+    this.showPaymentDialog = false;
+    this.formView.resetToListView();
+  }
+
+  async confirmPayment() {
+    const response = await this.paymentService.confirmPayment(this.paymentInProgress.id);
+    // if (response.success) {
+    //
+    // }
     this.showPaymentDialog = false;
     this.formView.resetToListView();
   }
