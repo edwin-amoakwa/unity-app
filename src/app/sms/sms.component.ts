@@ -352,7 +352,7 @@ export class SmsComponent implements OnInit {
     // Clean/monitor phone numbers and counts
     this.smsForm.get('phoneNos')?.valueChanges.subscribe((newValue: string) => {
       if (ObjectUtil.isNullOrUndefined(newValue)) return;
-      const cleanedValue = newValue.replace(/[^0-9\s\-\n]/g, '');
+      const cleanedValue = newValue.replace(/[^0-9\s\-\n,]/g, '');
       if (cleanedValue !== newValue) {
         newValue = ObjectUtil.standardizeNewlines(newValue);
         this.smsForm.get('phoneNos')?.setValue(cleanedValue, { emitEvent: false });
@@ -375,8 +375,7 @@ export class SmsComponent implements OnInit {
 
     this.smsForm.get('phoneNos')?.valueChanges.subscribe((value: string) => {
       if (value) {
-        const phoneNumbers = value.split(',').filter(phone => phone.trim().length > 0);
-        this.smsForm.patchValue({ totalReceipient: phoneNumbers.length }, { emitEvent: false });
+        this.countContactsInTextBox(value);
       }
     });
 
@@ -571,7 +570,7 @@ export class SmsComponent implements OnInit {
   countContactsInPhoneNoTextBox()
   {
     let newValue = this.smsForm.get('phoneNos').value;
-    const cleanedValue = newValue.replace(/[^0-9\s\-\n]/g, '');
+    const cleanedValue = newValue.replace(/[^0-9\s\-\n,]/g, '');
       if (cleanedValue !== newValue) {
         newValue = ObjectUtil.standardizeNewlines(newValue);
         this.smsForm.get('phoneNos')?.setValue(cleanedValue, { emitEvent: false });
@@ -581,7 +580,7 @@ export class SmsComponent implements OnInit {
 
   countContactsInTextBox(content: string) {
     content = ObjectUtil.standardizeNewlines(content);
-    let lines = content.split(/\r?\n/);
+    let lines = content.split(/[\r?\n,]/);
     lines = lines.map(line => line.trim()).filter(line => line !== '');
     let phoneCount = 0;
     lines.forEach(line => {
