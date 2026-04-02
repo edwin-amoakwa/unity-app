@@ -45,14 +45,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
-    if(this.loginForm.valid == false)
-    {
-      this.errorMessage = "Please enter valid username and password (min of 8 characters)";
-      MessageBox.error(this.errorMessage)
-      this.markFormGroupTouched();
-      return;
-    }
-
 
       this.isLoading = true;
       this.errorMessage = '';
