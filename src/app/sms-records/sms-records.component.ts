@@ -119,8 +119,11 @@ this.filterParam = {}
       delete smsRecord.smsStatusLabel;
       delete smsRecord.batchId;
       delete smsRecord.smsProvider;
+      delete smsRecord.smsProviderLabel;
       delete smsRecord.feedbackRequestCount;
       delete smsRecord.urlReached;
+      delete smsRecord.requestRawResponse;
+      delete smsRecord.feedBackReceived;
     })
     ExcelService.exportAsExcelFile(this.smsRecords, "SMS_Records")
   }
