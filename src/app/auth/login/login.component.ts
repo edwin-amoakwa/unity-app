@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.errorMessage = "Please enter valid username and password (min of 8 characters)";
       MessageBox.error(this.errorMessage)
       this.markFormGroupTouched();
+      return;
     }
 
 
