@@ -6,13 +6,15 @@ import { NgClass } from '@angular/common';
   templateUrl: './card.component.html',
   standalone: true,
   imports: [NgClass],
-  styleUrl: './card.component.scss'
+  styleUrl: './card.component.scss',
 })
 export class CardComponent {
   // public props (backward compatible)
   @Input() title: string = '';
   @Input() subtitle?: string;
-  @Input('subTitle') set subTitle(value: string | undefined) { this.subtitle = value; }
+  @Input('subTitle') set subTitle(value: string | undefined) {
+    this.subtitle = value;
+  }
   @Input() customHeader: boolean = false; // when true, consumer provides header content via [card-header]
 
   // adaptability/theming props
@@ -33,18 +35,26 @@ export class CardComponent {
   }
 
   get elevationClass(): string {
-    return this.elevation === 0 ? 'elevation-0' : this.elevation === 2 ? 'elevation-2' : 'elevation-1';
+    return this.elevation === 0
+      ? 'elevation-0'
+      : this.elevation === 2
+        ? 'elevation-2'
+        : 'elevation-1';
   }
 
   get paddingClass(): string {
-    return this.padding === 'sm' ? 'pad-sm' : this.padding === 'lg' ? 'pad-lg' : 'pad-md';
+    return this.padding === 'sm'
+      ? 'pad-sm'
+      : this.padding === 'lg'
+        ? 'pad-lg'
+        : 'pad-md';
   }
 
   get headerAlignClass(): string {
     return this.headerAlign === 'center'
       ? 'header-center'
       : this.headerAlign === 'right'
-      ? 'header-right'
-      : 'header-left';
+        ? 'header-right'
+        : 'header-left';
   }
 }

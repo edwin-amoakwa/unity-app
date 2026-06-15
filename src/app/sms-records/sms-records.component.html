@@ -8,7 +8,7 @@
 
       <div class="col-md-3">
         <label class="form-label">From</label>
-        <p-calendar
+        <p-datepicker
           [(ngModel)]="filterParam.fromDateTime"
           [showIcon]="true"
           hourFormat="12"
@@ -18,12 +18,12 @@
           inputId="fromDate"
           styleClass="w-100"
           inputStyleClass="w-100 p-inputtext-sm"
-        ></p-calendar>
+        ></p-datepicker>
       </div>
 
       <div class="col-md-3">
         <label class="form-label">To</label>
-        <p-calendar
+        <p-datepicker
           [(ngModel)]="filterParam.toDateTime"
           [showIcon]="true"
           hourFormat="12"
@@ -33,12 +33,12 @@
           inputId="toDate"
           styleClass="w-100"
           inputStyleClass="w-100 p-inputtext-sm"
-        ></p-calendar>
+        ></p-datepicker>
       </div>
 
       <div class="col-md-3">
         <label for="finalStatus" class="form-label"> Status</label>
-        <p-dropdown
+        <p-select
           id="finalStatus"
           [options]="smsStatusList"
           [(ngModel)]="filterParam.smsStatus"
@@ -47,11 +47,11 @@
           placeholder="Select Final Status"
           [showClear]="true"
           styleClass="w-100">
-        </p-dropdown>
+        </p-select>
       </div>
       <div class="col-md-3">
         <label for="senderId" class="form-label">Sender ID</label>
-        <p-dropdown
+        <p-select
           id="senderId"
           [options]="senderIdOptions"
           [(ngModel)]="filterParam.senderId"
@@ -60,7 +60,7 @@
           placeholder="Select Sender ID"
           [showClear]="true"
           styleClass="w-100">
-        </p-dropdown>
+        </p-select>
       </div>
       <div class="col-md-3">
         <label for="mobileNo" class="form-label">Mobile No</label>
@@ -103,7 +103,6 @@
       [loading]="isLoading"
       [paginator]="true"
       [rows]="20"
-      [responsive]="true"
       styleClass="p-datatable-sm"
       [scrollable]="true"
       scrollHeight="600px"
@@ -208,7 +207,7 @@
                     <p-tag
                       class="ms-2"
                       [value]="record.feedBackReceived ? 'Yes' : 'No'"
-                      [severity]="record.feedBackReceived ? 'success' : 'warning'">
+                      [severity]="record.feedBackReceived ? 'success' : 'warn'">
                     </p-tag>
                   </div>
                   <div class="mb-2">

@@ -1,12 +1,22 @@
 import { CollectionUtil } from './../core/system.utils';
 
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 
 import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
@@ -17,14 +27,23 @@ import { NotificationService } from '../core/notification.service';
 import { MessageBox } from '../message-helper';
 import { FormView } from '../core/form-view';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
-import {Select} from 'primeng/select';
-
+import { Select } from 'primeng/select';
 
 @Component({
   selector: 'app-sender-id',
-  imports: [CardComponent, ButtonToolbarComponent, ReactiveFormsModule, CommonModule, TableModule, ButtonModule, TagModule, TooltipModule, DropdownModule, Select],
+  imports: [
+    CardComponent,
+    ButtonToolbarComponent,
+    ReactiveFormsModule,
+    TableModule,
+    ButtonModule,
+    TagModule,
+    TooltipModule,
+    SelectModule,
+    Select,
+  ],
   templateUrl: './sender-id.component.html',
-  styleUrls: ['./sender-id.component.css']
+  styleUrls: ['./sender-id.component.css'],
 })
 export class SenderIdComponent implements OnInit {
   private configService = inject(ConfigService);
@@ -43,14 +62,13 @@ export class SenderIdComponent implements OnInit {
   @ViewChild('authLetterInput') authLetterInput!: ElementRef;
   @ViewChild('bizDocInput') bizDocInput!: ElementRef;
 
-  constructor()
-  {
+  constructor() {
     this.senderIdForm = this.formBuilder.group({
-      id:null,
-      documentComments:null,
+      id: null,
+      documentComments: null,
       purpose: null,
       senderId: ['', [Validators.required, Validators.maxLength(11)]],
-      applicationId: ['', Validators.required]
+      applicationId: ['', Validators.required],
     });
   }
 
@@ -95,7 +113,10 @@ export class SenderIdComponent implements OnInit {
   }
 
   // fileResource_authLetter: any = {};
-  fileResource_authLetter: FileResource = new FileResource("",new FileUpload);
+  fileResource_authLetter: FileResource = new FileResource(
+    '',
+    new FileUpload(),
+  );
   onFileChange_authLetter(event) {
     const reader = new FileReader();
 
@@ -106,20 +127,20 @@ export class SenderIdComponent implements OnInit {
       }
 
       reader.onload = () => {
-
-        const fileUpload: FileUpload = new FileUpload(file.name,reader.result as string);
+        const fileUpload: FileUpload = new FileUpload(
+          file.name,
+          reader.result as string,
+        );
         this.fileResource_authLetter.fileUpload = fileUpload;
 
         ////////console.log("file", file);
         ////////console.log("fileResource", this.fileResource_authLetter);
-
       };
-
     }
   }
 
   // fileResource_bizDoc: any = {};
-  fileResource_bizDoc: FileResource = new FileResource("",new FileUpload);
+  fileResource_bizDoc: FileResource = new FileResource('', new FileUpload());
   onFileChange_bizDoc(event) {
     const reader = new FileReader();
 
@@ -129,16 +150,16 @@ export class SenderIdComponent implements OnInit {
         reader.readAsDataURL(file);
       }
 
-
       reader.onload = () => {
-
-        const fileUpload: FileUpload = new FileUpload(file.name,reader.result as string);
+        const fileUpload: FileUpload = new FileUpload(
+          file.name,
+          reader.result as string,
+        );
         // fileUpload.fileName = file.name;
         // fileUpload.fileString = reader.result;
 
         this.fileResource_bizDoc.fileUpload = fileUpload;
       };
-
     }
   }
 
@@ -153,12 +174,12 @@ export class SenderIdComponent implements OnInit {
         documentComments: formValues.documentComments,
         applicationId: formValues.applicationId,
         authLetter: this.fileResource_authLetter,
-        bizRegDoc: this.fileResource_bizDoc
+        bizRegDoc: this.fileResource_bizDoc,
       };
 
       try {
         const response = await this.configService.createSenderId(payload);
-        CollectionUtil.add(this.senderIds,response.data);
+        CollectionUtil.add(this.senderIds, response.data);
         this.senderIdForm.reset();
         this.isLoading = false;
         this.authLetterInput.nativeElement.value = '';
@@ -172,9 +193,10 @@ export class SenderIdComponent implements OnInit {
   }
 
   async deleteSenderId(sender: any) {
-
-
-    const confirm = await MessageBox.deleteConfirmDialog("Delete Sender ID?","Are you sure you want to delete  Sender ID?");
+    const confirm = await MessageBox.deleteConfirmDialog(
+      'Delete Sender ID?',
+      'Are you sure you want to delete  Sender ID?',
+    );
     if (!confirm.value) return;
 
     this.isLoading = true;
@@ -188,22 +210,21 @@ export class SenderIdComponent implements OnInit {
       this.isLoading = false;
     } catch (error: any) {
       console.error('Error deleting sender ID:', error);
-      this.notificationService.error(error.message || 'Failed to delete sender ID');
+      this.notificationService.error(
+        error.message || 'Failed to delete sender ID',
+      );
       this.isLoading = false;
     }
   }
-
 
   async editSenderId(sender: any) {
     this.senderIdForm.reset();
     this.senderIdForm.patchValue(sender);
     this.formView.resetToCreateView();
   }
-
 }
 
-
-export class  FileResource {
+export class FileResource {
   id: string;
   fileUpload: FileUpload;
   constructor(id: string = '', fileUpload: FileUpload) {
@@ -212,12 +233,12 @@ export class  FileResource {
   }
 }
 
-export class  FileUpload {
+export class FileUpload {
   id: number;
   fileName: string;
   fileString: string | ArrayBuffer;
 
-  constructor(fileName: string = '', fileString : string | ArrayBuffer = '') {
+  constructor(fileName: string = '', fileString: string | ArrayBuffer = '') {
     this.fileName = fileName;
     this.fileString = fileString;
   }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 import {ApiResponse} from './core/ApiResponse';
+import {UserSession} from './core/user-session';
 
 export interface LoginPayload {
   username: string;
@@ -40,5 +41,26 @@ export class AuthService {
   // Verifies the PIN for the provided email
   async verifyPin(payload: { email: string; pin: string }): Promise<ApiResponse<any>> {
     return await firstValueFrom(this.http.post<ApiResponse<any>>(`${environment.baseUrl}/auth/verify-pin`, payload));
+  }
+
+  /**
+   * Returns the stored JWT bearer token, or null if not logged in.
+   */
+  getToken(): string | null {
+    return UserSession.getToken();
+  }
+
+  /**
+   * True when a JWT bearer token is present.
+   */
+  isLoggedIn(): boolean {
+    return UserSession.isLoggedIn();
+  }
+
+  /**
+   * Clears the token and any cached user/merchant/permissions.
+   */
+  logout(): void {
+    UserSession.logout();
   }
 }

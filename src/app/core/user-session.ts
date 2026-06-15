@@ -6,6 +6,7 @@ export class UserSession {
   public static readonly MerchantId: string = 'merchantId';
   public static readonly User: string = 'user';
   public static readonly merchant: string = 'merchant';
+  public static readonly permissions: string = 'permissions';
   public static readonly loginResponse: string = 'loginResponse';
 
   static login(loginResponse: any): void {
@@ -16,16 +17,30 @@ export class UserSession {
     // const { data } = loginResponse;
     const { user } = loginResponse;
     const { merchant } = loginResponse;
+    const { permissions } = loginResponse;
 
     // Save the complete data object to localStorage
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem(UserSession.merchant, JSON.stringify(merchant));
+    localStorage.setItem(UserSession.permissions, JSON.stringify(permissions));
 
     // Save merchantId and userId directly to localStorage
     localStorage.setItem('merchantId', user.merchantId);
     localStorage.setItem('userId', user.id);
+    // sessionId is the signed JWT returned by the backend; treat it as the bearer token.
     localStorage.setItem(this.SessionId, loginResponse.sessionId);
     localStorage.setItem(this.loginResponse, JSON.stringify(loginResponse));
+  }
+
+  /**
+   * Get the JWT bearer token (sessionId) from localStorage
+   */
+  static getToken(): string | null {
+    return localStorage.getItem(this.SessionId);
+  }
+
+  static getPermissions(): any | null {
+    return this.getAsJson(UserSession.permissions);
   }
 
   /**
@@ -108,9 +123,9 @@ export class UserSession {
   }
 
   /**
-   * Check if user is logged in
+   * Check if user is logged in (has a valid JWT bearer token)
    */
   static isLoggedIn(): boolean {
-    return this.getUser() !== null;
+    return !!this.getToken();
   }
 }

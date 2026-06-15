@@ -2,105 +2,122 @@
 
 <!-- styles moved to dashboard.component.scss -->
 
-<div *ngIf="merchant?.accountStatus == 'PENDING'" id="pending-account" class="row">
-  <div class="col-12">
-    <div class="pending-banner">
-      <div class="d-flex flex-wrap justify-content-between align-items-center">
-        <div class="d-flex align-items-center mb-3 mb-md-0">
-          <span class="icon-wrap">
-            <!-- Inline SVG icon (shield-check) -->
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M12 3l7 3v6c0 5-3.5 9-7 9s-7-4-7-9V6l7-3z" stroke="white" stroke-opacity="0.85" stroke-width="1.5"/>
-              <path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-          <div>
-            <h5 style="margin:0; font-weight:700; letter-spacing:0.2px;">Complete your account setup</h5>
-            <p class="helper-text">Finish a few quick steps to unlock all features.</p>
+@if (merchant?.accountStatus == "PENDING") {
+  <div id="pending-account" class="row">
+    <div class="col-12">
+      <div class="pending-banner">
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-center"
+        >
+          <div class="d-flex align-items-center mb-3 mb-md-0">
+            <span class="icon-wrap">
+              <!-- Inline SVG icon (shield-check) -->
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 3l7 3v6c0 5-3.5 9-7 9s-7-4-7-9V6l7-3z"
+                  stroke="white"
+                  stroke-opacity="0.85"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M9 12l2 2 4-4"
+                  stroke="white"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <div>
+              <h5 style="margin: 0; font-weight: 700; letter-spacing: 0.2px">
+                Complete your account setup
+              </h5>
+              <p class="helper-text">
+                Finish a few quick steps to unlock all features.
+              </p>
+            </div>
+          </div>
+          <div class="cta">
+            <a class="btn-cta" routerLink="/merchant-profile"
+              >Complete Account Setup</a
+            >
           </div>
         </div>
-
-        <div class="cta">
-          <a class="btn-cta" routerLink="/merchant-profile">Complete Account Setup</a>
+        <div class="meta mt-3">
+          <div>
+            <span class="item-label">Account Status:</span>
+            <span class="status-badge">
+              <span
+                style="
+                  display: inline-block;
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 50%;
+                  background: #fde047;
+                "
+              ></span>
+              {{ merchant.accountStatus }}
+            </span>
+          </div>
+          <div>
+            <span class="item-label">Merchant:</span>
+            <strong>{{ merchant.merchantName }}</strong>
+          </div>
         </div>
       </div>
-
-      <div class="meta mt-3">
-        <div>
-          <span class="item-label">Account Status:</span>
-          <span class="status-badge">
-            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#fde047;"></span>
-            {{ merchant.accountStatus }}
-          </span>
-        </div>
-        <div>
-          <span class="item-label">Merchant:</span>
-          <strong>{{ merchant.merchantName }}</strong>
-        </div>
-      </div>
     </div>
+  </div>
+}
+
+<div id="top" class="dash-header">
+  <div>
+    <h1 class="page-title" style="margin-bottom: 4px">{{ merchant?.merchantName }}</h1>
+    <p class="dash-subtitle">Daily summary for {{ currentDate | date }}</p>
+  </div>
+  <div class="credit-pill">
+    <span class="credit-label">Credit balance</span>
+    <span class="credit-value mono">{{ summary.creditBalance | currency }}</span>
   </div>
 </div>
 
+<div class="stats-grid">
+  <div class="card-item total">
+    <span class="label">Total</span>
+    <span class="value mono">{{ smsStats.total | number }}</span>
+  </div>
 
-<div id="top" class="d-flex justify-content-between align-items-center">
-  <h5>Daily Summary - {{currentDate | date}}</h5>
-  <div class="text-end">
-    <h4 style="color: #6366f1;">{{ merchant?.merchantName }}</h4>
+  <div class="card-item sent">
+    <span class="label">Sent</span>
+    <span class="value mono">{{ smsStats.sent | number }}</span>
+  </div>
+
+  <div class="card-item queued">
+    <span class="label">Queued</span>
+    <span class="value mono">{{ smsStats.queued | number }}</span>
+  </div>
+
+  <div class="card-item failed">
+    <span class="label">Failed</span>
+    <span class="value mono">{{ smsStats.failed | number }}</span>
+  </div>
+
+  <div class="card-item rejected">
+    <span class="label">Rejected</span>
+    <span class="value mono">{{ smsStats.rejected | number }}</span>
   </div>
 </div>
 
-
-
-<div class="topbar">
-  <div class="price-pill">{{summary.creditBalance | currency}}</div>
-</div>
-
-<div class="row">
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Total</span>
-      <span class="value">{{smsStats.total | number}}</span>
-    </div>
-  </div>
-
-
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Sent</span>
-      <span class="value">{{smsStats.sent | number}}</span>
-    </div>
-  </div>
-
-
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Queued</span>
-      <span class="value">{{smsStats.queued | number}}</span>
-    </div>
-  </div>
-
-
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Failed</span>
-      <span class="value">{{smsStats.failed | number}}</span>
-    </div>
-  </div>
-
-  <div class="col-2">
-    <div class="card-item">
-      <span class="label">Rejected</span>
-      <span class="value">{{smsStats.rejected | number}}</span>
-    </div>
-  </div>
-
-</div>
-
-<br />
-
-<div class="date-range-filter" style="display:flex; align-items:center;">
-  <label for="dateRangeSelect" style="margin-right:8px; color:#444; font-size:14px;">Date Range:</label>
+<div class="date-range-filter">
+  <label for="dateRangeSelect" class="form-label" style="margin: 0 8px 0 0"
+    >Date Range:</label
+  >
   <p-select
     inputId="dateRangeSelect"
     [options]="dateRanges"
@@ -112,20 +129,48 @@
   ></p-select>
 
   <!-- Custom period inputs: only show when CUSTOM_PERIOD is selected -->
-  <div *ngIf="chartDataFilter.period === 'CUSTOM_PERIOD'" style="display:flex; align-items:center; gap:8px; margin-left:12px;">
-    <label for="fromDate" style="color:#444; font-size:14px;">From:</label>
-    <input id="fromDate" type="date" [(ngModel)]="chartDataFilter.fromDate" (ngModelChange)="onFilterChange()" style="padding:6px 10px; border-radius:6px; border:1px solid #ccc; background:#fff;" />
-    <label for="toDate" style="color:#444; font-size:14px;">To:</label>
-    <input id="toDate" type="date" [(ngModel)]="chartDataFilter.toDate" (ngModelChange)="onFilterChange()" style="padding:6px 10px; border-radius:6px; border:1px solid #ccc; background:#fff;" />
-  </div>
+  @if (chartDataFilter.period === "CUSTOM_PERIOD") {
+    <div
+      style="display: flex; align-items: center; gap: 8px; margin-left: 12px"
+    >
+      <label for="fromDate" style="color: #444; font-size: 14px">From:</label>
+      <input
+        id="fromDate"
+        type="date"
+        [(ngModel)]="chartDataFilter.fromDate"
+        (ngModelChange)="onFilterChange()"
+        style="
+          padding: 6px 10px;
+          border-radius: 6px;
+          border: 1px solid #ccc;
+          background: #fff;
+        "
+      />
+      <label for="toDate" style="color: #444; font-size: 14px">To:</label>
+      <input
+        id="toDate"
+        type="date"
+        [(ngModel)]="chartDataFilter.toDate"
+        (ngModelChange)="onFilterChange()"
+        style="
+          padding: 6px 10px;
+          border-radius: 6px;
+          border: 1px solid #ccc;
+          background: #fff;
+        "
+      />
+    </div>
+  }
 
-  <div style="display:flex; align-items:center; gap:8px; margin-left: 12px;">
+  <div style="display: flex; align-items: center; gap: 8px; margin-left: 12px">
     <button
       type="button"
       class="btn"
-      [style.background-color]="chartDataFilter.smsStatus === 'SENT' ? '#28a745' : 'transparent'"
-      [style.color]="chartDataFilter.smsStatus === 'SENT' ? '#fff' : '#28a745'"
-      [style.border-color]="'#28a745'"
+      [style.background-color]="
+        chartDataFilter.smsStatus === 'SENT' ? '#1e9e57' : 'transparent'
+      "
+      [style.color]="chartDataFilter.smsStatus === 'SENT' ? '#fff' : '#1e9e57'"
+      [style.border-color]="'#1e9e57'"
       (click)="chartDataFilter.smsStatus = 'SENT'; onFilterChange()"
     >
       SENT
@@ -133,9 +178,13 @@
     <button
       type="button"
       class="btn"
-      [style.background-color]="chartDataFilter.smsStatus === 'FAILED' ? '#dc3545' : 'transparent'"
-      [style.color]="chartDataFilter.smsStatus === 'FAILED' ? '#fff' : '#dc3545'"
-      [style.border-color]="'#dc3545'"
+      [style.background-color]="
+        chartDataFilter.smsStatus === 'FAILED' ? '#d64545' : 'transparent'
+      "
+      [style.color]="
+        chartDataFilter.smsStatus === 'FAILED' ? '#fff' : '#d64545'
+      "
+      [style.border-color]="'#d64545'"
       (click)="chartDataFilter.smsStatus = 'FAILED'; onFilterChange()"
     >
       FAILED
@@ -143,9 +192,13 @@
     <button
       type="button"
       class="btn"
-      [style.background-color]="chartDataFilter.smsStatus === 'REJECTED' ? '#ffc107' : 'transparent'"
-      [style.color]="chartDataFilter.smsStatus === 'REJECTED' ? '#fff' : '#ffc107'"
-      [style.border-color]="'#ffc107'"
+      [style.background-color]="
+        chartDataFilter.smsStatus === 'REJECTED' ? '#d98a04' : 'transparent'
+      "
+      [style.color]="
+        chartDataFilter.smsStatus === 'REJECTED' ? '#fff' : '#d98a04'
+      "
+      [style.border-color]="'#d98a04'"
       (click)="chartDataFilter.smsStatus = 'REJECTED'; onFilterChange()"
     >
       REJECTED
@@ -159,254 +212,242 @@
   </div>
 </div>
 
-<div *ngIf="merchant?.accountStatus == 'PENDING'" class="row">
-  <div class="col-12 ">
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-
-          <div class="col-md-6">
-            <p><strong>Account Status:</strong>
-              <span class="badge bg-warning">{{merchant.accountStatus}}</span>
-            </p>
+@if (merchant?.accountStatus == "PENDING") {
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p>
+                <strong>Account Status:</strong>
+                <span class="badge bg-warning">{{
+                  merchant.accountStatus
+                }}</span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Merchant Name:</strong>{{ merchant.merchantName }}</p>
+            </div>
           </div>
-
-          <div class="col-md-6">
-            <p><strong>Merchant Name:</strong>{{merchant.merchantName}}</p>
-          </div>
-
         </div>
       </div>
     </div>
   </div>
-</div>
+}
 
-<div class="row" *ngIf="false">
-  <!-- Summary Section -->
-<!--  @if (summary) {-->
-<!--    <div class="col-12 mb-3">-->
-<!--      <div class="card">-->
-<!--        <div class="card-body">-->
-<!--          <h4 class="card-title">Dashboard Summary</h4>-->
-<!--          <pre>{{ summary | json }}</pre>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  }-->
-
-  <div class="col-xl-4 col-md-6">
-
-    <div class="row">
-      <div class="stats-container">
-        <div class="stat-card card-purple">
-          <div class="card-content">
-            <div class="icon-container">
-              <i class="pi pi-wallet icon"></i>
-            </div>
-            <div class="stat-info">
-              <div class="stat-number"> {{summary.creditBalance | currency}}</div>
-              <div class="stat-label">Credit Balance</div>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-
-
-
-
-  </div>
-  <div class="col-xl-4 col-md-6">
-
-    <div class="stat-card card-blue">
-      <div class="card-content">
-        <div class="icon-container">
-          <i class="pi pi-envelope icon"></i>
-        </div>
-        <div class="stat-info">
-          <div class="stat-number"> {{summary.smsBalance | number}}</div>
-          <div class="stat-label">SMS Balance</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <div class="col-xl-4 col-md-12">
-    <div class="card total-income-card overflow-hidden bg-primary-dark text-white">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div class="avatar avatar-lg icon m-r-5">
-            <i class="text-white ti ti-layout-board-split f-24"></i>
-          </div>
-          <div class="ms-2">
-            <h4 class="text-white f-w-600 mb-1"> {{summary.unitPrice | currency}}</h4>
-            <p class="mb-0 opacity-50 text-sm">Unit Price</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <br />
-
-    <div class="card total-income-card warning overflow-hidden">
-
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div class="avatar avatar-lg icon-warning m-r-5">
-            <i class="text-warning ti ti-layout-board-split f-24"></i>
-          </div>
-          <div class="ms-2">
-            <h4 class="f-w-600 mb-1">{{totalSmsSent}}</h4>
-            <p class="mb-0 opacity-50 text-sm">Total SMS</p>
-          </div>
-        </div>
-      </div>
-
-
-
-    </div>
-
-    <br />
-
-
-
-
-  </div>
-
-
-
-
-
-  <div class="col-xl-8 col-md-12">
-
-
-    <div class="row">
-      <div class="stats-container">
-        <div class="stat-card sent">
-          <div class="card-content">
-            <div class="icon-container">
-              <i class="pi pi-send icon"></i>
-            </div>
-            <div class="stat-info">
-              <div class="stat-number">{{smsStats.sent | number}}</div>
-              <div class="stat-label">Sent</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="stat-card queued">
-          <div class="card-content">
-            <div class="icon-container">
-              <i class="pi pi-clock icon"></i>
-            </div>
-            <div class="stat-info">
-              <div class="stat-number">{{smsStats.queued | number}}</div>
-              <div class="stat-label">Queued</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="stat-card failed">
-          <div class="card-content">
-            <div class="icon-container">
-              <i class="pi pi-times-circle icon"></i>
-            </div>
-            <div class="stat-info">
-              <div class="stat-number">{{smsStats.failed | number}}</div>
-              <div class="stat-label">Failed</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="stat-card rejected">
-          <div class="card-content">
-            <div class="icon-container">
-              <i class="pi pi-ban icon"></i>
-            </div>
-            <div class="stat-info">
-              <div class="stat-number">{{smsStats.rejected | number}}</div>
-              <div class="stat-label">Rejected</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rounded bg-light-secondary overflow-hidden mb-3">
-      <div class="px-3 pt-3">
-        <div class="row mb-1 align-items-start">
-          <div class="col">
-            <h5 class="text-secondary mb-0">Sent SMSs</h5>
-<!--            <small class="text-muted">10% Profit</small>-->
-          </div>
-          <div class="col-auto">
-<!--            <h4 class="mb-0">$1839.00</h4>-->
-          </div>
-        </div>
-      </div>
-      <app-sent-sms-chart />
-    </div>
-
-<!--    <app-bar-chart />-->
-  </div>
-
-  <div class="col-xl-4 col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <h3>Monthly Summary</h3>
-
-          <monthly-sms-chart-chart />
-
-      </div>
-    </div>
-    <br />
-    <div class="card">
-      <div class="card-body">
-        <div class="row mb-3 align-items-center">
-          <div class="col">
-            <h3>Lastest SMS Sent</h3>
-          </div>
-          <div class="col-auto"></div>
-        </div>
-
-
-
-        <ul class="list-group list-group-flush">
-          @for (sms of latestSms; track sms) {
-            <li class="list-group-item px-0 {{ sms.space }}">
-              <strong> <i>{{sms.smsNatureLabel}} {{sms.smsMessageTypeLabel}}</i> </strong>
-              <div class="row align-items-start">
-                <div class="col">
-                  <div id="sms-message" class="mb-0 text-muted">{{ sms.messageText }}</div>
-                  <small class="{{ sms.color }}">{{ sms.valueDate }}</small>
+@if (false) {
+  <div class="row">
+    <!-- Summary Section -->
+    <!--  @if (summary) {-->
+    <!--    <div class="col-12 mb-3">-->
+    <!--      <div class="card">-->
+    <!--        <div class="card-body">-->
+    <!--          <h4 class="card-title">Dashboard Summary</h4>-->
+    <!--          <pre>{{ summary | json }}</pre>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--  }-->
+    <div class="col-xl-4 col-md-6">
+      <div class="row">
+        <div class="stats-container">
+          <div class="stat-card card-purple">
+            <div class="card-content">
+              <div class="icon-container">
+                <i class="pi pi-wallet icon"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-number">
+                  {{ summary.creditBalance | currency }}
                 </div>
-                <div class="col-auto">
-                  <div class="mb-0">
-                    <p-badge value="Sent: {{ sms.smsStats.sent }}" severity="success" />
-                    <p-badge value="Queued: {{ sms.smsStats.queued }}" severity="info" />
-                    <p-badge value="Failed: {{ sms.smsStats.failed }}" severity="warn" />
-                    <p-badge value="Rejected: {{ sms.smsStats.rejected }}" severity="contrast" />
-                    <span class="ms-2 align-top avatar avatar-xxs {{ sms.bgColor }}">
-                      <i class="{{ sms.icon }} {{ sms.color }}"></i>
-                    </span>
+                <div class="stat-label">Credit Balance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6">
+      <div class="stat-card card-blue">
+        <div class="card-content">
+          <div class="icon-container">
+            <i class="pi pi-envelope icon"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">{{ summary.smsBalance | number }}</div>
+            <div class="stat-label">SMS Balance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-12">
+      <div
+        class="card total-income-card overflow-hidden bg-primary-dark text-white"
+      >
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="avatar avatar-lg icon m-r-5">
+              <i class="text-white ti ti-layout-board-split f-24"></i>
+            </div>
+            <div class="ms-2">
+              <h4 class="text-white f-w-600 mb-1">
+                {{ summary.unitPrice | currency }}
+              </h4>
+              <p class="mb-0 opacity-50 text-sm">Unit Price</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="card total-income-card warning overflow-hidden">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="avatar avatar-lg icon-warning m-r-5">
+              <i class="text-warning ti ti-layout-board-split f-24"></i>
+            </div>
+            <div class="ms-2">
+              <h4 class="f-w-600 mb-1">{{ totalSmsSent }}</h4>
+              <p class="mb-0 opacity-50 text-sm">Total SMS</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+    </div>
+    <div class="col-xl-8 col-md-12">
+      <div class="row">
+        <div class="stats-container">
+          <div class="stat-card sent">
+            <div class="card-content">
+              <div class="icon-container">
+                <i class="pi pi-send icon"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-number">{{ smsStats.sent | number }}</div>
+                <div class="stat-label">Sent</div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card queued">
+            <div class="card-content">
+              <div class="icon-container">
+                <i class="pi pi-clock icon"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-number">{{ smsStats.queued | number }}</div>
+                <div class="stat-label">Queued</div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card failed">
+            <div class="card-content">
+              <div class="icon-container">
+                <i class="pi pi-times-circle icon"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-number">{{ smsStats.failed | number }}</div>
+                <div class="stat-label">Failed</div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card rejected">
+            <div class="card-content">
+              <div class="icon-container">
+                <i class="pi pi-ban icon"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-number">{{ smsStats.rejected | number }}</div>
+                <div class="stat-label">Rejected</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rounded bg-light-secondary overflow-hidden mb-3">
+        <div class="px-3 pt-3">
+          <div class="row mb-1 align-items-start">
+            <div class="col">
+              <h5 class="text-secondary mb-0">Sent SMSs</h5>
+              <!--            <small class="text-muted">10% Profit</small>-->
+            </div>
+            <div class="col-auto">
+              <!--            <h4 class="mb-0">$1839.00</h4>-->
+            </div>
+          </div>
+        </div>
+        <app-sent-sms-chart />
+      </div>
+      <!--    <app-bar-chart />-->
+    </div>
+    <div class="col-xl-4 col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h3>Monthly Summary</h3>
+          <monthly-sms-chart-chart />
+        </div>
+      </div>
+      <br />
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3 align-items-center">
+            <div class="col">
+              <h3>Lastest SMS Sent</h3>
+            </div>
+            <div class="col-auto"></div>
+          </div>
+          <ul class="list-group list-group-flush">
+            @for (sms of latestSms; track sms) {
+              <li class="list-group-item px-0 {{ sms.space }}">
+                <strong>
+                  <i>{{ sms.smsNatureLabel }} {{ sms.smsMessageTypeLabel }}</i>
+                </strong>
+                <div class="row align-items-start">
+                  <div class="col">
+                    <div id="sms-message" class="mb-0 text-muted">
+                      {{ sms.messageText }}
+                    </div>
+                    <small class="{{ sms.color }}">{{ sms.valueDate }}</small>
+                  </div>
+                  <div class="col-auto">
+                    <div class="mb-0">
+                      <p-badge
+                        value="Sent: {{ sms.smsStats.sent }}"
+                        severity="success"
+                      />
+                      <p-badge
+                        value="Queued: {{ sms.smsStats.queued }}"
+                        severity="info"
+                      />
+                      <p-badge
+                        value="Failed: {{ sms.smsStats.failed }}"
+                        severity="warn"
+                      />
+                      <p-badge
+                        value="Rejected: {{ sms.smsStats.rejected }}"
+                        severity="contrast"
+                      />
+                      <span
+                        class="ms-2 align-top avatar avatar-xxs {{
+                          sms.bgColor
+                        }}"
+                      >
+                        <i class="{{ sms.icon }} {{ sms.color }}"></i>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          }
-        </ul>
-        <!--        <div class="text-center">-->
-        <!--          <a href="javascript:" class="b-b-primary text-primary f-w-500">-->
-        <!--            View all-->
-        <!--            <i class="ti ti-chevron-right"></i>-->
-        <!--          </a>-->
-        <!--        </div>-->
+              </li>
+            }
+          </ul>
+          <!--        <div class="text-center">-->
+          <!--          <a href="javascript:" class="b-b-primary text-primary f-w-500">-->
+          <!--            View all-->
+          <!--            <i class="ti ti-chevron-right"></i>-->
+          <!--          </a>-->
+          <!--        </div>-->
+        </div>
       </div>
     </div>
-
-
-
   </div>
-</div>
+}

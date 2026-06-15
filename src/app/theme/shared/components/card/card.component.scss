@@ -2,22 +2,32 @@
   display: block;
 }
 
-/* Base card styling aligned to theme variables */
+/* Base card styling aligned to Canopy tokens */
 .card {
   background: var(--surface);
   color: var(--text);
-  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 .card .card-header {
   background: var(--card-header-bg, transparent);
   border-bottom: 1px solid var(--border);
   box-shadow: var(--card-header-shadow, none);
+  padding: var(--space-5) var(--space-6);
 }
 .card .card-footer {
   background: transparent;
   border-top: 1px solid var(--border);
+  padding: var(--space-4) var(--space-6);
 }
-.card .card-header h5 { color: var(--text); }
+.card .card-header h5 {
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
 
 /* Variant modifiers */
 .card.default {}

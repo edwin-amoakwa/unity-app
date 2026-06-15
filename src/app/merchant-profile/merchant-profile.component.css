@@ -107,8 +107,8 @@
 :host ::ng-deep .login-form .p-inputtext:focus,
 :host ::ng-deep .login-form .p-password input:focus {
   outline: none;
-  border-color: #93c5fd;
-  box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+  border-color: #0f7e6f;
+  box-shadow: 0 0 0 3px rgba(15,126,111,0.18);
 }
 
 /* Checkbox */
@@ -122,7 +122,7 @@
   border-radius: 10px;
 }
 .checkbox-label { color: #374151; font-size: 14px; }
-.checkbox-label a { color: #2563eb; font-weight: 600; }
+.checkbox-label a { color: #0b6557; font-weight: 600; }
 .checkbox-label a:hover { text-decoration: underline; }
 
 /* Errors */
@@ -136,7 +136,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #60a5fa 0%, #6366f1 100%);
+  background: linear-gradient(135deg, #0f7e6f 0%, #094e44 100%);
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -145,9 +145,9 @@
   font-size: 15px;
   cursor: pointer;
   transition: transform 0.05s ease, filter 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 10px 20px rgba(99,102,241,0.25);
+  box-shadow: 0 10px 20px rgba(9,78,68,0.25);
 }
-.login-button:hover { filter: brightness(1.03); box-shadow: 0 12px 24px rgba(99,102,241,0.28); }
+.login-button:hover { filter: brightness(1.05); box-shadow: 0 12px 24px rgba(9,78,68,0.30); }
 .login-button:active { transform: translateY(1px); }
 .login-button:disabled { opacity: 0.7; cursor: not-allowed; }
 
@@ -155,7 +155,7 @@
 
 /* Footer */
 .login-footer { display: flex; justify-content: center; margin-top: 6px; }
-.forgot-password { color: #2563eb; font-weight: 600; }
+.forgot-password { color: #0b6557; font-weight: 600; }
 .forgot-password:hover { text-decoration: underline; }
 
 /* Dialog terms content spacing */
@@ -163,7 +163,7 @@
 
 /* Business document link */
 .doc-link {
-  color: #0ea5e9; /* sky-500 */
+  color: #0f7e6f;
   font-weight: 600;
   text-decoration: none;
   padding: 4px 6px;
@@ -171,15 +171,15 @@
   transition: color 0.15s ease, background-color 0.15s ease;
 }
 .doc-link:hover {
-  color: #0369a1; /* sky-700 */
-  background-color: rgba(14, 165, 233, 0.12);
+  color: #094e44;
+  background-color: rgba(15, 126, 111, 0.12);
 }
 .doc-link:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(14,165,233,0.25);
+  box-shadow: 0 0 0 3px rgba(15,126,111,0.25);
 }
 .doc-link-icon {
-  color: #0ea5e9;
+  color: #0f7e6f;
 }
 
 /* Responsive */

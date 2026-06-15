@@ -1,356 +1,523 @@
 <h1 class="page-title">SMS Templates</h1>
 
+@if (false) {
+  <button-toolbar>
+    <p-button
+      label="Create SMS"
+      icon="pi pi-plus"
+      (onClick)="createNewMessage()"
+      class="p-button-sm"
+    >
+    </p-button>
+    <p-button
+      label="From Template"
+      icon="pi pi-plus"
+      (onClick)="createFromTemplateDialog()"
+      class="p-button-sm"
+    >
+    </p-button>
+  </button-toolbar>
+}
 
-
-<button-toolbar *ngIf="false">
-  <p-button
-    label="Create SMS"
-    icon="pi pi-plus"
-    (onClick)="createNewMessage()"
-    class="p-button-sm">
-  </p-button>
-  <p-button
-    label="From Template"
-    icon="pi pi-plus"
-    (onClick)="createFromTemplateDialog()"
-    class="p-button-sm">
-  </p-button>
-</button-toolbar>
-
-
-<app-card  >
-
-  <div class="card-body" *ngIf="formView.listView">
-
-    <!-- Filters -->
-    <div class="filters d-flex flex-wrap align-items-end gap-2 mb-3" *ngIf="false">
-      <!-- SMS Status -->
-      <div class="field me-2 mb-2">
-        <label class="block text-sm mb-1">SMS Status</label>
-        <p-dropdown
-          [options]="smsStatusList"
-          optionLabel="itemName"
-          optionValue="id"
-          placeholder="Select status"
-          [(ngModel)]="filterSmsStatus"
-          [showClear]="true"
-          styleClass="p-inputtext-sm"
-          [style]="{ width: '220px' }"
-        ></p-dropdown>
-      </div>
-
-      <!-- From Date -->
-      <div class="field me-2 mb-2">
-        <label class="block text-sm mb-1">From</label>
-        <p-calendar
-          [(ngModel)]="fromDate"
-          [showIcon]="true"
-          hourFormat="12"
-          [showTime]="true"
-          dateFormat="yy-mm-dd"
-          placeholder="Start date"
-          inputId="fromDate"
-          inputStyleClass="p-inputtext-sm"
-          [style]="{ width: '220px' }"
-        ></p-calendar>
-      </div>
-
-      <!-- To Date -->
-      <div class="field me-2 mb-2">
-        <label class="block text-sm mb-1">To</label>
-        <p-calendar
-          [(ngModel)]="toDate"
-          [showIcon]="true"
-          hourFormat="12"
-          [showTime]="true"
-          dateFormat="yy-mm-dd"
-          placeholder="End date"
-          inputId="toDate"
-          inputStyleClass="p-inputtext-sm"
-          [style]="{ width: '220px' }"
-        ></p-calendar>
-      </div>
-
-      <!-- Search Button -->
-      <div class="field mb-2">
-        <p-button
-          label="Search"
-          icon="pi pi-search"
-          class="p-button-sm"
-          (onClick)="searchSms()"
-        ></p-button>
-      </div>
+<app-card>
+  @if (formView.listView) {
+    <div class="card-body">
+      <!-- Filters -->
+      @if (false) {
+        <div class="filters d-flex flex-wrap align-items-end gap-2 mb-3">
+          <!-- SMS Status -->
+          <div class="field me-2 mb-2">
+            <label class="block text-sm mb-1">SMS Status</label>
+            <p-select
+              [options]="smsStatusList"
+              optionLabel="itemName"
+              optionValue="id"
+              placeholder="Select status"
+              [(ngModel)]="filterSmsStatus"
+              [showClear]="true"
+              styleClass="p-inputtext-sm"
+              [style]="{ width: '220px' }"
+            ></p-select>
+          </div>
+          <!-- From Date -->
+          <div class="field me-2 mb-2">
+            <label class="block text-sm mb-1">From</label>
+            <p-datepicker
+              [(ngModel)]="fromDate"
+              [showIcon]="true"
+              hourFormat="12"
+              [showTime]="true"
+              dateFormat="yy-mm-dd"
+              placeholder="Start date"
+              inputId="fromDate"
+              inputStyleClass="p-inputtext-sm"
+              [style]="{ width: '220px' }"
+            ></p-datepicker>
+          </div>
+          <!-- To Date -->
+          <div class="field me-2 mb-2">
+            <label class="block text-sm mb-1">To</label>
+            <p-datepicker
+              [(ngModel)]="toDate"
+              [showIcon]="true"
+              hourFormat="12"
+              [showTime]="true"
+              dateFormat="yy-mm-dd"
+              placeholder="End date"
+              inputId="toDate"
+              inputStyleClass="p-inputtext-sm"
+              [style]="{ width: '220px' }"
+            ></p-datepicker>
+          </div>
+          <!-- Search Button -->
+          <div class="field mb-2">
+            <p-button
+              label="Search"
+              icon="pi pi-search"
+              class="p-button-sm"
+              (onClick)="searchSms()"
+            ></p-button>
+          </div>
+        </div>
+      }
+      <p-table
+        #dt
+        [value]="templateMessageList"
+        [loading]="isLoading"
+        [paginator]="true"
+        [rows]="10"
+        styleClass="p-datatable-sm"
+        [globalFilterFields]="[
+          'templateName',
+          'senderName',
+          'messageText',
+          'smsStatus',
+          'valueDate',
+        ]"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex justify-content-end">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-sm"
+                placeholder="Search..."
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Created Date</th>
+            <th>Name</th>
+            <th>Sender ID</th>
+            <th>Message</th>
+            <!--          <th >Phone Numbers</th>-->
+            <th>Recipients</th>
+            <th>Pages</th>
+            <th>Cost</th>
+            <th>Status</th>
+            <!--          <th >Nature</th>-->
+            <th style="width: 120px">Actions</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-sms>
+          <tr>
+            <td>{{ sms.valueDate }}</td>
+            <td>{{ sms.templateName }}</td>
+            <td>{{ sms.senderName }}</td>
+            <td>
+              <div
+                class="text-truncate"
+                style="max-width: 200px"
+                [pTooltip]="sms.messageText"
+              >
+                {{ sms.messageText }}
+              </div>
+            </td>
+            <!--          <td>-->
+            <!--            <div [pTooltip]="sms.phoneNos">-->
+            <!--              {{ formatPhoneNumbers(sms.phoneNos) }}-->
+            <!--            </div>-->
+            <!--          </td>-->
+            <td>{{ sms.totalRecipient }}</td>
+            <td>{{ sms.pagesCount }}</td>
+            <td>{{ sms.actualCost.toFixed(2) }}</td>
+            <td>
+              <p-tag
+                [value]="sms.smsStatus"
+                [severity]="getStatusSeverity(sms.smsStatus)"
+              >
+              </p-tag>
+            </td>
+            <td>
+              <div class="flex gap-1">
+                @if (false) {
+                  <p-button
+                    icon="pi pi-pencil"
+                    size="small"
+                    severity="info"
+                    [text]="true"
+                    pTooltip="Edit"
+                    tooltipPosition="left"
+                    (onClick)="openEditDialog(sms)"
+                  >
+                  </p-button>
+                }
+                <p-button
+                  icon="pi pi-clone"
+                  size="small"
+                  severity="secondary"
+                  [text]="true"
+                  pTooltip="Duplicate"
+                  tooltipPosition="left"
+                  (onClick)="duplicateSms(sms)"
+                >
+                </p-button>
+                @if (sms.smsStatus === "Pending") {
+                  <p-button
+                    icon="pi pi-trash"
+                    size="small"
+                    severity="danger"
+                    [text]="true"
+                    pTooltip="Delete"
+                    tooltipPosition="left"
+                    (onClick)="deleteSms(sms)"
+                  >
+                  </p-button>
+                }
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="12" class="text-center p-4">
+              <div class="flex flex-column align-items-center gap-2">
+                <i class="pi pi-inbox text-4xl text-muted"></i>
+                <p class="text-muted mb-0">No SMS messages found</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
+  }
 
-    <p-table
-      #dt
-      [value]="templateMessageList"
-      [loading]="isLoading"
-      [paginator]="true"
-      [rows]="10"
-      [responsive]="true"
-      styleClass="p-datatable-sm"
-      [globalFilterFields]="['templateName', 'senderName', 'messageText', 'smsStatus', 'valueDate']">
-
-      <ng-template pTemplate="caption">
-        <div class="flex justify-content-end">
-          <span class="p-input-icon-left">
-            <i class="pi pi-search"></i>
-            <input
-              pInputText
-              type="text"
-              class="p-inputtext-sm"
-              placeholder="Search..."
-              (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
-          </span>
-        </div>
-      </ng-template>
-
-      <ng-template pTemplate="header">
-        <tr>
-          <th >Created Date</th>
-          <th >Name</th>
-          <th >Sender ID</th>
-          <th >Message</th>
-<!--          <th >Phone Numbers</th>-->
-          <th >Recipients</th>
-          <th >Pages</th>
-          <th >Cost</th>
-          <th >Status</th>
-<!--          <th >Nature</th>-->
-
-          <th style="width: 120px;">Actions</th>
-          <th ></th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-sms>
-        <tr>
-          <td>{{ sms.valueDate }}</td>
-          <td>{{ sms.templateName }}</td>
-          <td>{{ sms.senderName }}</td>
-          <td>
-            <div class="text-truncate" style="max-width: 200px;" [pTooltip]="sms.messageText">
-              {{ sms.messageText }}
-            </div>
-          </td>
-<!--          <td>-->
-<!--            <div [pTooltip]="sms.phoneNos">-->
-<!--              {{ formatPhoneNumbers(sms.phoneNos) }}-->
-<!--            </div>-->
-<!--          </td>-->
-          <td>{{ sms.totalRecipient }}</td>
-          <td>{{ sms.pagesCount }}</td>
-          <td>{{ sms.actualCost.toFixed(2) }}</td>
-          <td>
-            <p-tag
-              [value]="sms.smsStatus"
-              [severity]="getStatusSeverity(sms.smsStatus)">
-            </p-tag>
-          </td>
-
-          <td>
-            <div class="flex gap-1">
-              <p-button
-                icon="pi pi-pencil"
-                size="small" *ngIf="false"
-                severity="info"
-                [text]="true"
-                pTooltip="Edit"
-                tooltipPosition="left"
-                (onClick)="openEditDialog(sms)">
-              </p-button>
-
-              <p-button
-                icon="pi pi-clone"
-                size="small"
-                severity="secondary"
-                [text]="true"
-                pTooltip="Duplicate"
-                tooltipPosition="left"
-                (onClick)="duplicateSms(sms)">
-              </p-button>
-
-              <p-button
-                icon="pi pi-trash"
-                size="small" *ngIf="sms.smsStatus === 'Pending'"
-                severity="danger"
-                [text]="true"
-                pTooltip="Delete"
-                tooltipPosition="left"
-                (onClick)="deleteSms(sms)">
-              </p-button>
-
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="12" class="text-center p-4">
-            <div class="flex flex-column align-items-center gap-2">
-              <i class="pi pi-inbox text-4xl text-muted"></i>
-              <p class="text-muted mb-0">No SMS messages found</p>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
-
-
-  <div class="card-body" *ngIf="formView.createView">
-
-    <form [formGroup]="smsForm" (ngSubmit)="onSubmit()" class="p-fluid">
-
-      <div class="row">
-        <div class="col-12 mb-3">
-          <div class="d-flex flex-row gap-3">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="smsMessageType" id="smsMessageType" formControlName="smsMessageType" value="SINGLE_SMS">
-              <label class="form-check-label" for="single">Single SMS</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="smsMessageType" id="smsMessageType2" formControlName="smsMessageType" value="BULK_SMS">
-              <label class="form-check-label" for="bulk">Bulk SMS</label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-4">
-        <label for="sender_id" class="form-label font-weight-bold">Sender ID *</label>
-        <p-dropdown id="senderId" placeholder="Select SenderID" formControlName="senderId" [options]="senderIds" optionLabel="senderId" optionValue="id"></p-dropdown>
-      </div>
-
-      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'SINGLE_SMS'">
-        <label for="phoneNos" class="form-label font-weight-bold">Phone Numbers*</label>
-        <input type="tel" class="form-control" id="phoneNos" formControlName="phoneNos" placeholder="">
-      </div>
-
-      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS'">
-        <label for="phone_numbers" class="form-label font-weight-bold">Phone Numbers *</label>
-        <div class="d-flex flex-row gap-3">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="phoneNumbersSource" formControlName="phoneNumbersSource" id="copy_paste" value="COPY_PASTE">
-            <label class="form-check-label" for="copy_paste">Copy and Paste</label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="phoneNumbersSource" formControlName="phoneNumbersSource" id="upload_file" value="UPLOADED_FILE">
-            <label class="form-check-label" for="upload_file">Upload File</label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="phoneNumbersSource" formControlName="phoneNumbersSource" id="groups" value="GROUP">
-            <label class="form-check-label" for="groups">Group</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource === 'UPLOADED_FILE'">
-        <label for="uploadedFile" class="form-label font-weight-bold">
-          Uploaded File:*
-          <span style="font-size:12px;"><i>for xls/xlxs/csv files: contacts must be in only first column of the spreadsheet</i></span>
-        </label>
-        <p-fileUpload #fileUploader mode="basic" name="uploadedFile" accept=".txt,.xlsx,.xls,.csv" [auto]="true" [customUpload]="true" (onSelect)="onFileSelect($event)" [showUploadButton]="false" [showCancelButton]="false" chooseLabel="Choose a .txt,.xlsx,.xls,.csv File" invalidFileTypeMessageSummary="Invalid File Type" invalidFileTypeMessageDetail="Please select a .txt,.xlsx,.xls,.csv file."></p-fileUpload>
-      </div>
-
-      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource !== 'GROUP'">
-        <label for="phoneNos" class="form-label font-weight-bold">Phone No.s*</label>
-        <textarea class="form-control" id="phoneNos2" formControlName="phoneNos" rows="5" (input)="countContactsInPhoneNoTextBox()"></textarea>
-      </div>
-
-      <div class="mb-4" *ngIf="smsForm?.value?.smsMessageType === 'BULK_SMS' && smsForm?.value?.phoneNumbersSource === 'GROUP'">
-        <label for="group_select" class="form-label font-weight-bold">Group *</label>
-        <p-dropdown id="groupId" formControlName="groupId" [options]="groups" optionLabel="groupName" optionValue="id" (onChange)="onGroupSelected()"></p-dropdown>
-      </div>
-
-      <div class="mb-4">
-        <label for="message_text" class="form-label font-weight-bold">Message Text *</label>
-        <textarea class="form-control" id="message_text" formControlName="messageText" rows="5" required (input)="updateCount()"></textarea>
-        <div class="d-flex justify-content-between mt-2">
-          <span class="sms-count">Characters: {{ characterCount }} / {{ smsCount }} SMS</span>
-          <span class="sms-count ms-3">Pages: {{ smsForm?.value?.pagesCount }}</span>
-          <span class="sms-count ms-3">Recipients: {{ smsForm?.value?.totalRecipient }}</span>
-        </div>
-      </div>
-
-
-      <div class="form-check form-check-custom-success">
+  @if (formView.createView) {
+    <div class="card-body">
+      <form [formGroup]="smsForm" (ngSubmit)="onSubmit()" class="p-fluid">
         <div class="row">
-          <div class="col-auto">
-            <input class="form-check-input" type="checkbox" id="template_sms" formControlName="templateSms">
-            <label class="form-check-label" for="template_sms">Save as Template SMS</label>
-        </div>
-
-          <div class="col-auto">
-            <div *ngIf="smsForm?.value?.templateSms">
-              <input type="text" class="form-control" id="templateName" formControlName="templateName" placeholder="Template Name">
+          <div class="col-12 mb-3">
+            <div class="d-flex flex-row gap-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="smsMessageType"
+                  id="smsMessageType"
+                  formControlName="smsMessageType"
+                  value="SINGLE_SMS"
+                />
+                <label class="form-check-label" for="single">Single SMS</label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="smsMessageType"
+                  id="smsMessageType2"
+                  formControlName="smsMessageType"
+                  value="BULK_SMS"
+                />
+                <label class="form-check-label" for="bulk">Bulk SMS</label>
+              </div>
             </div>
           </div>
-
         </div>
-
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label font-weight-bold">SMS Options</label>
-        <div class="d-flex flex-row gap-3 flex-wrap">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="flash_sms" formControlName="flashSms">
-            <label class="form-check-label" for="flash_sms">Flash SMS</label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="schedule_sms" formControlName="scheduleSms">
-            <label class="form-check-label" for="schedule_sms">Schedule SMS</label>
-          </div>
-
-
-        </div>
-      </div>
-
-      <div class="mb-4" *ngIf="smsForm?.value?.scheduleSms">
         <div class="mb-4">
-          <label class="form-label font-weight-bold">SMS Nature *</label>
-          <div class="d-flex flex-row gap-3">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="onetime" value="ONE_TIME">
-              <label class="form-check-label" for="onetime">Onetime</label>
+          <label for="sender_id" class="form-label font-weight-bold"
+            >Sender ID *</label
+          >
+          <p-select
+            id="senderId"
+            placeholder="Select SenderID"
+            formControlName="senderId"
+            [options]="senderIds"
+            optionLabel="senderId"
+            optionValue="id"
+          ></p-select>
+        </div>
+        @if (smsForm?.value?.smsMessageType === "SINGLE_SMS") {
+          <div class="mb-4">
+            <label for="phoneNos" class="form-label font-weight-bold"
+              >Phone Numbers*</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="phoneNos"
+              formControlName="phoneNos"
+              placeholder=""
+            />
+          </div>
+        }
+        @if (smsForm?.value?.smsMessageType === "BULK_SMS") {
+          <div class="mb-4">
+            <label for="phone_numbers" class="form-label font-weight-bold"
+              >Phone Numbers *</label
+            >
+            <div class="d-flex flex-row gap-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="phoneNumbersSource"
+                  formControlName="phoneNumbersSource"
+                  id="copy_paste"
+                  value="COPY_PASTE"
+                />
+                <label class="form-check-label" for="copy_paste"
+                  >Copy and Paste</label
+                >
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="phoneNumbersSource"
+                  formControlName="phoneNumbersSource"
+                  id="upload_file"
+                  value="UPLOADED_FILE"
+                />
+                <label class="form-check-label" for="upload_file"
+                  >Upload File</label
+                >
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="phoneNumbersSource"
+                  formControlName="phoneNumbersSource"
+                  id="groups"
+                  value="GROUP"
+                />
+                <label class="form-check-label" for="groups">Group</label>
+              </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="smsNature" formControlName="smsNature" id="recurring" value="RECURRING">
-              <label class="form-check-label" for="recurring">Recurring</label>
+          </div>
+        }
+        @if (
+          smsForm?.value?.smsMessageType === "BULK_SMS" &&
+          smsForm?.value?.phoneNumbersSource === "UPLOADED_FILE"
+        ) {
+          <div class="mb-4">
+            <label for="uploadedFile" class="form-label font-weight-bold">
+              Uploaded File:*
+              <span style="font-size: 12px"
+                ><i
+                  >for xls/xlxs/csv files: contacts must be in only first column
+                  of the spreadsheet</i
+                ></span
+              >
+            </label>
+            <p-fileUpload
+              #fileUploader
+              mode="basic"
+              name="uploadedFile"
+              accept=".txt,.xlsx,.xls,.csv"
+              [auto]="true"
+              [customUpload]="true"
+              (onSelect)="onFileSelect($event)"
+              [showUploadButton]="false"
+              [showCancelButton]="false"
+              chooseLabel="Choose a .txt,.xlsx,.xls,.csv File"
+              invalidFileTypeMessageSummary="Invalid File Type"
+              invalidFileTypeMessageDetail="Please select a .txt,.xlsx,.xls,.csv file."
+            ></p-fileUpload>
+          </div>
+        }
+        @if (
+          smsForm?.value?.smsMessageType === "BULK_SMS" &&
+          smsForm?.value?.phoneNumbersSource !== "GROUP"
+        ) {
+          <div class="mb-4">
+            <label for="phoneNos" class="form-label font-weight-bold"
+              >Phone No.s*</label
+            >
+            <textarea
+              class="form-control"
+              id="phoneNos2"
+              formControlName="phoneNos"
+              rows="5"
+              (input)="countContactsInPhoneNoTextBox()"
+            ></textarea>
+          </div>
+        }
+        @if (
+          smsForm?.value?.smsMessageType === "BULK_SMS" &&
+          smsForm?.value?.phoneNumbersSource === "GROUP"
+        ) {
+          <div class="mb-4">
+            <label for="group_select" class="form-label font-weight-bold"
+              >Group *</label
+            >
+            <p-select
+              id="groupId"
+              formControlName="groupId"
+              [options]="groups"
+              optionLabel="groupName"
+              optionValue="id"
+              (onChange)="onGroupSelected()"
+            ></p-select>
+          </div>
+        }
+        <div class="mb-4">
+          <label for="message_text" class="form-label font-weight-bold"
+            >Message Text *</label
+          >
+          <textarea
+            class="form-control"
+            id="message_text"
+            formControlName="messageText"
+            rows="5"
+            required
+            (input)="updateCount()"
+          ></textarea>
+          <div class="d-flex justify-content-between mt-2">
+            <span class="sms-count"
+              >Characters: {{ characterCount }} / {{ smsCount }} SMS</span
+            >
+            <span class="sms-count ms-3"
+              >Pages: {{ smsForm?.value?.pagesCount }}</span
+            >
+            <span class="sms-count ms-3"
+              >Recipients: {{ smsForm?.value?.totalRecipient }}</span
+            >
+          </div>
+        </div>
+        <div class="form-check form-check-custom-success">
+          <div class="row">
+            <div class="col-auto">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="template_sms"
+                formControlName="templateSms"
+              />
+              <label class="form-check-label" for="template_sms"
+                >Save as Template SMS</label
+              >
+            </div>
+            <div class="col-auto">
+              @if (smsForm?.value?.templateSms) {
+                <div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="templateName"
+                    formControlName="templateName"
+                    placeholder="Template Name"
+                  />
+                </div>
+              }
             </div>
           </div>
         </div>
-
-        <label for="scheduledTime" class="form-label font-weight-bold w-100">Scheduled Time*</label>
-        <p-calendar id="scheduledTime" formControlName="scheduledTime" [showTime]="true" [showSeconds]="false" dateFormat="mm/dd/yy"></p-calendar>
-      </div>
-
-
-      <div class="d-flex justify-content-end gap-3 mt-4">
-        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Close</button>
-        <button type="submit" class="btn btn-success">
-          <i class="pi pi-save me-2"></i>Save SMS
-        </button>
-      </div>
-
-    </form>
-
-<!--    <p-button-->
-<!--      label="Close" severity="contrast"-->
-<!--      icon="pi pi-close"-->
-<!--      (onClick)="formView.resetToListView()"-->
-<!--      class="p-button-sm">-->
-<!--    </p-button>-->
-
-
-  </div>
-
-
-
-
+        <div class="mb-4">
+          <label class="form-label font-weight-bold">SMS Options</label>
+          <div class="d-flex flex-row gap-3 flex-wrap">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="flash_sms"
+                formControlName="flashSms"
+              />
+              <label class="form-check-label" for="flash_sms">Flash SMS</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="schedule_sms"
+                formControlName="scheduleSms"
+              />
+              <label class="form-check-label" for="schedule_sms"
+                >Schedule SMS</label
+              >
+            </div>
+          </div>
+        </div>
+        @if (smsForm?.value?.scheduleSms) {
+          <div class="mb-4">
+            <div class="mb-4">
+              <label class="form-label font-weight-bold">SMS Nature *</label>
+              <div class="d-flex flex-row gap-3">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="smsNature"
+                    formControlName="smsNature"
+                    id="onetime"
+                    value="ONE_TIME"
+                  />
+                  <label class="form-check-label" for="onetime">Onetime</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="smsNature"
+                    formControlName="smsNature"
+                    id="recurring"
+                    value="RECURRING"
+                  />
+                  <label class="form-check-label" for="recurring"
+                    >Recurring</label
+                  >
+                </div>
+              </div>
+            </div>
+            <label for="scheduledTime" class="form-label font-weight-bold w-100"
+              >Scheduled Time*</label
+            >
+            <p-datepicker
+              id="scheduledTime"
+              formControlName="scheduledTime"
+              [showTime]="true"
+              [showSeconds]="false"
+              dateFormat="mm/dd/yy"
+            ></p-datepicker>
+          </div>
+        }
+        <div class="d-flex justify-content-end gap-3 mt-4">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="onCancel()"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="pi pi-save me-2"></i>Save SMS
+          </button>
+        </div>
+      </form>
+      <!--    <p-button-->
+      <!--      label="Close" severity="contrast"-->
+      <!--      icon="pi pi-close"-->
+      <!--      (onClick)="formView.resetToListView()"-->
+      <!--      class="p-button-sm">-->
+      <!--    </p-button>-->
+    </div>
+  }
 </app-card>
 
 <!-- SMS Form Dialog -->
@@ -377,25 +544,32 @@
   [draggable]="false"
   [resizable]="false"
   styleClass="p-fluid"
-  [style]="{width: '50vw'}"
-  [breakpoints]="{'960px': '70vw', '640px': '95vw'}"
-  (onHide)="closeTemplateDialog()">
-
+  [style]="{ width: '50vw' }"
+  [breakpoints]="{ '960px': '70vw', '640px': '95vw' }"
+  (onHide)="closeTemplateDialog()"
+>
   <div class="mb-3">
-     <label  class="form-label font-weight-bold">Select Template*</label>
-    <select
-      [(ngModel)]="selectedTemplateSms"
-      class="form-select w-100">
+    <label class="form-label font-weight-bold">Select Template*</label>
+    <select [(ngModel)]="selectedTemplateSms" class="form-select w-100">
       <option [ngValue]="null">-- Select Template --</option>
-      <option *ngFor="let t of templateMsgs" [ngValue]="t">{{ t.templateName }}</option>
+      @for (t of templateMsgs; track t) {
+        <option [ngValue]="t">{{ t.templateName }}</option>
+      }
     </select>
   </div>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cancel" styleClass="p-button-secondary" (onClick)="closeTemplateDialog()"></p-button>
-    <p-button label="Generate" styleClass="p-button-primary" (onClick)="createFromTemplate()"></p-button>
+    <p-button
+      label="Cancel"
+      styleClass="p-button-secondary"
+      (onClick)="closeTemplateDialog()"
+    ></p-button>
+    <p-button
+      label="Generate"
+      styleClass="p-button-primary"
+      (onClick)="createFromTemplate()"
+    ></p-button>
   </ng-template>
-
 </p-dialog>
 
 <!-- Confirmation Dialog -->

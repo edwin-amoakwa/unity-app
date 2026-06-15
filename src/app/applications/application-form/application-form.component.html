@@ -1,5 +1,8 @@
-
-<form [formGroup]="applicationForm" (ngSubmit)="onSubmit()" class="application-form">
+<form
+  [formGroup]="applicationForm"
+  (ngSubmit)="onSubmit()"
+  class="application-form"
+>
   <div class="container-fluid">
     <!-- Application Name -->
     <div class="row mb-3">
@@ -11,35 +14,40 @@
           pInputText
           id="appName"
           formControlName="appName"
-          [class.ng-invalid]="isFieldInvalid('appName')" />
-        <small
-          class="p-error block mt-1"
-          *ngIf="isFieldInvalid('appName')">
-          {{ getFieldError('appName') }}
-        </small>
+          [class.ng-invalid]="isFieldInvalid('appName')"
+        />
+        @if (isFieldInvalid("appName")) {
+          <small class="p-error block mt-1">
+            {{ getFieldError("appName") }}
+          </small>
+        }
       </div>
     </div>
 
     <!-- Application Type -->
     <div class="row mb-3">
       <div class="col-12 col-md-4 d-flex align-items-center">
-        <label for="applicationType" class="form-label mb-0">Application Type *</label>
+        <label for="applicationType" class="form-label mb-0"
+          >Application Type *</label
+        >
       </div>
       <div class="col-12 col-md-8">
-        <p-dropdown
-          inputId="applicationType" placeholder="Select Application Type"
+        <p-select
+          inputId="applicationType"
+          placeholder="Select Application Type"
           formControlName="applicationType"
           [options]="applicationTypes"
           optionLabel="label"
           optionValue="value"
           [class.ng-invalid]="isFieldInvalid('applicationType')"
-          styleClass="w-full">
-        </p-dropdown>
-        <small
-          class="p-error block mt-1"
-          *ngIf="isFieldInvalid('applicationType')">
-          {{ getFieldError('applicationType') }}
-        </small>
+          styleClass="w-full"
+        >
+        </p-select>
+        @if (isFieldInvalid("applicationType")) {
+          <small class="p-error block mt-1">
+            {{ getFieldError("applicationType") }}
+          </small>
+        }
       </div>
     </div>
 
@@ -53,29 +61,34 @@
           pInputText
           id="callBackUrl"
           formControlName="callBackUrl"
-          [class.ng-invalid]="isFieldInvalid('callBackUrl')" />
-        <small
-          class="p-error block mt-1"
-          *ngIf="isFieldInvalid('callBackUrl')">
-          {{ getFieldError('callBackUrl') }}
-        </small>
+          [class.ng-invalid]="isFieldInvalid('callBackUrl')"
+        />
+        @if (isFieldInvalid("callBackUrl")) {
+          <small class="p-error block mt-1">
+            {{ getFieldError("callBackUrl") }}
+          </small>
+        }
       </div>
     </div>
 
     <!-- Enable IP Restriction -->
     <div class="row mb-3">
       <div class="col-12 col-md-4 d-flex align-items-center">
-        <label for="enableIpRestriction" class="form-label mb-0">Enable IP Restriction</label>
+        <label for="enableIpRestriction" class="form-label mb-0"
+          >Enable IP Restriction</label
+        >
       </div>
       <div class="col-12 col-md-8 d-flex align-items-center">
-        <p-inputSwitch formControlName="enableIpRestriction"></p-inputSwitch>
+        <p-toggleSwitch formControlName="enableIpRestriction"></p-toggleSwitch>
       </div>
     </div>
 
     <!-- Allowed IP Addresses -->
     <div class="row mb-3">
       <div class="col-12 col-md-4 d-flex align-items-center">
-        <label for="allowedIpAddresses" class="form-label mb-0">Allowed IP Addresses</label>
+        <label for="allowedIpAddresses" class="form-label mb-0"
+          >Allowed IP Addresses</label
+        >
       </div>
       <div class="col-12 col-md-8">
         <textarea
@@ -83,11 +96,11 @@
           id="allowedIpAddresses"
           formControlName="allowedIpAddresses"
           rows="4"
-          placeholder="One per line or comma-separated, e.g. 192.168.0.1, 10.0.0.5">
+          placeholder="One per line or comma-separated, e.g. 192.168.0.1, 10.0.0.5"
+        >
         </textarea>
       </div>
     </div>
-
   </div>
 
   <!-- Form Actions -->
@@ -98,8 +111,8 @@
       label="Cancel"
       icon="pi pi-times"
       class="p-button-text p-button-secondary"
-      (click)="onCancel()">
-    </button>
+      (click)="onCancel()"
+    ></button>
     <button
       pButton
       type="submit"
@@ -107,7 +120,7 @@
       [icon]="application?.id ? 'pi pi-check' : 'pi pi-plus'"
       class="p-button-primary"
       [disabled]="applicationForm.invalid || isSubmitting"
-      [loading]="isSubmitting">
-    </button>
+      [loading]="isSubmitting"
+    ></button>
   </div>
 </form>

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 // PrimeNG imports
 import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -16,7 +16,7 @@ import { CardComponent } from '../theme/shared/components/card/card.component';
 import { SmsRecordsService } from './sms-records.service';
 import {StaticDataService} from '../static-data.service';
 import {ConfigService} from '../config.service';
-import {Calendar} from 'primeng/calendar';
+import {DatePicker} from 'primeng/datepicker';
 import {DateUtil} from '../core/system.utils';
 import {ExcelService} from '../core/excel.service';
 
@@ -33,9 +33,9 @@ import {ExcelService} from '../core/excel.service';
     ButtonModule,
     TagModule,
     TooltipModule,
-    DropdownModule,
+    SelectModule,
     InputTextModule,
-    Calendar
+    DatePicker
   ],
   templateUrl: './sms-records.component.html',
   styleUrls: ['./sms-records.component.scss']
@@ -98,12 +98,12 @@ this.filterParam = {}
     this.loadSmsRecords();
   }
 
-  getFinalStatusSeverity(status: string): 'success' | 'warning' | 'danger' | 'info' {
+  getFinalStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {
     switch (status?.toLowerCase()) {
       case 'delivered':
         return 'success';
       case 'pending':
-        return 'warning';
+        return 'warn';
       case 'failed':
         return 'danger';
       default:
@@ -128,12 +128,12 @@ this.filterParam = {}
     ExcelService.exportAsExcelFile(this.smsRecords, "SMS_Records")
   }
 
-  getSmsStatusSeverity(status: string): 'success' | 'warning' | 'danger' | 'info' {
+  getSmsStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {
     switch (status?.toLowerCase()) {
       case 'sent':
         return 'success';
       case 'pending':
-        return 'warning';
+        return 'warn';
       case 'failed':
         return 'danger';
       default:

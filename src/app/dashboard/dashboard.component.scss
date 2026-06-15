@@ -1,49 +1,100 @@
-
-.card-item {
-  width: 150px;
-  background: #dcdcdc;
-  padding: 18px 24px;
-  border-radius: 6px;
+/* ----------------------------------- Header ----------------------------------- */
+.dash-header {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-family: Arial, sans-serif;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+.dash-subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 
+/* Gold "money" credit pill */
+.credit-pill {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(184, 134, 43, 0.10), rgba(184, 134, 43, 0.04));
+  border: 1px solid rgba(184, 134, 43, 0.30);
+}
+.credit-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.credit-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  line-height: 1.1;
+}
+
+/* ----------------------------------- Stat cards ----------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.card-item {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5) var(--space-5) var(--space-5) calc(var(--space-5) + 4px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow: hidden;
+  transition: box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+}
+.card-item:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.card-item::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--stone-300);
+}
+.card-item.total::before  { background: var(--primary); }
+.card-item.sent::before   { background: var(--success); }
+.card-item.queued::before { background: var(--info); }
+.card-item.failed::before { background: var(--danger); }
+.card-item.rejected::before { background: var(--warning); }
+
 .label {
-  font-size: 14px;
-  color: #444;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .value {
-  font-size: 20px;
+  font-size: 1.75rem;
   font-weight: 600;
-  color: #000;
-  /* Shift the value to the right within the card item */
-  align-self: flex-end;
-  text-align: right;
+  color: var(--text);
+  line-height: 1.1;
 }
 
-
-
-
-.topbar {
-  width: 100%;
-  background: #f5f5f5;
-  padding: 12px 20px;
+/* ----------------------------------- Date range filter ----------------------------------- */
+.date-range-filter {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  gap: 12px;
-}
-
-.price-pill {
-  background: #dcdcdc;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 18px;
-  color: #333;
-  font-weight: 600;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
 }
 
 .user-section {
@@ -118,11 +169,12 @@ body.berry-dark .tab-content {
   .pending-banner {
     position: relative;
     overflow: hidden;
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
     padding: 22px 24px;
-    background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 55%, #a855f7 100%);
+    margin-bottom: var(--space-6);
+    background: linear-gradient(135deg, #08221f 0%, #094e44 55%, #0f7e6f 100%);
     color: #ffffff;
-    box-shadow: 0 10px 30px rgba(2, 8, 23, 0.25);
+    box-shadow: var(--shadow-md);
     &::after {
       content: "";
       position: absolute;

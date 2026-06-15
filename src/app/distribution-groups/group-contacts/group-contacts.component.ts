@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, UntypedFormGroup, Validato
 
 // PrimNG imports
 import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
@@ -28,7 +28,7 @@ import {DatePicker} from 'primeng/datepicker';
     InputTextModule,
     TableModule,
     DialogModule,
-    CalendarModule,
+    DatePickerModule,
     Tooltip,
     ButtonToolbarComponent,
     CardComponent,

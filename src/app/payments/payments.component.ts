@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
@@ -34,7 +34,7 @@ import {CollectionUtil} from '../core/system.utils';
     ButtonModule,
     InputTextModule,
     InputNumberModule,
-    DropdownModule,
+    SelectModule,
     TableModule,
     CardModule,
     TextareaModule,

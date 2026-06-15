@@ -1,62 +1,60 @@
+<div class="login-split">
+  <aside class="login-brand">
+    <div class="brand-top">
+      <span class="brand-mark"><i class="pi pi-send" aria-hidden="true"></i></span>
+      <span class="brand-name">Ecolink <em>MMS</em></span>
+    </div>
 
+    <div class="brand-copy">
+      <h1>Merchant SMS portal</h1>
+      <p>Send and track SMS for your business.</p>
+    </div>
 
-<div class="auth-container">
-  <div class="auth-background">
-    <div class="background-overlay"></div>
-  </div>
+    <div class="brand-foot">© 2026 Ecolink</div>
+  </aside>
 
-  <div class="auth-content">
-    <div class="glass-container">
-      <div class="login-header">
-        <h4 class="login-title">Ecolink</h4>
-        <h1 class="login-title">Merchant Portal</h1>
-        <p class="login-subtitle">Enter your company details to register as Merchant</p>
-      </div>
+  <main class="login-panel">
+    <div class="login-card wide">
+      <span class="brand-mini">
+        <i class="pi pi-send" aria-hidden="true"></i> Ecolink <em>MMS</em>
+      </span>
 
       <!-- Step 1: Registration form -->
-      <form *ngIf="currentStep === 'form'" [formGroup]="registerForm" (ngSubmit)="startRegistration()" class="login-form">
-        <div class="form-grid">
-          <!-- Company Name -->
-          <div class="form-group">
-            <label for="companyName" class="form-label">Company Name</label>
-            <div class="input-container">
-              <i class="pi pi-building"></i>
-              <input
-                pInputText
-                type="text"
-                id="companyName"
-                formControlName="companyName"
-                placeholder="Enter company name"
-              />
-            </div>
-            <div *ngIf="isFieldInvalid('companyName')" class="field-error">
-              <small>{{ getFieldError('companyName') }}</small>
-            </div>
-          </div>
+      @if (currentStep === 'form') {
+        <header class="login-head">
+          <h2>Create your merchant account</h2>
+          <p>Enter your company details to get started.</p>
+        </header>
 
-          <!-- Contact Person -->
-          <div class="form-group">
-            <label for="contactPerson" class="form-label">Contact Person</label>
-            <div class="input-container">
-              <i class="pi pi-user"></i>
-              <input
-                pInputText
-                type="text"
-                id="contactPerson"
-                formControlName="contactPerson"
-                placeholder="Enter contact person name"
-              />
+        <form [formGroup]="registerForm" (ngSubmit)="startRegistration()" class="login-form" novalidate>
+          <div class="auth-grid">
+            <!-- Company Name -->
+            <div class="field">
+              <label for="companyName">Company Name</label>
+              <div class="control" [class.invalid]="isFieldInvalid('companyName')">
+                <i class="pi pi-building lead" aria-hidden="true"></i>
+                <input pInputText type="text" id="companyName" formControlName="companyName" />
+              </div>
+              @if (isFieldInvalid('companyName')) {
+                <small class="field-error">{{ getFieldError('companyName') }}</small>
+              }
             </div>
-            <div *ngIf="isFieldInvalid('contactPerson')" class="field-error">
-              <small>{{ getFieldError('contactPerson') }}</small>
+
+            <!-- Contact Person -->
+            <div class="field">
+              <label for="contactPerson">Contact Person</label>
+              <div class="control" [class.invalid]="isFieldInvalid('contactPerson')">
+                <i class="pi pi-user lead" aria-hidden="true"></i>
+                <input pInputText type="text" id="contactPerson" formControlName="contactPerson" />
+              </div>
+              @if (isFieldInvalid('contactPerson')) {
+                <small class="field-error">{{ getFieldError('contactPerson') }}</small>
+              }
             </div>
-          </div>
 
-
-          <div class="form-group">
-            <label for="industryId" class="form-label">Industry</label>
-            <div class="input-container">
-              <i class="pi pi-briefcase"></i>
+            <!-- Industry -->
+            <div class="field">
+              <label for="industryId">Industry</label>
               <p-select
                 inputId="industryId"
                 [options]="industries"
@@ -65,33 +63,31 @@
                 optionValue="id"
                 [filter]="true"
                 filterBy="industryName"
-                placeholder="Select an Industry"
-                >
+              >
                 <ng-template #selectedItem let-selectedOption>
-                  <div class="flex items-center gap-2">
-                    <span>{{ selectedOption?.industryName }}</span>
-                  </div>
+                  <div class="flex items-center gap-2"><span>{{ selectedOption?.industryName }}</span></div>
                 </ng-template>
                 <ng-template let-industry #item>
-                  <div class="flex items-center gap-2">
-                    <span>{{industry?.industryName }}</span>
-                  </div>
+                  <div class="flex items-center gap-2"><span>{{ industry?.industryName }}</span></div>
                 </ng-template>
               </p-select>
+              @if (isFieldInvalid('industryId')) {
+                <small class="field-error">{{ getFieldError('industryId') }}</small>
+              }
             </div>
-            <div *ngIf="isFieldInvalid('industryId')" class="field-error">
-              <small>{{ getFieldError('industryId') }}</small>
-            </div>
-          </div>
 
-
-          <div class="form-group">
-            <label for="mobileNo" class="form-label">Mobile Number</label>
-            <div class="input-container">
-              <i class="pi pi-phone"></i>
-
-              <p-select [options]="countries" formControlName="countryId" optionLabel="countryName" [filter]="true"
-                        filterBy="countryName"  optionValue="id" placeholder="Select a Country">
+            <!-- Country -->
+            <div class="field">
+              <label for="countryId">Country</label>
+              <p-select
+                inputId="countryId"
+                [options]="countries"
+                formControlName="countryId"
+                optionLabel="countryName"
+                optionValue="id"
+                [filter]="true"
+                filterBy="countryName"
+              >
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
                     <i class="fi" [ngClass]="'fi-' + selectedOption.countryCode"></i>
@@ -101,151 +97,131 @@
                 <ng-template let-country #item>
                   <div class="flex items-center gap-2">
                     <i class="fi" [ngClass]="'fi-' + country.countryCode"></i>
-                    <span style="margin-left: 5px;">{{ country.countryName }}</span>
+                    <span style="margin-left: 5px">{{ country.countryName }}</span>
                   </div>
                 </ng-template>
               </p-select>
-
-              <input
-                pInputText
-                type="tel"
-                id="mobileNo"
-                formControlName="mobileNo"
-                placeholder="Enter mobile number"
-                [attr.minlength]="phoneNumberLength"
-                [attr.maxlength]="phoneNumberLength"
-                [attr.pattern]="mobilePattern"
-                aria-label="mobile number"
-              />
             </div>
-            <div *ngIf="isFieldInvalid('mobileNo')" class="field-error">
-              <small>{{ getFieldError('mobileNo') }}</small>
+
+            <!-- Mobile Number -->
+            <div class="field">
+              <label for="mobileNo">Mobile Number</label>
+              <div class="control" [class.invalid]="isFieldInvalid('mobileNo')">
+                <i class="pi pi-phone lead" aria-hidden="true"></i>
+                <input
+                  pInputText
+                  type="tel"
+                  id="mobileNo"
+                  formControlName="mobileNo"
+                  [attr.minlength]="phoneNumberLength"
+                  [attr.maxlength]="phoneNumberLength"
+                  [attr.pattern]="mobilePattern"
+                  aria-label="mobile number"
+                />
+              </div>
+              @if (isFieldInvalid('mobileNo')) {
+                <small class="field-error">{{ getFieldError('mobileNo') }}</small>
+              }
+            </div>
+
+            <!-- Email Address -->
+            <div class="field">
+              <label for="emailAddress">Email Address</label>
+              <div class="control" [class.invalid]="isFieldInvalid('emailAddress')">
+                <i class="pi pi-envelope lead" aria-hidden="true"></i>
+                <input pInputText type="email" id="emailAddress" formControlName="emailAddress" />
+              </div>
+              @if (isFieldInvalid('emailAddress')) {
+                <small class="field-error">{{ getFieldError('emailAddress') }}</small>
+              }
+            </div>
+
+            <!-- Billing Address -->
+            <div class="field span-2">
+              <label for="billingAddress">Billing Address</label>
+              <div class="control align-top" [class.invalid]="isFieldInvalid('billingAddress')">
+                <i class="pi pi-map-marker lead" aria-hidden="true"></i>
+                <textarea pTextarea id="billingAddress" formControlName="billingAddress" rows="2"></textarea>
+              </div>
+              @if (isFieldInvalid('billingAddress')) {
+                <small class="field-error">{{ getFieldError('billingAddress') }}</small>
+              }
+            </div>
+
+            <!-- Password -->
+            <div class="field span-2">
+              <label for="userPassword">Password</label>
+              <p-password inputId="userPassword" formControlName="userPassword" [feedback]="false" [toggleMask]="true"></p-password>
+              @if (isFieldInvalid('userPassword')) {
+                <small class="field-error">{{ getFieldError('userPassword') }}</small>
+              }
+            </div>
+
+            <!-- Terms -->
+            <div class="span-2">
+              <div class="terms-row">
+                <p-checkbox inputId="agreeToTerms" formControlName="agreeToTerms" [binary]="true"></p-checkbox>
+                <label class="checkbox-label" for="agreeToTerms">
+                  I agree with the
+                  <a href="#" (click)="openTerms($event)">Terms &amp; Conditions</a>
+                </label>
+              </div>
+              @if (isFieldInvalid('agreeToTerms')) {
+                <small class="field-error">{{ getFieldError('agreeToTerms') }}</small>
+              }
+            </div>
+
+            <!-- Submit -->
+            <div class="span-2">
+              <button type="submit" class="submit" style="width: 100%" [disabled]="isLoading">
+                @if (!isLoading) {
+                  <span><i class="pi pi-user-plus" aria-hidden="true"></i> Create account</span>
+                } @else {
+                  <span><i class="pi pi-spinner pi-spin" aria-hidden="true"></i> Creating account</span>
+                }
+              </button>
             </div>
           </div>
 
-          <!-- Email Address -->
-          <div class="form-group">
-            <label for="emailAddress" class="form-label">Email Address</label>
-            <div class="input-container">
-              <i class="pi pi-envelope"></i>
-              <input
-                pInputText
-                type="email"
-                id="emailAddress"
-                formControlName="emailAddress"
-                placeholder="Enter email address"
-              />
-            </div>
-            <div *ngIf="isFieldInvalid('emailAddress')" class="field-error">
-              <small>{{ getFieldError('emailAddress') }}</small>
-            </div>
-          </div>
-
-          <!-- Billing Address -->
-          <div class="form-group full-width">
-            <label for="billingAddress" class="form-label">Billing Address</label>
-            <div class="input-container">
-              <i class="pi pi-map-marker"></i>
-              <textarea pTextarea
-                id="billingAddress"
-                formControlName="billingAddress"
-                rows="3"
-                placeholder="Enter billing address"
-                style="flex: 1 1 auto; width: 100%"
-              ></textarea>
-            </div>
-            <div *ngIf="isFieldInvalid('billingAddress')" class="field-error">
-              <small>{{ getFieldError('billingAddress') }}</small>
-            </div>
-          </div>
-
-          <!-- Password -->
-          <div class="form-group full-width">
-            <label for="userPassword" class="form-label">Password</label>
-            <div class="input-container">
-              <i class="pi pi-lock"></i>
-              <p-password
-                inputId="userPassword"
-                formControlName="userPassword"
-                [feedback]="false"
-                placeholder="Enter password"
-              ></p-password>
-            </div>
-            <div *ngIf="isFieldInvalid('userPassword')" class="field-error">
-              <small>{{ getFieldError('userPassword') }}</small>
-            </div>
-          </div>
-
-          <!-- Terms and Conditions -->
-          <div class="form-group full-width">
-            <div class="checkbox-container">
-              <p-checkbox
-                inputId="agreeToTerms"
-                formControlName="agreeToTerms"
-                [binary]="true"
-              ></p-checkbox>
-              <label class="checkbox-label" for="agreeToTerms">
-                I agree with
-                <a href="#" (click)="openTerms($event)">Read / View Terms & Conditions</a>
-              </label>
-            </div>
-            <div *ngIf="isFieldInvalid('agreeToTerms')" class="field-error">
-              <small>{{ getFieldError('agreeToTerms') }}</small>
-            </div>
-
-          </div>
-
-          <!-- Submit button -->
-          <div class="full-width">
-            <button
-              type="submit"
-              class="login-button"
-              [class.loading]="isLoading"
-              [disabled]="isLoading"
-            >
-              <span *ngIf="!isLoading" class="button-text">
-                <i class="pi pi-user-plus"></i>
-                Sign Up
-              </span>
-              <span *ngIf="isLoading" class="loading-spinner">
-                <i class="pi pi-spinner pi-spin"></i>
-                Signing up...
-              </span>
-            </button>
-          </div>
-
-          <!-- Additional options -->
-          <div class="login-footer full-width">
-            <a routerLink="/login" class="forgot-password">Already have an account? Sign In</a>
-          </div>
-        </div>
-      </form>
+          <p class="signup">
+            Already have an account?
+            <a routerLink="/login" class="link">Sign in</a>
+          </p>
+        </form>
+      }
 
       <!-- Step 2: Email PIN verification -->
-      <div *ngIf="currentStep === 'verify'" id="verify-panel" class="login-form" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background: rgba(0, 0, 0, 0.03); padding: 16px; border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.12);">
-        <div class="form-group">
-          <h4 >Email Verification</h4>
-          <p class="login-subtitle">
-            A verification PIN have been sent to your email {{ verifyEmail }}. Enter it to proceed with registration.
-          </p>
-        </div>
+      @if (currentStep === 'verify') {
+        <header class="login-head">
+          <h2>Verify your email</h2>
+          <p>Enter the PIN we sent to {{ verifyEmail }} to finish setting up your account.</p>
+        </header>
 
-        <div class="form-group">
-          <label for="pin" class="form-label">Verification PIN</label>
-          <div class="input-container">
-            <i class="pi pi-lock"></i>
-            <input pInputText id="pin" type="text" [(ngModel)]="pin" name="pin" placeholder="Enter PIN" />
+        <div class="verify-panel">
+          <div class="field" style="text-align: left">
+            <label for="pin">Verification PIN</label>
+            <div class="control">
+              <i class="pi pi-shield lead" aria-hidden="true"></i>
+              <input id="pin" type="text" [(ngModel)]="pin" name="pin" />
+            </div>
           </div>
-        </div>
 
-        <div *ngIf="verifyMessage" class="field-error" style="margin-top:8px;">
-          <small>{{ verifyMessage }}</small>
-        </div>
+          @if (verifyMessage) {
+            <div class="form-alert" role="alert">
+              <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+              <span>{{ verifyMessage }}</span>
+            </div>
+          }
 
-        <button pButton class="btn-primary w-full" (click)="proceedVerification()" [disabled]="isLoading">
-          {{ isLoading ? 'Please wait...' : 'Proceed' }}
-        </button>
-      </div>
+          <button type="button" class="submit" (click)="proceedVerification()" [disabled]="isLoading">
+            @if (!isLoading) {
+              <span><i class="pi pi-check" aria-hidden="true"></i> Proceed</span>
+            } @else {
+              <span><i class="pi pi-spinner pi-spin" aria-hidden="true"></i> Please wait</span>
+            }
+          </button>
+        </div>
+      }
 
       <!-- Terms & Conditions Dialog -->
       <p-dialog
@@ -262,5 +238,5 @@
         </div>
       </p-dialog>
     </div>
-  </div>
+  </main>
 </div>

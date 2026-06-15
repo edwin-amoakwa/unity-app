@@ -1,18 +1,23 @@
 // angular import
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {Router, RouterModule} from '@angular/router';
-import {UntypedFormBuilder, Validators, ReactiveFormsModule, FormGroup} from '@angular/forms';
-import {AuthService, LoginPayload} from '../../auth.service';
-import {UserSession} from '../../core/user-session';
-import {CommonModule} from '@angular/common';
-import {UnityConfig} from '../../app-config';
-import {MessageBox} from '../../message-helper';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import {
+  UntypedFormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  FormGroup,
+} from '@angular/forms';
+import { AuthService, LoginPayload } from '../../auth.service';
+import { UserSession } from '../../core/user-session';
+
+import { UnityConfig } from '../../app-config';
+import { MessageBox } from '../../message-helper';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrls: []
+  styleUrls: [],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
@@ -22,12 +27,19 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
   private originalTheme: string | null = null;
 
   constructor() {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
-      userPassword: ['', [Validators.required, Validators.minLength(UnityConfig.PasswordMinLength)]]
+      userPassword: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(UnityConfig.PasswordMinLength),
+        ],
+      ],
     });
   }
 
@@ -45,32 +57,29 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
+    this.isLoading = true;
+    this.errorMessage = '';
 
-      this.isLoading = true;
-      this.errorMessage = '';
+    const payload: LoginPayload = this.loginForm.value;
 
-      const payload: LoginPayload = this.loginForm.value;
-
-      try {
-        const response = await this.authService.login(payload);
-        this.isLoading = false;
-        // Handle successful login - could store token, redirect, etc.
-        console.log('Login successful:', response);
-        if(response.success)
-        {
-          UserSession.login(response.data);
-        }
-        this.router.navigate(['/dashboard']); // Adjust route as needed
-      } catch (error: any) {
-        this.isLoading = false;
-        this.errorMessage = error.message || 'Login failed. Please try again.';
-        console.error('Login error:', error);
+    try {
+      const response = await this.authService.login(payload);
+      this.isLoading = false;
+      // Handle successful login - could store token, redirect, etc.
+      console.log('Login successful:', response);
+      if (response.success) {
+        UserSession.login(response.data);
       }
-
+      this.router.navigate(['/dashboard']); // Adjust route as needed
+    } catch (error: any) {
+      this.isLoading = false;
+      this.errorMessage = error.message || 'Login failed. Please try again.';
+      console.error('Login error:', error);
+    }
   }
 
   private markFormGroupTouched() {
-    Object.keys(this.loginForm.controls).forEach(key => {
+    Object.keys(this.loginForm.controls).forEach((key) => {
       const control = this.loginForm.get(key);
       control?.markAsTouched();
     });

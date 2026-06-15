@@ -1,14 +1,25 @@
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
 
-import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 // PrimNG imports
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { SelectModule } from 'primeng/select';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 import { ApplicationType } from '../../unity.model';
 
@@ -16,16 +27,15 @@ import { ApplicationType } from '../../unity.model';
   selector: 'app-application-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
     InputNumberModule,
-    DropdownModule,
-    InputSwitchModule
+    SelectModule,
+    ToggleSwitchModule,
   ],
   templateUrl: './application-form.component.html',
-  styleUrls: ['./application-form.component.scss']
+  styleUrls: ['./application-form.component.scss'],
 })
 export class ApplicationFormComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -35,9 +45,7 @@ export class ApplicationFormComponent implements OnInit {
   @Output() cancelled = new EventEmitter<void>();
 
   applicationForm!: FormGroup;
-  applicationTypes = [
-    { label: 'SMS', value: ApplicationType.SMS },
-  ];
+  applicationTypes = [{ label: 'SMS', value: ApplicationType.SMS }];
 
   // When true, disables the submit button until the save completes
   isSubmitting = false;
@@ -56,25 +64,39 @@ export class ApplicationFormComponent implements OnInit {
 
   private initializeForm() {
     this.applicationForm = this.fb.group({
-      id: "",
-      appName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      id: '',
+      appName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+        ],
+      ],
       applicationType: [null, [Validators.required]],
       callBackUrl: [''],
       allowedIpAddresses: [''],
-      enableIpRestriction: [false]
+      enableIpRestriction: [false],
     });
 
     // Watch for application type changes to update type name
-    this.applicationForm.get('applicationType')?.valueChanges.subscribe(type => {
-      if (type) {
-        const selectedType = this.applicationTypes.find(t => t.value === type);
-        if (selectedType) {
-          this.applicationForm.patchValue({
-            applicationTypeName: selectedType.label
-          }, { emitEvent: false });
+    this.applicationForm
+      .get('applicationType')
+      ?.valueChanges.subscribe((type) => {
+        if (type) {
+          const selectedType = this.applicationTypes.find(
+            (t) => t.value === type,
+          );
+          if (selectedType) {
+            this.applicationForm.patchValue(
+              {
+                applicationTypeName: selectedType.label,
+              },
+              { emitEvent: false },
+            );
+          }
         }
-      }
-    });
+      });
   }
 
   private populateForm() {
@@ -92,12 +114,11 @@ export class ApplicationFormComponent implements OnInit {
         this.applicationSubmitted.emit(formValue);
       } else {
         // Mark all fields as touched to show validation errors
-        Object.keys(this.applicationForm.controls).forEach(key => {
+        Object.keys(this.applicationForm.controls).forEach((key) => {
           this.applicationForm.get(key)?.markAsTouched();
         });
       }
-    }
-    finally {
+    } finally {
       this.isSubmitting = false;
     }
   }
@@ -105,8 +126,6 @@ export class ApplicationFormComponent implements OnInit {
   onCancel() {
     this.cancelled.emit();
   }
-
-
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.applicationForm.get(fieldName);
@@ -142,7 +161,7 @@ export class ApplicationFormComponent implements OnInit {
       merchantId: 'Merchant ID',
       callBackUrl: 'Callback URL',
       allowedIpAddresses: 'Allowed IP Addresses',
-      enableIpRestriction: 'Enable IP Restriction'
+      enableIpRestriction: 'Enable IP Restriction',
     };
     return labels[fieldName] || fieldName;
   }

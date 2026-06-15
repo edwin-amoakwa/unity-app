@@ -41,7 +41,7 @@ export class ConfigService {
 
   async getPaymentChannels(): Promise<ApiResponse<any[]>> {
     return await firstValueFrom(
-      this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/data/payment-channels`)
+      this.http.get<ApiResponse<any[]>>(`${environment.baseUrl}/merchant/data/payment-channels`)
     );
   }
 }

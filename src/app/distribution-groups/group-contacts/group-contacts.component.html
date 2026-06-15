@@ -4,17 +4,20 @@
       label="Add Contact"
       icon="pi pi-plus"
       (onClick)="openNewContactDialog()"
-      styleClass="p-button-primary">
+      styleClass="p-button-primary"
+    >
     </p-button>
 
-    <p-button
-      *ngIf="selectedContacts?.length"
-      [label]="'Delete (' + selectedContacts.length + ') '"
-      icon="pi pi-trash"
-      (onClick)="deleteSelectedContacts()"
-      styleClass="p-button-danger"
-      pTooltip="Delete selected contacts">
-    </p-button>
+    @if (selectedContacts?.length) {
+      <p-button
+        [label]="'Delete (' + selectedContacts.length + ') '"
+        icon="pi pi-trash"
+        (onClick)="deleteSelectedContacts()"
+        styleClass="p-button-danger"
+        pTooltip="Delete selected contacts"
+      >
+      </p-button>
+    }
   </div>
 </button-toolbar>
 
@@ -25,10 +28,11 @@
     styleClass="p-datatable-sm"
     [paginator]="true"
     [rows]="10"
-    [rowsPerPageOptions]="[10,25,50,100]"
+    [rowsPerPageOptions]="[10, 25, 50, 100]"
     selectionMode="multiple"
     dataKey="id"
-    [(selection)]="selectedContacts">
+    [(selection)]="selectedContacts"
+  >
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 3rem">
@@ -51,20 +55,22 @@
         <td>{{ contact.firstName }}</td>
         <td>{{ contact.surname }}</td>
         <td>{{ contact.otherNames }}</td>
-        <td>{{ contact.birthDate | date:'shortDate' }}</td>
+        <td>{{ contact.birthDate | date: "shortDate" }}</td>
         <td>
           <div class="flex gap-1">
             <p-button
               icon="pi pi-pencil"
               (onClick)="editContact(contact)"
               styleClass="p-button-warning p-button-sm"
-              pTooltip="Edit">
+              pTooltip="Edit"
+            >
             </p-button>
             <p-button
               icon="pi pi-trash"
               (onClick)="deleteContact(contact)"
               styleClass="p-button-danger p-button-sm"
-              pTooltip="Delete">
+              pTooltip="Delete"
+            >
             </p-button>
           </div>
         </td>
@@ -78,15 +84,21 @@
   </p-table>
 </div>
 
-<br/>
-<br/>
+<br />
+<br />
 
-<app-card title="Upload Contacts" subtitle="upload contacts from a spreadsheet(xls) file. ">
+<app-card
+  title="Upload Contacts"
+  subtitle="upload contacts from a spreadsheet(xls) file. "
+>
   <div class="row">
     <div class="col-12">
       <div class="row">
         <p>
-          <i style="font-size:12px;">(Column Headers: First Name,Other Name(s),Surname,Birth Date,Telephone)</i>
+          <i style="font-size: 12px"
+            >(Column Headers: First Name,Other Name(s),Surname,Birth
+            Date,Telephone)</i
+          >
         </p>
       </div>
     </div>
@@ -94,20 +106,26 @@
     <div class="col-12">
       <div class="row">
         <p>
-        <a
-          pButton
-          [href]="downloadLink"
-          download="group-contact-template.xls"
-          icon="pi pi-download"
-          label="Download Contact Upload Template (Excel)"
-          class="p-button-link"
-          title="Download the Excel template for uploading contacts"
-        ></a>
+          <a
+            pButton
+            [href]="downloadLink"
+            download="group-contact-template.xls"
+            icon="pi pi-download"
+            label="Download Contact Upload Template (Excel)"
+            class="p-button-link"
+            title="Download the Excel template for uploading contacts"
+          ></a>
         </p>
       </div>
       <div class="row" [formGroup]="uploadForm">
         <div class="col-auto">
-          <input #fileInput (change)="onFileChange($event)" class="form-control" formControlName="selectedFile" type="file">
+          <input
+            #fileInput
+            (change)="onFileChange($event)"
+            class="form-control"
+            formControlName="selectedFile"
+            type="file"
+          />
         </div>
         <div class="col-auto">
           <button
@@ -116,17 +134,24 @@
             (click)="upload()"
             [disabled]="loading"
             [loading]="loading"
-          >upload</button>
+          >
+            upload
+          </button>
         </div>
         <div class="col-auto d-none">
-          <button type="button" pButton class="p-button-secondary" (click)="clearUploadForm()">Clear</button>
+          <button
+            type="button"
+            pButton
+            class="p-button-secondary"
+            (click)="clearUploadForm()"
+          >
+            Clear
+          </button>
         </div>
       </div>
     </div>
   </div>
 </app-card>
-
-
 
 <!-- Contact Form Dialog -->
 <p-dialog
@@ -137,10 +162,10 @@
   [draggable]="false"
   [resizable]="false"
   styleClass="p-fluid"
-  [style]="{width: '60vw'}"
-  [breakpoints]="{'960px': '70vw', '640px': '95vw'}"
-  (onHide)="closeContactDialog()">
-
+  [style]="{ width: '60vw' }"
+  [breakpoints]="{ '960px': '70vw', '640px': '95vw' }"
+  (onHide)="closeContactDialog()"
+>
   <form [formGroup]="contactForm" (ngSubmit)="saveContact()">
     <div class="container-fluid">
       <!-- Mobile Number -->
@@ -154,10 +179,13 @@
             id="mobileNo"
             formControlName="mobileNo"
             [class.ng-invalid]="isContactFieldInvalid('mobileNo')"
-            class="form-control" />
-          <small class="p-error" *ngIf="isContactFieldInvalid('mobileNo')">
-            {{ getContactFieldError('mobileNo') }}
-          </small>
+            class="form-control"
+          />
+          @if (isContactFieldInvalid("mobileNo")) {
+            <small class="p-error">
+              {{ getContactFieldError("mobileNo") }}
+            </small>
+          }
         </div>
       </div>
 
@@ -172,10 +200,13 @@
             id="firstName"
             formControlName="firstName"
             [class.ng-invalid]="isContactFieldInvalid('firstName')"
-            class="form-control" />
-          <small class="p-error" *ngIf="isContactFieldInvalid('firstName')">
-            {{ getContactFieldError('firstName') }}
-          </small>
+            class="form-control"
+          />
+          @if (isContactFieldInvalid("firstName")) {
+            <small class="p-error">
+              {{ getContactFieldError("firstName") }}
+            </small>
+          }
         </div>
       </div>
 
@@ -190,10 +221,13 @@
             id="surname"
             formControlName="surname"
             [class.ng-invalid]="isContactFieldInvalid('surname')"
-            class="form-control" />
-          <small class="p-error" *ngIf="isContactFieldInvalid('surname')">
-            {{ getContactFieldError('surname') }}
-          </small>
+            class="form-control"
+          />
+          @if (isContactFieldInvalid("surname")) {
+            <small class="p-error">
+              {{ getContactFieldError("surname") }}
+            </small>
+          }
         </div>
       </div>
 
@@ -207,7 +241,8 @@
             pInputText
             id="otherNames"
             formControlName="otherNames"
-            class="form-control" />
+            class="form-control"
+          />
         </div>
       </div>
 
@@ -223,7 +258,8 @@
             [showIcon]="true"
             appendTo="body"
             dateFormat="dd/mm/yy"
-            class="w-100">
+            class="w-100"
+          >
           </p-datePicker>
         </div>
       </div>
@@ -234,14 +270,16 @@
         label="Cancel"
         icon="pi pi-times"
         (onClick)="closeContactDialog()"
-        styleClass="p-button-text">
+        styleClass="p-button-text"
+      >
       </p-button>
       <p-button
         label="{{ editingContact ? 'Update' : 'Save' }}"
         icon="pi pi-check"
         type="submit"
         [loading]="savingContact"
-        styleClass="p-button-primary">
+        styleClass="p-button-primary"
+      >
       </p-button>
     </div>
   </form>

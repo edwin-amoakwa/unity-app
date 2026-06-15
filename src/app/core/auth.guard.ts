@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const sessionId = localStorage.getItem(UserSession.SessionId);
+    const sessionId = UserSession.getToken();
 
     if (sessionId) {
       // When logged in, verify permission for the route

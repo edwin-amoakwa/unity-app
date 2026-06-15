@@ -54,6 +54,11 @@ this.chartOptions = {}
         toolbar: {
           show: true
         },
+        // Disabled to avoid the ApexCharts runMaskReveal race (null node)
+        // when the chart re-renders after its async data load.
+        animations: {
+          enabled: false
+        },
         background: 'transparent'
       },
       colors: ['#1E88E5', '#D32F2F', '#388E3C', '#FBC02D'],

@@ -1,33 +1,30 @@
 /* Shared styles for common elements across app pages */
 
 .page-title {
-  margin: 0 0 1rem 0;
-  padding-bottom: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 1.2;
-  border-bottom: 1px solid var(--border);
+  margin: 0 0 var(--space-5) 0;
+  padding-bottom: 0;
+  font-size: 1.5rem;       /* 24px — H1 */
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
   color: var(--text);
-}
-
-/* Slightly larger on wider screens */
-@media (min-width: 768px) {
-  .page-title {
-    font-size: 1.75rem;
-  }
 }
 
 /* Muted helper text under titles, if needed */
 .page-subtitle {
-  margin-top: 0.25rem;
+  margin-top: calc(-1 * var(--space-3));
+  margin-bottom: var(--space-5);
   color: var(--muted);
+  font-size: 0.875rem;
 }
 
 
 
 
 .p-dialog {
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .p-dialog .p-dialog-header {

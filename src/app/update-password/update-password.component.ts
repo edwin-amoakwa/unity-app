@@ -1,6 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 
 // PrimNG imports
@@ -17,16 +22,15 @@ import { NotificationService } from '../core/notification.service';
   selector: 'app-update-password',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
     CardModule,
-    ToastModule
+    ToastModule,
   ],
   providers: [MessageService],
   templateUrl: './update-password.component.html',
-  styleUrl: './update-password.component.scss'
+  styleUrl: './update-password.component.scss',
 })
 export class UpdatePasswordComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -46,13 +50,13 @@ export class UpdatePasswordComponent implements OnInit {
     this.updatePasswordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
     });
   }
 
   async onSubmit() {
     if (this.updatePasswordForm.invalid) {
-      Object.keys(this.updatePasswordForm.controls).forEach(key => {
+      Object.keys(this.updatePasswordForm.controls).forEach((key) => {
         this.updatePasswordForm.get(key)?.markAsTouched();
       });
       return;
@@ -62,20 +66,24 @@ export class UpdatePasswordComponent implements OnInit {
     const { currentPassword, newPassword, confirmPassword } = formValue;
 
     if (newPassword !== confirmPassword) {
-      this.notificationService.error('New password and confirm password do not match');
+      this.notificationService.error(
+        'New password and confirm password do not match',
+      );
       return;
     }
 
     try {
       this.loading = true;
-      const response = await this.userService.updatePasswordWithCurrent(formValue);
+      const response =
+        await this.userService.updatePasswordWithCurrent(formValue);
 
       if (response.success) {
-        this.notificationService.success('Password updated. You will be logged out, so you can login with your new password.');
+        this.notificationService.success(
+          'Password updated. You will be logged out, so you can login with your new password.',
+        );
         this.updatePasswordForm.reset();
         localStorage.clear();
         this.router.navigate(['/login']);
-
       }
     } catch (error: any) {
       this.notificationService.error('Failed to update password');
@@ -104,9 +112,9 @@ export class UpdatePasswordComponent implements OnInit {
 
   getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
-      'currentPassword': 'Current Password',
-      'newPassword': 'New Password',
-      'confirmPassword': 'Confirm Password'
+      currentPassword: 'Current Password',
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm Password',
     };
     return labels[fieldName] || fieldName;
   }

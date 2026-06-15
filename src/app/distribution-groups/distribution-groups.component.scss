@@ -48,12 +48,12 @@
 
   .p-button {
     &.p-button-info {
-      background-color: #3b82f6;
-      border-color: #3b82f6;
+      background-color: var(--primary);
+      border-color: var(--primary);
 
       &:hover {
-        background-color: #2563eb;
-        border-color: #2563eb;
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
       }
     }
   }

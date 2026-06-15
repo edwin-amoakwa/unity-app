@@ -1,13 +1,18 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 // PrimNG imports
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
@@ -19,7 +24,7 @@ import { StaticDataService } from '../static-data.service';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { UserService } from './user.service';
-import {Password} from 'primeng/password';
+import { Password } from 'primeng/password';
 
 // Permissions model interfaces
 interface PermissionAction {
@@ -39,12 +44,11 @@ interface PermissionPage {
   selector: 'app-users',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     ButtonModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     TableModule,
     CardModule,
     DialogModule,
@@ -52,14 +56,13 @@ interface PermissionPage {
     ToggleSwitchModule,
     ButtonToolbarComponent,
     CardComponent,
-    Password
+    Password,
   ],
   providers: [MessageService],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.scss'
+  styleUrl: './users.component.scss',
 })
-export class UsersComponent implements OnInit
-{
+export class UsersComponent implements OnInit {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private messageService = inject(MessageService);
@@ -94,8 +97,8 @@ export class UsersComponent implements OnInit
       pageUrl: '/dashboard',
       actions: [
         { name: 'view', enabled: true },
-        { name: 'edit', enabled: false }
-      ]
+        { name: 'edit', enabled: false },
+      ],
     },
     {
       enabled: false,
@@ -104,9 +107,9 @@ export class UsersComponent implements OnInit
       pageUrl: '/settings',
       actions: [
         { name: 'modify', enabled: false },
-        { name: 'delete', enabled: false }
-      ]
-    }
+        { name: 'delete', enabled: false },
+      ],
+    },
   ];
 
   // Dropdown options
@@ -125,15 +128,14 @@ export class UsersComponent implements OnInit
       emailAddress: ['', [Validators.required, Validators.email]],
       phoneNo: ['', [Validators.required]],
       accountCategory: ['', [Validators.required]],
-      accountStatus: ['', [Validators.required]]
+      accountStatus: ['', [Validators.required]],
     });
 
     this.passwordForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
     });
   }
-
 
   async loadUsers() {
     try {
@@ -143,7 +145,9 @@ export class UsersComponent implements OnInit
       if (response.success) {
         this.users = response.data;
       } else {
-        this.notificationService.error(response.message|| 'Failed to load users');
+        this.notificationService.error(
+          response.message || 'Failed to load users',
+        );
         // this.messageService.add({
         //   severity: 'error',
         //   summary: 'Error',
@@ -151,7 +155,7 @@ export class UsersComponent implements OnInit
         // });
       }
     } catch (error: any) {
-      this.notificationService.error( 'Failed to load users');
+      this.notificationService.error('Failed to load users');
       // this.messageService.add({
       //   severity: 'error',
       //   summary: 'Error',
@@ -171,20 +175,29 @@ export class UsersComponent implements OnInit
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: this.editingUser ? 'User updated successfully' : 'User created successfully'
+          detail: this.editingUser
+            ? 'User updated successfully'
+            : 'User created successfully',
         });
       } else {
-        this.notificationService.error(response.message || (this.editingUser ? 'Failed to update user' : 'Failed to create user'));
+        this.notificationService.error(
+          response.message ||
+            (this.editingUser
+              ? 'Failed to update user'
+              : 'Failed to create user'),
+        );
       }
     } catch (error: any) {
-      const errorMessage = this.editingUser ? 'Failed to update user' : 'Failed to create user';
+      const errorMessage = this.editingUser
+        ? 'Failed to update user'
+        : 'Failed to create user';
       this.notificationService.error(errorMessage);
     }
   }
 
   async onSubmit() {
     if (this.userForm.invalid) {
-      Object.keys(this.userForm.controls).forEach(key => {
+      Object.keys(this.userForm.controls).forEach((key) => {
         this.userForm.get(key)?.markAsTouched();
       });
       return;
@@ -211,7 +224,9 @@ export class UsersComponent implements OnInit
   }
 
   async deleteUser(user: any) {
-    if (confirm(`Are you sure you want to delete user "${user.accountName}"?`)) {
+    if (
+      confirm(`Are you sure you want to delete user "${user.accountName}"?`)
+    ) {
       try {
         this.loading = true;
         const response = await this.userService.deleteUser(user.id!);
@@ -220,11 +235,13 @@ export class UsersComponent implements OnInit
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: 'User deleted successfully'
+            detail: 'User deleted successfully',
           });
           await this.loadUsers();
         } else {
-          this.notificationService.error(response.message || 'Failed to delete user');
+          this.notificationService.error(
+            response.message || 'Failed to delete user',
+          );
         }
       } catch (error: any) {
         this.notificationService.error('Failed to delete user');
@@ -269,14 +286,14 @@ export class UsersComponent implements OnInit
 
   getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
-      'accountName': 'Account Name',
-      'emailAddress': 'Email Address',
-      'phoneNo': 'Phone Number',
-      'accountCategory': 'Account Category',
-      'merchantName': 'Merchant Name',
-      'merchantId': 'Merchant ID',
-      'accountStatus': 'Account Status',
-      'userCategory': 'User Category'
+      accountName: 'Account Name',
+      emailAddress: 'Email Address',
+      phoneNo: 'Phone Number',
+      accountCategory: 'Account Category',
+      merchantName: 'Merchant Name',
+      merchantId: 'Merchant ID',
+      accountStatus: 'Account Status',
+      userCategory: 'User Category',
     };
     return labels[fieldName] || fieldName;
   }
@@ -301,7 +318,7 @@ export class UsersComponent implements OnInit
   async updatePassword() {
     console.log(this.passwordForm.invalid);
     if (this.passwordForm.invalid) {
-      Object.keys(this.passwordForm.controls).forEach(key => {
+      Object.keys(this.passwordForm.controls).forEach((key) => {
         this.passwordForm.get(key)?.markAsTouched();
       });
       return;
@@ -315,7 +332,7 @@ export class UsersComponent implements OnInit
       return;
     }
 
-    const payload:any = {};
+    const payload: any = {};
     payload.userId = this.currentUser.id;
     payload.newPassword = newPassword;
     payload.confirmPassword = confirmPassword;
@@ -329,10 +346,12 @@ export class UsersComponent implements OnInit
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: 'Password updated successfully'
+          detail: 'Password updated successfully',
         });
       } else {
-        this.notificationService.error(response.message || 'Failed to update password');
+        this.notificationService.error(
+          response.message || 'Failed to update password',
+        );
       }
     } catch (error: any) {
       this.notificationService.error('Failed to update password');
@@ -361,8 +380,8 @@ export class UsersComponent implements OnInit
 
   getPasswordFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
-      'newPassword': 'New Password',
-      'confirmPassword': 'Confirm Password'
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm Password',
     };
     return labels[fieldName] || fieldName;
   }
@@ -374,7 +393,9 @@ export class UsersComponent implements OnInit
     this.permLoading = true;
     this.permError = null;
     try {
-      const resp = await this.userService.getUserPermissions(String(user.id ?? user.userId ?? ''));
+      const resp = await this.userService.getUserPermissions(
+        String(user.id ?? user.userId ?? ''),
+      );
       if (resp?.success) {
         const data = (resp.data || []) as any[];
         // Normalize to PermissionPage[] shape if backend differs
@@ -385,17 +406,25 @@ export class UsersComponent implements OnInit
           pageUrl: p.pageUrl ?? p.url ?? '',
           actions: (p.actions || []).map((a: any) => ({
             name: a.name ?? a.action ?? '',
-            enabled: !!a.enabled
-          }))
+            enabled: !!a.enabled,
+          })),
         }));
       } else {
-        this.notificationService.error(resp?.message || 'Failed to load permissions');
+        this.notificationService.error(
+          resp?.message || 'Failed to load permissions',
+        );
         // Fallback to defaults
-        this.permissionsData = this.defaultPermissions.map(p => ({...p, actions: p.actions.map(a => ({...a}))}));
+        this.permissionsData = this.defaultPermissions.map((p) => ({
+          ...p,
+          actions: p.actions.map((a) => ({ ...a })),
+        }));
       }
     } catch (e) {
       this.notificationService.error('Failed to load permissions');
-      this.permissionsData = this.defaultPermissions.map(p => ({...p, actions: p.actions.map(a => ({...a}))}));
+      this.permissionsData = this.defaultPermissions.map((p) => ({
+        ...p,
+        actions: p.actions.map((a) => ({ ...a })),
+      }));
     } finally {
       this.permLoading = false;
     }
@@ -405,13 +434,22 @@ export class UsersComponent implements OnInit
     if (!this.permRolesUser) return;
     try {
       this.permSaveLoading = true;
-      console.log("this.permissionsData == ",this.permissionsData);
-      const resp = await this.userService.saveUserPermissions(String(this.permRolesUser.id ?? this.permRolesUser.userId ?? ''), this.permissionsData);
+      console.log('this.permissionsData == ', this.permissionsData);
+      const resp = await this.userService.saveUserPermissions(
+        String(this.permRolesUser.id ?? this.permRolesUser.userId ?? ''),
+        this.permissionsData,
+      );
       if (resp?.success) {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Permissions saved' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Permissions saved',
+        });
         this.closePermRolesDialog();
       } else {
-        this.notificationService.error(resp?.message || 'Failed to save permissions');
+        this.notificationService.error(
+          resp?.message || 'Failed to save permissions',
+        );
       }
     } catch (e) {
       this.notificationService.error('Failed to save permissions');

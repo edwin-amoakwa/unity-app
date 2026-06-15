@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationSettingsService } from './notification-settings.service';
 import { CoreModule } from '../core/core.module';
@@ -11,7 +11,7 @@ import { CoreModule } from '../core/core.module';
 @Component({
   selector: 'app-notification-settings',
   standalone: true,
-  imports: [CoreModule, TableModule, TagModule, InputSwitchModule],
+  imports: [CoreModule, TableModule, TagModule, ToggleSwitchModule],
   templateUrl: './notification-settings.component.html',
   styleUrls: ['./notification-settings.component.scss']
 })

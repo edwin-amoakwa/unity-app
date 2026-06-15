@@ -1,80 +1,100 @@
+<div class="login-split">
+  <aside class="login-brand">
+    <div class="brand-top">
+      <span class="brand-mark"><i class="pi pi-send" aria-hidden="true"></i></span>
+      <span class="brand-name">Ecolink <em>MMS</em></span>
+    </div>
 
-<div class="auth-container">
-  <div class="auth-background">
-    <!-- Background gradient overlay -->
-    <div class="background-overlay"></div>
-  </div>
+    <div class="brand-copy">
+      <h1>Merchant SMS portal</h1>
+      <p>Send and track SMS for your business.</p>
+    </div>
 
-  <div class="auth-content">
-    <div class="glass-container narrow">
-      <div class="login-header">
-        <h4 class="login-title">Ecolink </h4>
-        <h1 class="login-title"> Merchant Portal</h1>
-        <p class="login-subtitle">Please sign in to your account</p>
-      </div>
+    <div class="brand-foot">© 2026 Ecolink</div>
+  </aside>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" id="loginForm" style="display: flex; flex-direction: column; align-items: center;">
+  <main class="login-panel">
+    <div class="login-card">
+      <span class="brand-mini">
+        <i class="pi pi-send" aria-hidden="true"></i> Ecolink <em>MMS</em>
+      </span>
 
-        <!-- Username field (label on top) -->
-        <div class="form-group">
-          <label for="username" class="form-label">Username</label>
-          <div class="input-container">
-            <i class="pi pi-user"></i>
+      <header class="login-head">
+        <h2>Welcome back</h2>
+        <p>Sign in to your merchant portal.</p>
+      </header>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" novalidate>
+        @if (errorMessage) {
+          <div class="form-alert" role="alert">
+            <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        <div class="field">
+          <label for="username">Username</label>
+          <div
+            class="control"
+            [class.invalid]="username?.invalid && username?.touched"
+          >
+            <i class="pi pi-user lead" aria-hidden="true"></i>
             <input
-              type="text"
               id="username"
+              type="text"
               formControlName="username"
-              class="form-input"
-              [class.error]="username?.invalid && username?.touched"
+              autocomplete="username"
             />
           </div>
-<!--          <div *ngIf="username?.invalid && username?.touched" class="field-error">-->
-<!--            <small *ngIf="username?.errors?.['required']">Username is required</small>-->
-<!--          </div>-->
+          @if (username?.invalid && username?.touched) {
+            <small class="field-error">Username is required.</small>
+          }
         </div>
 
-        <div class="form-group">
-          <label for="userPassword" class="form-label">Password</label>
-          <div class="input-container">
-            <i class="pi pi-lock"></i>
+        <div class="field">
+          <label for="userPassword">Password</label>
+          <div
+            class="control"
+            [class.invalid]="userPassword?.invalid && userPassword?.touched"
+          >
+            <i class="pi pi-lock lead" aria-hidden="true"></i>
             <input
-              type="password"
               id="userPassword"
+              [type]="showPassword ? 'text' : 'password'"
               formControlName="userPassword"
-              class="form-input"
-              [class.error]="userPassword?.invalid && userPassword?.touched"
+              autocomplete="current-password"
             />
+            <button
+              type="button"
+              class="toggle"
+              (click)="showPassword = !showPassword"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <i class="pi" [class.pi-eye]="!showPassword" [class.pi-eye-slash]="showPassword" aria-hidden="true"></i>
+            </button>
           </div>
-<!--          <div *ngIf="userPassword?.invalid && userPassword?.touched" class="field-error">-->
-<!--            <small *ngIf="userPassword?.errors?.['required']">Password is required</small>-->
-<!--            <small *ngIf="userPassword?.errors?.['minlength']">Password must be at least 6 characters</small>-->
-<!--          </div>-->
+          @if (userPassword?.invalid && userPassword?.touched) {
+            <small class="field-error">Password is required (min 8 characters).</small>
+          }
         </div>
 
+        <div class="field-row">
+          <a routerLink="/password-reset" class="link">Forgot your password?</a>
+        </div>
 
-        <button
-          type="submit"
-          class="login-button"
-          [class.loading]="isLoading"
-          [disabled]="isLoading"
-        >
-          <span *ngIf="!isLoading" class="button-text">
-            <i class="pi pi-sign-in"></i>
-            Sign In
-          </span>
-          <span *ngIf="isLoading" class="loading-spinner">
-            <i class="pi pi-spinner pi-spin"></i>
-            Signing in...
-          </span>
+        <button type="submit" class="submit" [disabled]="isLoading">
+          @if (!isLoading) {
+            <span><i class="pi pi-sign-in" aria-hidden="true"></i> Sign in</span>
+          } @else {
+            <span><i class="pi pi-spinner pi-spin" aria-hidden="true"></i> Signing in</span>
+          }
         </button>
 
-
-        <div class="login-footer">
-          <a routerLink="/password-reset" class="forgot-password">Forgot your password?</a>
-          <br/>
-          <a routerLink="/register" class="forgot-password">Register as a Merchant</a>
-        </div>
+        <p class="signup">
+          New to Ecolink?
+          <a routerLink="/register" class="link">Register as a merchant</a>
+        </p>
       </form>
     </div>
-  </div>
+  </main>
 </div>

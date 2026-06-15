@@ -58,6 +58,11 @@ export class SentSmsChartComponent implements OnInit, OnChanges{
         sparkline: {
           enabled: false
         },
+        // Disabled to avoid the ApexCharts runMaskReveal race (null node)
+        // when the chart re-renders after its async data load.
+        animations: {
+          enabled: false
+        },
         background: 'transparent'
       },
       stroke: {

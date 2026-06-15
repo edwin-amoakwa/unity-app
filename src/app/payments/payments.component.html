@@ -7,272 +7,326 @@
     label="Top Up Balance"
     icon="pi pi-plus"
     class="p-button-primary"
-    (click)="openCreate()" >
-  </button>
+    (click)="openCreate()"
+  ></button>
 </button-toolbar>
 
-<div class="col-sm-12 mb-4" *ngIf="formView.createView">
-  <app-card title="Merchant Top Up">
-
-    <div class="mb-3">
-      <p-selectButton
-        [options]="paymentModeOptions"
-        [(ngModel)]="selectedPaymentMode"
-        (ngModelChange)="onPaymentModeChange()"
-        optionLabel="label"
-        optionValue="value">
-      </p-selectButton>
-    </div>
-
-    <ng-container *ngIf="selectedPaymentMode === 'ONLINE'">
-    <form [formGroup]="paymentForm" (ngSubmit)="initiatePayment()">
-
-      <div class="row mb-3">
-        <div class="col-md-3">
-          <label for="mobileNo" class="form-label">Mobile Number *</label>
-        </div>
-        <div class="col-md-9">
-          <input
-            pInputText
-            id="mobileNo"
-            type="tel"
-            formControlName="mobileNo"
-            maxlength="10"
-            inputmode="numeric"
-            class="w-full"
-            [ngClass]="{'ng-invalid': isFieldInvalid('mobileNo')}"
-          />
-          <small class="p-error" *ngIf="isFieldInvalid('mobileNo')">
-            {{ getFieldError('mobileNo') }}
-          </small>
-        </div>
+@if (formView.createView) {
+  <div class="col-sm-12 mb-4">
+    <app-card title="Merchant Top Up">
+      <div class="mb-3">
+        <p-selectButton
+          [options]="paymentModeOptions"
+          [(ngModel)]="selectedPaymentMode"
+          (ngModelChange)="onPaymentModeChange()"
+          optionLabel="label"
+          optionValue="value"
+        >
+        </p-selectButton>
       </div>
-
-
-      <!-- Form of Payment -->
-      <div class="row mb-3">
-        <div class="col-md-3">
-          <label for="paymentChannel" class="form-label">Payment Channel*</label>
-        </div>
-        <div class="col-md-9">
-          <p-dropdown
-            id="paymentChannel"
-            optionLabel="channelName"
-            placeholder="Select Payment Channel"
-            formControlName="paymentChannel"
-            [options]="paymentChannels"
-            [class.ng-invalid]="isFieldInvalid('paymentChannel')"
-            styleClass="w-full">
-          </p-dropdown>
-          <div class="text-muted mt-1" *ngIf="paymentForm.get('paymentChannel')?.value as ch">
-            Tax rate: {{ selectedTaxRate | number:'1.0-2' }} %
+      @if (selectedPaymentMode === "ONLINE") {
+        <form [formGroup]="paymentForm" (ngSubmit)="initiatePayment()">
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="mobileNo" class="form-label">Mobile Number *</label>
+            </div>
+            <div class="col-md-9">
+              <input
+                pInputText
+                id="mobileNo"
+                type="tel"
+                formControlName="mobileNo"
+                maxlength="10"
+                inputmode="numeric"
+                class="w-full"
+                [ngClass]="{ 'ng-invalid': isFieldInvalid('mobileNo') }"
+              />
+              @if (isFieldInvalid("mobileNo")) {
+                <small class="p-error">
+                  {{ getFieldError("mobileNo") }}
+                </small>
+              }
+            </div>
           </div>
-          <small class="p-error" *ngIf="isFieldInvalid('paymentChannel')">
-            {{ getFieldError('paymentChannel') }}
-          </small>
-        </div>
-      </div>
-
-      <!-- Amount -->
-      <div class="row mb-3">
-        <div class="col-md-3">
-          <label for="amount" class="form-label">Amount *</label>
-        </div>
-        <div class="col-md-9">
-          <p-inputNumber
-            id="amount"
-            formControlName="amount"
-            mode="decimal"
-            [minFractionDigits]="2"
-            [maxFractionDigits]="2"
-            currency="GHS"
-            locale="en-US"
-            styleClass="w-full"
-            [class.ng-invalid]="isFieldInvalid('amount')">
-          </p-inputNumber>
-          <small class="p-error" *ngIf="isFieldInvalid('amount')">
-            {{ getFieldError('amount') }}
-          </small>
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-md-3">
-        </div>
-        <div class="col-md-9" id="tip">
-          Tips: We will charge a {{ selectedTaxRate | number:'1.0-2' }}% tax from the payment, the final {{ finalAmount | number:'1.2-2' }} credit will be after tax
-        </div>
-      </div>
-
-
-      <div class="row">
-        <div class="col-md-9 offset-md-3 d-flex gap-2">
-          <button type="button" class="btn btn-secondary" (click)="backToList()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="paymentForm.invalid">
-            <span *ngIf="!editingPayment">Top Up</span>
-            <span *ngIf="editingPayment">Update</span>
-            Payment
-          </button>
-        </div>
-      </div>
-    </form>
-    </ng-container>
-
-    <ng-container *ngIf="selectedPaymentMode === 'OFFLINE'">
-      <div class="col-sm-12 mb-4" style="border: 1px solid #ccc; padding: 1rem; background-color: #e0e0e0">
-          <div [innerHTML]="offlineDetailsHtml || '<p>No offline payment details available.</p>'"></div>
-      </div>
-    </ng-container>
-
-  </app-card>
-</div>
-
-<div class="grid" *ngIf="formView.listView">
-  <div class="col-12">
-    <div class="card">
-
-      <p-table
-        [value]="payments"
-        [loading]="loading"
-        [paginator]="true"
-        [rows]="10"
-        [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        styleClass="p-datatable-gridlines"
-        dataKey="id">
-
-        <ng-template pTemplate="header">
-          <tr>
-            <th style="width: 5rem"></th>
-            <th>Value Date</th>
-            <th>Payment Channel</th>
-            <th>Mobile No</th>
-            <th>Top Up Amount</th>
-            <th>Tax Amount</th>
-            <th>Credit Amount</th>
-            <th>Paid</th>
-            <th>Actions</th>
-
-            <th class="d-none">Actions</th>
-          </tr>
-        </ng-template>
-
-        <ng-template #body let-payment let-expanded="expanded">
-          <tr>
-            <td>
-              <p-button
+          <!-- Form of Payment -->
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="paymentChannel" class="form-label"
+                >Payment Channel*</label
+              >
+            </div>
+            <div class="col-md-9">
+              <p-select
+                id="paymentChannel"
+                optionLabel="channelName"
+                placeholder="Select Payment Channel"
+                formControlName="paymentChannel"
+                [options]="paymentChannels"
+                [class.ng-invalid]="isFieldInvalid('paymentChannel')"
+                styleClass="w-full"
+              >
+              </p-select>
+              @if (paymentForm.get("paymentChannel")?.value; as ch) {
+                <div class="text-muted mt-1">
+                  Tax rate: {{ selectedTaxRate | number: "1.0-2" }} %
+                </div>
+              }
+              @if (isFieldInvalid("paymentChannel")) {
+                <small class="p-error">
+                  {{ getFieldError("paymentChannel") }}
+                </small>
+              }
+            </div>
+          </div>
+          <!-- Amount -->
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="amount" class="form-label">Amount *</label>
+            </div>
+            <div class="col-md-9">
+              <p-inputNumber
+                id="amount"
+                formControlName="amount"
+                mode="decimal"
+                [minFractionDigits]="2"
+                [maxFractionDigits]="2"
+                currency="GHS"
+                locale="en-US"
+                styleClass="w-full"
+                [class.ng-invalid]="isFieldInvalid('amount')"
+              >
+              </p-inputNumber>
+              @if (isFieldInvalid("amount")) {
+                <small class="p-error">
+                  {{ getFieldError("amount") }}
+                </small>
+              }
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-3"></div>
+            <div class="col-md-9" id="tip">
+              Tips: We will charge a {{ selectedTaxRate | number: "1.0-2" }}%
+              tax from the payment, the final
+              {{ finalAmount | number: "1.2-2" }} credit will be after tax
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-9 offset-md-3 d-flex gap-2">
+              <button
                 type="button"
-                pRipple
-                [pRowToggler]="payment"
-                styleClass="p-button-text p-button-rounded p-button-plain"
-                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
-              </p-button>
-            </td>
-            <td>{{ payment.createdDate | date:'dd-MMM-yyyy hh:mm:ss a'  }}</td>
-            <td>{{ payment.paymentChannelName }}</td>
-            <td>{{ payment.mobileNo }}</td>
-            <td>{{ payment.amount | currency:'GHS':'symbol':'1.2-2' }}</td>
-            <td>{{ payment.taxAmount | currency:'GHS':'symbol':'1.2-2' }}</td>
-            <td>{{ payment.creditAmount | currency:'GHS':'symbol':'1.2-2' }}</td>
-            <td>
-              <span [class]="payment.paid ? 'text-green-500' : 'text-red-500'">
-                {{ payment.paid ? 'Yes' : 'No' }}
-              </span>
-            </td>
+                class="btn btn-secondary"
+                (click)="backToList()"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="paymentForm.invalid"
+              >
+                @if (!editingPayment) {
+                  <span>Top Up</span>
+                }
+                @if (editingPayment) {
+                  <span>Update</span>
+                }
+                Payment
+              </button>
+            </div>
+          </div>
+        </form>
+      }
+      @if (selectedPaymentMode === "OFFLINE") {
+        <div
+          class="col-sm-12 mb-4"
+          style="
+            border: 1px solid #ccc;
+            padding: 1rem;
+            background-color: #e0e0e0;
+          "
+        >
+          <div
+            [innerHTML]="
+              offlineDetailsHtml ||
+              '<p>No offline payment details available.</p>'
+            "
+          ></div>
+        </div>
+      }
+    </app-card>
+  </div>
+}
 
-            <td>
-              @if (!payment.paid) {
+@if (formView.listView) {
+  <div class="grid">
+    <div class="col-12">
+      <div class="card">
+        <p-table
+          [value]="payments"
+          [loading]="loading"
+          [paginator]="true"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          styleClass="p-datatable-gridlines"
+          dataKey="id"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 5rem"></th>
+              <th>Value Date</th>
+              <th>Payment Channel</th>
+              <th>Mobile No</th>
+              <th>Top Up Amount</th>
+              <th>Tax Amount</th>
+              <th>Credit Amount</th>
+              <th>Paid</th>
+              <th>Actions</th>
+              <th class="d-none">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-payment let-expanded="expanded">
+            <tr>
+              <td>
                 <p-button
-                  icon="pi pi-check-circle"
-                  (onClick)="confirmPaymentById(payment)"
-                  styleClass="p-button-rounded p-button-text p-button-success mr-1"
-                  pTooltip="Confirm Payment">
+                  type="button"
+                  pRipple
+                  [pRowToggler]="payment"
+                  styleClass="p-button-text p-button-rounded p-button-plain"
+                  [icon]="
+                    expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'
+                  "
+                >
                 </p-button>
-              }
-            </td>
-
-            <td class="d-none">
-
-              @if (!payment.paid) {
-                <p-button
-                  icon="pi pi-pencil"
-                  (onClick)="editPayment(payment)"
-                  styleClass="p-button-rounded p-button-text p-button-info mr-1"
-                  pTooltip="Edit">
-                </p-button>
-
-                <p-button
-                  icon="pi pi-trash"
-                  (onClick)="deletePayment(payment)"
-                  styleClass="p-button-rounded p-button-text p-button-danger"
-                  pTooltip="Delete">
-                </p-button>
-              }
-
-            </td>
-          </tr>
-        </ng-template>
-
-        <ng-template #expandedrow let-payment>
-          <tr>
-            <td colspan="6">
-              <div class="p-3">
-                <div class="row">
-                  <div class="col-12 col-md-6">
-                    <strong>Initiated By:</strong>
-                    <p class="m-0">{{ payment.initiatedByName || '-' }}</p>
-                  </div>
-                  <div class="col-12 col-md-6">
-                    <strong>Verified By:</strong>
-                    <p class="m-0">{{ payment.verifiedByName || '-' }}</p>
-                  </div>
-                  <div class="col-12 col-md-6">
-                    <strong>Initiation Source:</strong>
-                    <p class="m-0">{{ payment.initiationSourceName || '-' }}</p>
-                  </div>
-                  <div class="col-12 col-md-6">
-                    <strong>Payment Notes:</strong>
-                    <p class="m-0">{{ payment.paymentNotes || '-' }}</p>
+              </td>
+              <td>
+                {{ payment.createdDate | date: "dd-MMM-yyyy hh:mm:ss a" }}
+              </td>
+              <td>{{ payment.paymentChannelName }}</td>
+              <td>{{ payment.mobileNo }}</td>
+              <td>
+                {{ payment.amount | currency: "GHS" : "symbol" : "1.2-2" }}
+              </td>
+              <td>
+                {{ payment.taxAmount | currency: "GHS" : "symbol" : "1.2-2" }}
+              </td>
+              <td>
+                {{
+                  payment.creditAmount | currency: "GHS" : "symbol" : "1.2-2"
+                }}
+              </td>
+              <td>
+                <span
+                  [class]="payment.paid ? 'text-green-500' : 'text-red-500'"
+                >
+                  {{ payment.paid ? "Yes" : "No" }}
+                </span>
+              </td>
+              <td>
+                @if (!payment.paid) {
+                  <p-button
+                    icon="pi pi-check-circle"
+                    (onClick)="confirmPaymentById(payment)"
+                    styleClass="p-button-rounded p-button-text p-button-success mr-1"
+                    pTooltip="Confirm Payment"
+                  >
+                  </p-button>
+                }
+              </td>
+              <td class="d-none">
+                @if (!payment.paid) {
+                  <p-button
+                    icon="pi pi-pencil"
+                    (onClick)="editPayment(payment)"
+                    styleClass="p-button-rounded p-button-text p-button-info mr-1"
+                    pTooltip="Edit"
+                  >
+                  </p-button>
+                  <p-button
+                    icon="pi pi-trash"
+                    (onClick)="deletePayment(payment)"
+                    styleClass="p-button-rounded p-button-text p-button-danger"
+                    pTooltip="Delete"
+                  >
+                  </p-button>
+                }
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #expandedrow let-payment>
+            <tr>
+              <td colspan="6">
+                <div class="p-3">
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <strong>Initiated By:</strong>
+                      <p class="m-0">{{ payment.initiatedByName || "-" }}</p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <strong>Verified By:</strong>
+                      <p class="m-0">{{ payment.verifiedByName || "-" }}</p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <strong>Initiation Source:</strong>
+                      <p class="m-0">
+                        {{ payment.initiationSourceName || "-" }}
+                      </p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <strong>Payment Notes:</strong>
+                      <p class="m-0">{{ payment.paymentNotes || "-" }}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="6" class="text-center">No payments found</td>
-          </tr>
-        </ng-template>
-      </p-table>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="text-center">No payments found</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
     </div>
   </div>
-</div>
+}
 
+<p-dialog
+  id="paymentDialog"
+  [(visible)]="showPaymentDialog"
+  [modal]="true"
+  [closable]="false"
+  header="Payment Initiated"
+  [style]="{ width: '450px' }"
+>
+  <div class="text-center p-4">
+    <i
+      class="pi pi-spin pi-spinner"
+      style="font-size: 3rem; color: var(--primary-color)"
+    ></i>
+    <p class="mt-4">
+      Your will received a Mobile Money Prompt in on your phone. once payment is
+      done. click I have finish payment
+    </p>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      type="button"
+      label="Cancel"
+      class="p-button-text"
+      (click)="closePaymentDialog()"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="I have finish payment"
+      (click)="confirmPayment()"
+    ></button>
+  </ng-template>
+</p-dialog>
 
- <p-dialog
-   id="paymentDialog"
-   [(visible)]="showPaymentDialog"
-   [modal]="true"
-   [closable]="false"
-   header="Payment Initiated"
-   [style]="{ width: '450px' }">
-   <div class="text-center p-4">
-     <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--primary-color)"></i>
-     <p class="mt-4">
-       Your will received a Mobile Money Prompt in on your phone. once payment is done. click I have finish payment
-     </p>
-   </div>
-   <ng-template pTemplate="footer">
-     <button pButton type="button" label="Cancel" class="p-button-text" (click)="closePaymentDialog()"></button>
-     <button pButton type="button" label="I have finish payment" (click)="confirmPayment()"></button>
-   </ng-template>
- </p-dialog>
-
- <p-toast></p-toast>
-
-
-
-
+<p-toast></p-toast>

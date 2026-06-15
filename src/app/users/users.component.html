@@ -5,13 +5,12 @@
     label="New User"
     icon="pi pi-plus"
     (onClick)="openNewUserDialog()"
-    styleClass="p-button-primary">
+    styleClass="p-button-primary"
+  >
   </p-button>
-
 </button-toolbar>
 
 <app-card>
-
   <p-table
     [value]="users"
     [loading]="loading"
@@ -20,15 +19,15 @@
     [showCurrentPageReport]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [rowsPerPageOptions]="[10, 25, 50]"
-    styleClass="p-datatable-gridlines">
-
+    styleClass="p-datatable-gridlines"
+  >
     <ng-template pTemplate="header">
       <tr>
         <th>Account Name</th>
         <th>Email Address</th>
         <th>Phone No</th>
-        <th> Category</th>
-        <th> Status</th>
+        <th>Category</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </ng-template>
@@ -39,45 +38,61 @@
         <td>{{ user.emailAddress }}</td>
         <td>{{ user.phoneNo }}</td>
         <td>
-              <span *ngFor="let option of accountCategoryOptions">
-                {{ option.id === user.accountCategory ? option.itemName : '' }}
-              </span>
+          @for (option of accountCategoryOptions; track option) {
+            <span>
+              {{ option.id === user.accountCategory ? option.itemName : "" }}
+            </span>
+          }
         </td>
         <td>
-              <span [class]="user.accountStatus === 'ACTIVE' ? 'text-green-500' : 'text-red-500'">
-                <span *ngFor="let option of accountStatusOptions">
-                  {{ option.id === user.accountStatus ? option.itemName : '' }}
-                </span>
+          <span
+            [class]="
+              user.accountStatus === 'ACTIVE'
+                ? 'text-green-500'
+                : 'text-red-500'
+            "
+          >
+            @for (option of accountStatusOptions; track option) {
+              <span>
+                {{ option.id === user.accountStatus ? option.itemName : "" }}
               </span>
+            }
+          </span>
         </td>
         <td>
           <p-button
             icon="pi pi-pencil"
             (onClick)="editUser(user)"
             styleClass="p-button-rounded p-button-text p-button-info mr-1"
-            pTooltip="Edit">
+            pTooltip="Edit"
+          >
           </p-button>
 
           <p-button
             icon="pi pi-key"
             (onClick)="openPasswordDialog(user)"
             styleClass="p-button-rounded p-button-text p-button-warning mr-1"
-            pTooltip="Change Password">
+            pTooltip="Change Password"
+          >
           </p-button>
 
           <p-button
             icon="pi pi-shield"
             (onClick)="openPermRolesDialog(user)"
             styleClass="p-button-rounded p-button-text p-button-help mr-1"
-            pTooltip="Permissions & Roles">
+            pTooltip="Permissions & Roles"
+          >
           </p-button>
 
-          <p-button *ngIf="false"
-                    icon="pi pi-trash"
-                    (onClick)="deleteUser(user)"
-                    styleClass="p-button-rounded p-button-text p-button-danger"
-                    pTooltip="Delete">
-          </p-button>
+          @if (false) {
+            <p-button
+              icon="pi pi-trash"
+              (onClick)="deleteUser(user)"
+              styleClass="p-button-rounded p-button-text p-button-danger"
+              pTooltip="Delete"
+            >
+            </p-button>
+          }
         </td>
       </tr>
     </ng-template>
@@ -88,10 +103,7 @@
       </tr>
     </ng-template>
   </p-table>
-
 </app-card>
-
-
 
 <!-- User Form Dialog -->
 <p-dialog
@@ -102,10 +114,10 @@
   [draggable]="false"
   [resizable]="false"
   styleClass="p-fluid"
-  [style]="{width: '70vw'}"
-  [breakpoints]="{'960px': '85vw', '640px': '95vw'}"
-  (onHide)="closeUserDialog()">
-
+  [style]="{ width: '70vw' }"
+  [breakpoints]="{ '960px': '85vw', '640px': '95vw' }"
+  (onHide)="closeUserDialog()"
+>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <!-- Account Name -->
@@ -116,10 +128,13 @@
           id="accountName"
           formControlName="accountName"
           [class.ng-invalid]="isFieldInvalid('accountName')"
-          class="w-full" />
-        <small class="p-error" *ngIf="isFieldInvalid('accountName')">
-          {{ getFieldError('accountName') }}
-        </small>
+          class="w-full"
+        />
+        @if (isFieldInvalid("accountName")) {
+          <small class="p-error">
+            {{ getFieldError("accountName") }}
+          </small>
+        }
       </div>
 
       <!-- Email Address -->
@@ -130,10 +145,13 @@
           id="emailAddress"
           formControlName="emailAddress"
           [class.ng-invalid]="isFieldInvalid('emailAddress')"
-          class="w-full" />
-        <small class="p-error" *ngIf="isFieldInvalid('emailAddress')">
-          {{ getFieldError('emailAddress') }}
-        </small>
+          class="w-full"
+        />
+        @if (isFieldInvalid("emailAddress")) {
+          <small class="p-error">
+            {{ getFieldError("emailAddress") }}
+          </small>
+        }
       </div>
 
       <!-- Phone Number -->
@@ -144,16 +162,19 @@
           id="phoneNo"
           formControlName="phoneNo"
           [class.ng-invalid]="isFieldInvalid('phoneNo')"
-          class="w-full" />
-        <small class="p-error" *ngIf="isFieldInvalid('phoneNo')">
-          {{ getFieldError('phoneNo') }}
-        </small>
+          class="w-full"
+        />
+        @if (isFieldInvalid("phoneNo")) {
+          <small class="p-error">
+            {{ getFieldError("phoneNo") }}
+          </small>
+        }
       </div>
 
       <!-- Account Category -->
       <div class="col-12 col-md-6 mb-3">
         <label for="accountCategory">Account Category *</label>
-        <p-dropdown
+        <p-select
           id="accountCategory"
           optionValue="id"
           optionLabel="itemName"
@@ -161,18 +182,20 @@
           [options]="accountCategoryOptions"
           appendTo="body"
           [class.ng-invalid]="isFieldInvalid('accountCategory')"
-          styleClass="w-full">
-        </p-dropdown>
-        <small class="p-error" *ngIf="isFieldInvalid('accountCategory')">
-          {{ getFieldError('accountCategory') }}
-        </small>
+          styleClass="w-full"
+        >
+        </p-select>
+        @if (isFieldInvalid("accountCategory")) {
+          <small class="p-error">
+            {{ getFieldError("accountCategory") }}
+          </small>
+        }
       </div>
-
 
       <!-- Account Status -->
       <div class="col-12 col-md-6 mb-3">
         <label for="accountStatus">Account Status *</label>
-        <p-dropdown
+        <p-select
           id="accountStatus"
           optionValue="id"
           optionLabel="itemName"
@@ -180,13 +203,15 @@
           [options]="accountStatusOptions"
           appendTo="body"
           [class.ng-invalid]="isFieldInvalid('accountStatus')"
-          styleClass="w-full">
-        </p-dropdown>
-        <small class="p-error" *ngIf="isFieldInvalid('accountStatus')">
-          {{ getFieldError('accountStatus') }}
-        </small>
+          styleClass="w-full"
+        >
+        </p-select>
+        @if (isFieldInvalid("accountStatus")) {
+          <small class="p-error">
+            {{ getFieldError("accountStatus") }}
+          </small>
+        }
       </div>
-
     </div>
   </form>
 
@@ -196,7 +221,8 @@
       label="Cancel"
       icon="pi pi-times"
       (onClick)="closeUserDialog()"
-      styleClass="p-button-text">
+      styleClass="p-button-text"
+    >
     </p-button>
     <p-button
       type="button"
@@ -204,7 +230,8 @@
       icon="pi pi-check"
       (onClick)="onSubmit()"
       [loading]="loading"
-      styleClass="p-button-primary">
+      styleClass="p-button-primary"
+    >
     </p-button>
   </ng-template>
 </p-dialog>
@@ -218,10 +245,10 @@
   [draggable]="false"
   [resizable]="false"
   styleClass="p-fluid"
-  [style]="{width: '30vw'}"
-  [breakpoints]="{'960px': '50vw', '640px': '95vw'}"
-  (onHide)="closePasswordDialog()">
-
+  [style]="{ width: '30vw' }"
+  [breakpoints]="{ '960px': '50vw', '640px': '95vw' }"
+  (onHide)="closePasswordDialog()"
+>
   <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
     <div class="row mb-3">
       <div class="col-4">
@@ -235,11 +262,14 @@
           [feedback]="false"
           [class.ng-invalid]="isPasswordFieldInvalid('newPassword')"
           styleClass="w-full"
-          inputStyleClass="w-full">
+          inputStyleClass="w-full"
+        >
         </p-password>
-        <small class="p-error" *ngIf="isPasswordFieldInvalid('newPassword')">
-          {{ getPasswordFieldError('newPassword') }}
-        </small>
+        @if (isPasswordFieldInvalid("newPassword")) {
+          <small class="p-error">
+            {{ getPasswordFieldError("newPassword") }}
+          </small>
+        }
       </div>
     </div>
 
@@ -255,11 +285,14 @@
           [feedback]="false"
           [class.ng-invalid]="isPasswordFieldInvalid('confirmPassword')"
           styleClass="w-full"
-          inputStyleClass="w-full">
+          inputStyleClass="w-full"
+        >
         </p-password>
-        <small class="p-error" *ngIf="isPasswordFieldInvalid('confirmPassword')">
-          {{ getPasswordFieldError('confirmPassword') }}
-        </small>
+        @if (isPasswordFieldInvalid("confirmPassword")) {
+          <small class="p-error">
+            {{ getPasswordFieldError("confirmPassword") }}
+          </small>
+        }
       </div>
     </div>
   </form>
@@ -270,7 +303,8 @@
       label="Cancel"
       icon="pi pi-times"
       (onClick)="closePasswordDialog()"
-      styleClass="p-button-text">
+      styleClass="p-button-text"
+    >
     </p-button>
     <p-button
       type="button"
@@ -278,12 +312,11 @@
       icon="pi pi-check"
       (onClick)="updatePassword()"
       [loading]="passwordLoading"
-      styleClass="p-button-primary">
+      styleClass="p-button-primary"
+    >
     </p-button>
   </ng-template>
 </p-dialog>
-
-
 
 <!-- Permissions & Roles Dialog -->
 <p-dialog
@@ -294,17 +327,23 @@
   [draggable]="false"
   [resizable]="false"
   styleClass="p-fluid"
-  [style]="{width: '60vw'}"
-  [breakpoints]="{'960px': '60vw', '640px': '95vw'}"
-  (onHide)="closePermRolesDialog()">
-
+  [style]="{ width: '60vw' }"
+  [breakpoints]="{ '960px': '60vw', '640px': '95vw' }"
+  (onHide)="closePermRolesDialog()"
+>
   <div class="mb-3">
-    <p><strong>User:</strong> {{ permRolesUser?.accountName || permRolesUser?.emailAddress }}</p>
+    <p>
+      <strong>User:</strong>
+      {{ permRolesUser?.accountName || permRolesUser?.emailAddress }}
+    </p>
     <p>Configure this user's permissions and roles.</p>
   </div>
 
   <div class="permissions-table">
-    <p-table [value]="permissionsData" styleClass="p-datatable-sm p-datatable-gridlines">
+    <p-table
+      [value]="permissionsData"
+      styleClass="p-datatable-sm p-datatable-gridlines"
+    >
       <ng-template pTemplate="header">
         <tr>
           <th>Page</th>
@@ -315,16 +354,18 @@
       <ng-template pTemplate="body" let-page>
         <tr>
           <td>{{ page.pageName }}</td>
-<!--          <td>{{ page.pageUrl }}</td>-->
-          <td >
+          <!--          <td>{{ page.pageUrl }}</td>-->
+          <td>
             <p-toggleSwitch [(ngModel)]="page.enabled"></p-toggleSwitch>
           </td>
           <td class="d-none">
             <div class="flex align-items-center gap-3 flex-wrap">
-              <div *ngFor="let act of page.actions" class="flex align-items-center gap-2 mr-3">
-                <span class="text-sm">{{ act.name }}</span>
-                <p-toggleSwitch [(ngModel)]="act.enabled"></p-toggleSwitch>
-              </div>
+              @for (act of page.actions; track act) {
+                <div class="flex align-items-center gap-2 mr-3">
+                  <span class="text-sm">{{ act.name }}</span>
+                  <p-toggleSwitch [(ngModel)]="act.enabled"></p-toggleSwitch>
+                </div>
+              }
             </div>
           </td>
         </tr>
@@ -338,7 +379,8 @@
       label="Close"
       icon="pi pi-times"
       (onClick)="closePermRolesDialog()"
-      styleClass="p-button-text">
+      styleClass="p-button-text"
+    >
     </p-button>
     <p-button
       type="button"
@@ -347,7 +389,8 @@
       (onClick)="savePermissions()"
       [loading]="permSaveLoading"
       [disabled]="permLoading || !permissionsData?.length"
-      styleClass="p-button-primary">
+      styleClass="p-button-primary"
+    >
     </p-button>
   </ng-template>
 </p-dialog>

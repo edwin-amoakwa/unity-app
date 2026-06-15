@@ -13,13 +13,12 @@ import {Checkbox} from 'primeng/checkbox';
 import {UnityConfig} from '../../app-config';
 import { Dialog } from 'primeng/dialog';
 import { TermsAndConditionsComponent } from './terms-and-conditions.component';
-import {ButtonDirective} from 'primeng/button';
 import {Textarea} from 'primeng/textarea';
 
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule, ReactiveFormsModule, FormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox, ButtonDirective, Textarea],
+  imports: [RouterModule, ReactiveFormsModule, FormsModule, CommonModule, Select, Dialog, TermsAndConditionsComponent, InputText, Password, Checkbox, Textarea],
   templateUrl: './register.component.html',
   styleUrls: []
 })

@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TableModule } from 'primeng/table';
@@ -33,7 +33,7 @@ import {UserSession} from '../core/user-session';
     FormsModule,
     ButtonModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     TableModule,
     CardModule,
     DialogModule,

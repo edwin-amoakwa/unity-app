@@ -1,15 +1,19 @@
 // angular import
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {Router, RouterModule} from '@angular/router';
-import {UntypedFormBuilder, Validators, ReactiveFormsModule, FormGroup} from '@angular/forms';
-import {AuthService, RequestPasswordPayload} from '../../auth.service';
-import {CommonModule} from '@angular/common';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import {
+  UntypedFormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  FormGroup,
+} from '@angular/forms';
+import { AuthService, RequestPasswordPayload } from '../../auth.service';
 
 @Component({
   selector: 'app-password-reset',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule],
   templateUrl: './password-reset.component.html',
-  styleUrls: []
+  styleUrls: [],
 })
 export class PasswordResetComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
@@ -24,7 +28,7 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.resetForm = this.fb.group({
-      username: ['', [Validators.required]]
+      username: ['', [Validators.required]],
     });
   }
 
@@ -53,16 +57,20 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
         const response = await this.authService.requestPassword(payload);
         this.isLoading = false;
 
-        if(response.success) {
-          this.successMessage = 'Password reset instructions have been sent to you.';
+        if (response.success) {
+          this.successMessage =
+            'Password reset instructions have been sent to you.';
           this.resetForm.reset();
         } else {
-          this.errorMessage = response.message || 'Failed to send password reset instructions.';
+          this.errorMessage =
+            response.message || 'Failed to send password reset instructions.';
         }
         console.log('Password reset request successful:', response);
       } catch (error: any) {
         this.isLoading = false;
-        this.errorMessage = error.error.message || 'Failed to send password reset instructions. Please try again.';
+        this.errorMessage =
+          error.error.message ||
+          'Failed to send password reset instructions. Please try again.';
         console.error('Password reset error:', error);
       }
     } else {
@@ -71,7 +79,7 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
   }
 
   private markFormGroupTouched() {
-    Object.keys(this.resetForm.controls).forEach(key => {
+    Object.keys(this.resetForm.controls).forEach((key) => {
       const control = this.resetForm.get(key);
       control?.markAsTouched();
     });

@@ -7,11 +7,11 @@ import * as XLSX from 'xlsx';
 // PrimNG imports
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -42,12 +42,12 @@ import {GenericFormValidator} from '../core/generic-form-validator';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    DropdownModule,
+    SelectModule,
     InputTextModule,
     TextareaModule,
     InputNumberModule,
     CheckboxModule,
-    CalendarModule,
+    DatePickerModule,
     ButtonModule,
     ConfirmDialogModule,
     DialogModule,
@@ -292,8 +292,8 @@ export class SmsComponent implements OnInit {
     });
   }
 
-  getStatusSeverity(smsStatus): 'success' | 'warning' | 'danger' | 'info' {
-    return smsStatus ==='Pending' ? 'success' : 'warning';
+  getStatusSeverity(smsStatus): 'success' | 'warn' | 'danger' | 'info' {
+    return smsStatus ==='Pending' ? 'success' : 'warn';
   }
 
   // formatPhoneNumbers(phoneNos: string): string {

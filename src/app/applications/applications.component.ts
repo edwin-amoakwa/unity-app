@@ -123,7 +123,7 @@ this.selectedApplication = response.data;
 
 
 
-  getApplicationTypeSeverity(type: ApplicationType | null): 'success' | 'warning' | 'danger' | 'info' {
+  getApplicationTypeSeverity(type: ApplicationType | null): 'success' | 'warn' | 'danger' | 'info' {
     if (!type) return 'info';
 
     switch (type) {

@@ -1,36 +1,38 @@
 import {HttpInterceptorFn, HttpErrorResponse, HttpResponse, HttpRequest} from '@angular/common/http';
 import {inject} from '@angular/core';
+import {Router} from '@angular/router';
 import {catchError, throwError, tap} from 'rxjs';
 import {UserSession} from './user-session';
 import {NotificationService} from './notification.service';
 
 /**
- * HTTP Interceptor that adds merchantId to all outgoing requests and handles errors centrally
+ * Public auth endpoints that must be called WITHOUT an Authorization header.
+ * The backend derives the current user/merchant from the JWT for everything else.
+ */
+const PUBLIC_AUTH_PATHS = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/request-password',
+  '/auth/send-verify-pin',
+  '/auth/verify-pin'
+];
+
+/**
+ * HTTP Interceptor that attaches the JWT bearer token to outgoing requests
+ * (except the public auth endpoints) and handles errors centrally.
  */
 export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next) => {
 
   let notificationsService = inject(NotificationService);
-  let merchantId = localStorage.getItem(UserSession.MerchantId);
-  let userId = localStorage.getItem(UserSession.UserID);
-  let countryId = UserSession.getMerchant()?.countryId;
+  let router = inject(Router);
 
-  let headers: any = {};
+  const isPublicAuth = PUBLIC_AUTH_PATHS.some(path => req.url.includes(path));
+  const token = UserSession.getToken();
 
-  if (merchantId) {
-    headers.merchantId = merchantId;
-  }
-
-  if (userId) {
-    headers.userId = userId;
-  }
-  if (countryId) {
-    headers.countryId = countryId;
-  }
-
-  // console.log(" http heaers",headers);
-  const modifiedReq = req.clone({
-    setHeaders: headers
-  });
+  // Attach the bearer token to every protected request.
+  const modifiedReq = (token && !isPublicAuth)
+    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    : req;
 
   return next(modifiedReq).pipe(
     tap(httpEvent => {
@@ -66,6 +68,12 @@ export const RequestInterceptor: HttpInterceptorFn = (req:HttpRequest<any>, next
     }),
     catchError((error: HttpErrorResponse) => {
       let errorMessage = 'An unexpected error occurred';
+
+      // Auth failure: clear session and send the user back to login.
+      if (error.status === 401) {
+        UserSession.logout();
+        router.navigate(['/login']);
+      }
 
       // Log error responses
       // console.log(`[HTTP Error Response] ${req.method} ${req.url} - Status: ${error.status}`, error);

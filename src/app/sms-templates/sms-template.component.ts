@@ -1,16 +1,21 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import * as XLSX from 'xlsx';
 
 // PrimNG imports
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -29,7 +34,7 @@ import { DistributionGroupsService } from '../distribution-groups/distribution-g
 import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
 import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
-import {SmsService} from '../sms/sms.service';
+import { SmsService } from '../sms/sms.service';
 
 @Component({
   selector: 'app-sms',
@@ -37,26 +42,25 @@ import {SmsService} from '../sms/sms.service';
   imports: [
     CoreModule,
     ButtonToolbarComponent,
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    DropdownModule,
+    SelectModule,
     InputTextModule,
     TextareaModule,
     InputNumberModule,
     CheckboxModule,
-    CalendarModule,
+    DatePickerModule,
     ButtonModule,
     ConfirmDialogModule,
     DialogModule,
     TableModule,
     TagModule,
     TooltipModule,
-    FileUploadModule
+    FileUploadModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './sms-template.component.html',
-  styleUrls: ['./sms-template.component.css']
+  styleUrls: ['./sms-template.component.css'],
 })
 export class SmsTemplateComponent implements OnInit {
   private smsService = inject(SmsService);
@@ -73,42 +77,37 @@ export class SmsTemplateComponent implements OnInit {
 
   // selectedSms: any | null = null;
   templateMsgs: any[] = [];
-  showTemplateDialog:boolean = false;
+  showTemplateDialog: boolean = false;
 
+  private fb = inject(FormBuilder);
+  private configService = inject(ConfigService);
+  private distributionGroupsService = inject(DistributionGroupsService);
+  private messageService = inject(MessageService);
 
-    private fb = inject(FormBuilder);
-    private configService = inject(ConfigService);
-    private distributionGroupsService = inject(DistributionGroupsService);
-    private messageService = inject(MessageService);
+  smsForm!: FormGroup;
+  senderIds: any[] = [];
+  groups: any[] = [];
+  smsStatusList = StaticDataService.groupSmsStatus();
+  characterCount: number = 0;
+  smsCount: number = 1;
 
-    smsForm!: FormGroup;
-    senderIds: any[] = [];
-    groups: any[] = [];
-    smsStatusList = StaticDataService.groupSmsStatus();
-    characterCount: number = 0;
-    smsCount: number = 1;
-
-    // Filters
-    filterSmsStatus: string | null = null;
-    fromDate: Date | null = null;
-    toDate: Date | null = null;
-
+  // Filters
+  filterSmsStatus: string | null = null;
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
 
   ngOnInit() {
-
     this.loadSmsMessages();
   }
 
   async loadSmsMessages() {
     this.isLoading = true;
     try {
-
       const response = await this.smsService.getTemplateSMS();
       this.templateMessageList = response.data;
-      this.templateMessageList.forEach(item=>{
-        if(item.templateSms)
-        {
-          CollectionUtil.add(this.templateMsgs,item);
+      this.templateMessageList.forEach((item) => {
+        if (item.templateSms) {
+          CollectionUtil.add(this.templateMsgs, item);
         }
       });
       this.isLoading = false;
@@ -125,47 +124,45 @@ export class SmsTemplateComponent implements OnInit {
     this.loadSmsMessages();
   }
 
-  closeTemplateDialog()
-  {
+  closeTemplateDialog() {
     this.selectedSms = null;
     this.showTemplateDialog = false;
   }
 
-  createFromTemplateDialog()
-  {
+  createFromTemplateDialog() {
     this.selectedSms = null;
     this.showTemplateDialog = true;
   }
 
   async createFromTemplate() {
     try {
-      console.log("selectedTemplateSms",this.selectedTemplateSms);
-      if(ObjectUtil.isNullOrUndefinedOrEmpty(this.selectedTemplateSms?.id))
-      {
-        this.notificationService.error("Select A Template SMS");
+      console.log('selectedTemplateSms', this.selectedTemplateSms);
+      if (ObjectUtil.isNullOrUndefinedOrEmpty(this.selectedTemplateSms?.id)) {
+        this.notificationService.error('Select A Template SMS');
         return;
       }
-        const response = await this.smsService.duplicateSmsMessage(this.selectedTemplateSms.id);
-        if(!response.success)
-        {
-          MessageBox.errorDetail(response.message,response.data)
-           const errorMessage = response.message;
-          this.notificationService.error(errorMessage);
-          return
-        }
+      const response = await this.smsService.duplicateSmsMessage(
+        this.selectedTemplateSms.id,
+      );
+      if (!response.success) {
+        MessageBox.errorDetail(response.message, response.data);
+        const errorMessage = response.message;
+        this.notificationService.error(errorMessage);
+        return;
+      }
 
-        // CollectionUtil.add(this.smsMessages, response.data);
-        // this.formView.resetToListView();
-      console.log("response.data",response.data);
-        this.openEditDialog(response.data);
-
+      // CollectionUtil.add(this.smsMessages, response.data);
+      // this.formView.resetToListView();
+      console.log('response.data', response.data);
+      this.openEditDialog(response.data);
     } catch (error) {
       console.error('Error with SMS message:', error);
-      const errorMessage = this.selectedSms ? 'Failed to Generate SMS message' : 'Failed to Generate SMS message';
+      const errorMessage = this.selectedSms
+        ? 'Failed to Generate SMS message'
+        : 'Failed to Generate SMS message';
       this.notificationService.error(errorMessage);
     }
   }
-
 
   createNewMessage() {
     this.selectedSms = {};
@@ -193,55 +190,49 @@ export class SmsTemplateComponent implements OnInit {
 
   async onSmsSubmitted(sms: any) {
     try {
+      const response = await this.smsService.saveSmsMessage(sms);
+      if (!response.success) {
+        MessageBox.errorDetail(response.message, response.data);
+        const errorMessage = response.message;
+        this.notificationService.error(errorMessage);
+        return;
+      }
 
-        const response = await this.smsService.saveSmsMessage( sms);
-        if(!response.success)
-        {
-          MessageBox.errorDetail(response.message,response.data)
-           const errorMessage = response.message;
-          this.notificationService.error(errorMessage);
-          return
-        }
+      CollectionUtil.add(this.templateMessageList, response.data);
+      if (response.data.templateSms) {
+        CollectionUtil.add(this.templateMsgs, response.data);
+      } else {
+        try {
+          CollectionUtil.remove(this.templateMsgs, response.data.id);
+        } catch (error) {}
+      }
 
-        CollectionUtil.add(this.templateMessageList, response.data);
-        if(response.data.templateSms)
-        {
-          CollectionUtil.add(this.templateMsgs,response.data);
-        }
-        else
-        {
-          try {
-            CollectionUtil.remove(this.templateMsgs,response.data.id);
-          } catch (error) {}
-        }
-
-        this.formView.resetToListView();
-
-
+      this.formView.resetToListView();
     } catch (error) {
       console.error('Error with SMS message:', error);
-      const errorMessage = this.selectedSms ? 'Failed to update SMS message' : 'Failed to create SMS message';
+      const errorMessage = this.selectedSms
+        ? 'Failed to update SMS message'
+        : 'Failed to create SMS message';
       this.notificationService.error(errorMessage);
     }
   }
 
   async duplicateSms(sms: any) {
     try {
+      const response = await this.smsService.duplicateSmsMessage(sms.id);
+      if (!response.success) {
+        MessageBox.errorDetail(response.message, response.data);
+        const errorMessage = response.message;
+        this.notificationService.error(errorMessage);
+        return;
+      }
 
-        const response = await this.smsService.duplicateSmsMessage(sms.id);
-        if(!response.success)
-        {
-          MessageBox.errorDetail(response.message,response.data)
-           const errorMessage = response.message;
-          this.notificationService.error(errorMessage);
-          return
-        }
-
-        this.openEditDialog(response.data);
-
+      this.openEditDialog(response.data);
     } catch (error) {
       console.error('Error with SMS message:', error);
-      const errorMessage = this.selectedSms ? 'Failed to Duplicate SMS message' : 'Failed to Duplicate SMS message';
+      const errorMessage = this.selectedSms
+        ? 'Failed to Duplicate SMS message'
+        : 'Failed to Duplicate SMS message';
       this.notificationService.error(errorMessage);
     }
   }
@@ -254,18 +245,16 @@ export class SmsTemplateComponent implements OnInit {
       accept: async () => {
         if (sms.id) {
           try {
-           const response = await this.smsService.deleteSmsMessage(sms.id);
-           if(response.success)
-           {
-             CollectionUtil.remove(this.templateMessageList, sms.id);
-           }
-
+            const response = await this.smsService.deleteSmsMessage(sms.id);
+            if (response.success) {
+              CollectionUtil.remove(this.templateMessageList, sms.id);
+            }
           } catch (error) {
             console.error('Error deleting SMS message:', error);
             this.notificationService.error('Failed to delete SMS message');
           }
         }
-      }
+      },
     });
   }
 
@@ -277,24 +266,23 @@ export class SmsTemplateComponent implements OnInit {
       accept: async () => {
         if (sms.id) {
           try {
-
             const response = await this.smsService.sendSmsMessage(sms.id);
-            if(response.success)
-            {
+            if (response.success) {
               CollectionUtil.add(this.templateMessageList, response.data);
             }
-
           } catch (error) {
             console.error('Error deleting SMS message:', error);
-            this.notificationService.error('Failed to Initiate/Send SMS message');
+            this.notificationService.error(
+              'Failed to Initiate/Send SMS message',
+            );
           }
         }
-      }
+      },
     });
   }
 
-  getStatusSeverity(smsStatus): 'success' | 'warning' | 'danger' | 'info' {
-    return smsStatus ==='Pending' ? 'success' : 'warning';
+  getStatusSeverity(smsStatus): 'success' | 'warn' | 'danger' | 'info' {
+    return smsStatus === 'Pending' ? 'success' : 'warn';
   }
 
   formatPhoneNumbers(phoneNos: string): string {
@@ -348,7 +336,9 @@ export class SmsTemplateComponent implements OnInit {
       const cleanedValue = newValue.replace(/[^0-9\s\-\n,]/g, '');
       if (cleanedValue !== newValue) {
         newValue = ObjectUtil.standardizeNewlines(newValue);
-        this.smsForm.get('phoneNos')?.setValue(cleanedValue, { emitEvent: false });
+        this.smsForm
+          .get('phoneNos')
+          ?.setValue(cleanedValue, { emitEvent: false });
       }
       this.countContactsInTextBox(newValue);
     });
@@ -356,7 +346,6 @@ export class SmsTemplateComponent implements OnInit {
     this.loadDropdownData();
     this.setupFormSubscriptions();
   }
-
 
   setupFormSubscriptions() {
     this.smsForm.get('messageText')?.valueChanges.subscribe((value: string) => {
@@ -372,35 +361,35 @@ export class SmsTemplateComponent implements OnInit {
       }
     });
 
-    this.smsForm.get('scheduleSms')?.valueChanges.subscribe((value: boolean) => {
-      const scheduledTimeControl = this.smsForm.get('scheduledTime');
-      if (value) {
-        scheduledTimeControl?.setValidators([Validators.required]);
-      } else {
-        scheduledTimeControl?.clearValidators();
-        scheduledTimeControl?.setValue(null);
-      }
-      scheduledTimeControl?.updateValueAndValidity();
-    });
+    this.smsForm
+      .get('scheduleSms')
+      ?.valueChanges.subscribe((value: boolean) => {
+        const scheduledTimeControl = this.smsForm.get('scheduledTime');
+        if (value) {
+          scheduledTimeControl?.setValidators([Validators.required]);
+        } else {
+          scheduledTimeControl?.clearValidators();
+          scheduledTimeControl?.setValue(null);
+        }
+        scheduledTimeControl?.updateValueAndValidity();
+      });
   }
 
   async loadDropdownData() {
-    this.configService.getSenderIdsApprovedList().then(response => {
+    this.configService.getSenderIdsApprovedList().then((response) => {
       this.senderIds = response.data;
     });
 
-    this.distributionGroupsService.getDistributionGroups().then(response => {
+    this.distributionGroupsService.getDistributionGroups().then((response) => {
       this.groups = response.data;
     });
   }
 
   populateForm() {
-    if (this.selectedSms && this.smsForm)
-    {
+    if (this.selectedSms && this.smsForm) {
       this.smsForm.patchValue(this.selectedSms);
       try {
-        if(!ObjectUtil.isNullOrUndefined(this.selectedSms.scheduledTime))
-        {
+        if (!ObjectUtil.isNullOrUndefined(this.selectedSms.scheduledTime)) {
           const scheduledTimeString: string = this.selectedSms.scheduledTime;
 
           // CRITICAL STEP: Convert the ISO string to a Date object
@@ -409,7 +398,9 @@ export class SmsTemplateComponent implements OnInit {
           // 3. Set the Date object value to the form control
           this.smsForm.controls['scheduledTime'].setValue(scheduledDateObject);
         }
-      } catch (error) {console.log(error);}
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
@@ -429,13 +420,17 @@ export class SmsTemplateComponent implements OnInit {
       const formValue = this.smsForm.getRawValue();
       formValue.phoneNos = ObjectUtil.standardizeNewlines(formValue.phoneNos);
       try {
-        formValue.scheduledTime = this.formatDateTimeForApi(formValue.scheduledTime);
+        formValue.scheduledTime = this.formatDateTimeForApi(
+          formValue.scheduledTime,
+        );
       } catch (error) {}
       this.onSmsSubmitted(formValue);
     } else {
       ObjectUtil.logInvalidFields(this.smsForm);
       this.markFormGroupTouched(this.smsForm);
-      this.notificationService.error('Please fill in all required fields correctly');
+      this.notificationService.error(
+        'Please fill in all required fields correctly',
+      );
     }
   }
 
@@ -444,7 +439,7 @@ export class SmsTemplateComponent implements OnInit {
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {
-    Object.keys(formGroup.controls).forEach(field => {
+    Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);
       control?.markAsTouched({ onlySelf: true });
     });
@@ -471,12 +466,24 @@ export class SmsTemplateComponent implements OnInit {
   async onFileSelect(event: FileSelectEvent) {
     const file = event.files?.[0];
     if (!file) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No file selected.' });
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No file selected.',
+      });
       return;
     }
 
-    const allowedTypes = ['text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'];
-    if (!allowedTypes.includes(file.type) && !file.name.match(/\.(txt|xlsx|xls|csv)$/i)) {
+    const allowedTypes = [
+      'text/plain',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel',
+      'text/csv',
+    ];
+    if (
+      !allowedTypes.includes(file.type) &&
+      !file.name.match(/\.(txt|xlsx|xls|csv)$/i)
+    ) {
       // this.messageService.add({ severity: 'error', summary: 'Invalid File Type', detail: 'Please select a .txt, .xlsx, .xls, or .csv file.' });
       return;
     }
@@ -491,26 +498,43 @@ export class SmsTemplateComponent implements OnInit {
         if (file.name.endsWith('.txt') || file.type === 'text/plain') {
           phoneNumbers = new TextDecoder().decode(data).split(/\r?\n/);
         } else if (file.name.endsWith('.csv')) {
-          phoneNumbers = new TextDecoder().decode(data).split(/\r?\n/).flatMap((line: string) => line.split(','));
+          phoneNumbers = new TextDecoder()
+            .decode(data)
+            .split(/\r?\n/)
+            .flatMap((line: string) => line.split(','));
         } else {
           const workbook = XLSX.read(data, { type: 'array' });
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
-          const sheetData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-          phoneNumbers = sheetData.map(row => (row[0] ? String(row[0]).trim() : '')).filter(Boolean);
+          const sheetData: any[][] = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+          });
+          phoneNumbers = sheetData
+            .map((row) => (row[0] ? String(row[0]).trim() : ''))
+            .filter(Boolean);
         }
 
-        phoneNumbers = phoneNumbers.map(num => num.replace(/[^0-9\n\r\s\-]/g, '').trim()).filter(Boolean);
+        phoneNumbers = phoneNumbers
+          .map((num) => num.replace(/[^0-9\n\r\s\-]/g, '').trim())
+          .filter(Boolean);
         const uniquePhones = Array.from(new Set(phoneNumbers));
         this.smsForm.patchValue({ phoneNos: uniquePhones.join('\n') });
       } catch (error) {
         console.error('Error reading file:', error);
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to read file.' });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to read file.',
+        });
       }
     };
 
     reader.onerror = () => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to read file.' });
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to read file.',
+      });
     };
 
     reader.readAsArrayBuffer(file);
@@ -520,24 +544,24 @@ export class SmsTemplateComponent implements OnInit {
     this.smsForm.patchValue({ uploadedFile: null });
   }
 
-
-  countContactsInPhoneNoTextBox()
-  {
+  countContactsInPhoneNoTextBox() {
     let newValue = this.smsForm.get('phoneNos').value;
     const cleanedValue = newValue.replace(/[^0-9\s\-\n,]/g, '');
-      if (cleanedValue !== newValue) {
-        newValue = ObjectUtil.standardizeNewlines(newValue);
-        this.smsForm.get('phoneNos')?.setValue(cleanedValue, { emitEvent: false });
-      }
-      this.countContactsInTextBox(newValue);
+    if (cleanedValue !== newValue) {
+      newValue = ObjectUtil.standardizeNewlines(newValue);
+      this.smsForm
+        .get('phoneNos')
+        ?.setValue(cleanedValue, { emitEvent: false });
+    }
+    this.countContactsInTextBox(newValue);
   }
 
   countContactsInTextBox(content: string) {
     content = ObjectUtil.standardizeNewlines(content);
     let lines = content.split(/[\r?\n,]/);
-    lines = lines.map(line => line.trim()).filter(line => line !== '');
+    lines = lines.map((line) => line.trim()).filter((line) => line !== '');
     let phoneCount = 0;
-    lines.forEach(line => {
+    lines.forEach((line) => {
       let cleanedLine = line.replace(/[^0-9]/g, '');
       if (cleanedLine.length >= 10) {
         phoneCount++;
@@ -545,7 +569,10 @@ export class SmsTemplateComponent implements OnInit {
     });
     // console.log("lines",lines.length);
     // console.log("phoneCount",phoneCount);
-    this.smsForm.patchValue({ totalRecipient: phoneCount }, { emitEvent: false });
+    this.smsForm.patchValue(
+      { totalRecipient: phoneCount },
+      { emitEvent: false },
+    );
   }
 
   updateCount() {
