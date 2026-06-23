@@ -18,7 +18,8 @@ import {StaticDataService} from '../static-data.service';
 import {ConfigService} from '../config.service';
 import {DatePicker} from 'primeng/datepicker';
 import {DateUtil} from '../core/system.utils';
-import {ExcelService} from '../core/excel.service';
+import {Pager} from '../core/pager';
+import * as FileSaver from 'file-saver';
 
 
 
@@ -48,25 +49,53 @@ export class SmsRecordsComponent implements OnInit {
   smsRecords: any[] = [];
   isLoading: boolean = false;
 
+  pager: any = {
+    pageNo: 1,
+    pageSize: 10,
+    totalRecords: 0
+  }
+
+  // Index of the first row shown, used to keep the paginator in sync
+  first: number = 0;
+
   // Filter options
   smsStatusList: any[] = StaticDataService.smsFinalStatus();
   senderIdOptions: any[] = [];
   filterParam:any = {}
 
   ngOnInit() {
-    this.loadSmsRecords();
+    // The table is in lazy mode, so it fires onLazyLoad on init and loads the records.
     this.loadFilterOptions();
   }
 
-  async loadSmsRecords() {
+  async loadSmsRecords(event?: any) {
     this.isLoading = true;
     try {
 
-      const filters = Object.assign({},this.filterParam);
-      filters.fromDateTime = DateUtil.toLocalDateTimeString(this.filterParam.fromDateTime);
-      filters.toDateTime = DateUtil.toLocalDateTimeString(this.filterParam.toDateTime);
+      const filters = this.buildFilters();
+
+      if (event) {
+        console.log("event>>>", event);
+        const pageParam = Pager.createPagerNg(event);
+        this.pager.pageNo = pageParam.pageNo;
+        this.pager.pageSize = pageParam.pageSize;
+        this.first = event.first ?? 0;
+      }
+      filters.pageNo = this.pager.pageNo;
+      filters.pageSize = this.pager.pageSize;
+      filters.totalRecords = this.pager.totalRecords;
+
       const response = await this.smsRecordsService.getSmsRecords(filters);
       this.smsRecords = response.data || [];
+
+      const pager: any = response.pager;
+      if (pager) {
+        // this.pager.totalRecords = pager.totalRecords;
+        // this.pager.totalRecords = pager.totalRecords;
+        this.pager.totalRecords = pager?.totalRecords ?? this.smsRecords.length;
+      }
+      // this.pager.totalRecords = pager?.totalRecords ?? this.smsRecords.length;
+
     } catch (error) {
       console.error('Error loading SMS records:', error);
       this.notificationService.error('Failed to load SMS records');
@@ -74,6 +103,13 @@ export class SmsRecordsComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  private buildFilters(): any {
+    const filters = Object.assign({}, this.filterParam);
+    filters.fromDateTime = DateUtil.toLocalDateTimeString(this.filterParam.fromDateTime);
+    filters.toDateTime = DateUtil.toLocalDateTimeString(this.filterParam.toDateTime);
+    return filters;
   }
 
   async loadFilterOptions() {
@@ -90,12 +126,20 @@ export class SmsRecordsComponent implements OnInit {
   }
 
   doSearch() {
+    this.resetToFirstPage();
     this.loadSmsRecords();
   }
 
   clearFilters() {
-this.filterParam = {}
+    this.filterParam = {}
+    this.resetToFirstPage();
     this.loadSmsRecords();
+  }
+
+  private resetToFirstPage() {
+    this.pager.pageNo = 1;
+    this.pager.totalRecords = 0
+    this.first = 0;
   }
 
   getFinalStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {
@@ -111,21 +155,24 @@ this.filterParam = {}
     }
   }
 
-  downloadFileAsExcel()
+  async downloadFileAsExcel()
   {
-    this.smsRecords.forEach(smsRecord => {
-      delete smsRecord.id;
-      delete smsRecord.batchId;
-      delete smsRecord.smsStatusLabel;
-      delete smsRecord.batchId;
-      delete smsRecord.smsProvider;
-      delete smsRecord.smsProviderLabel;
-      delete smsRecord.feedbackRequestCount;
-      delete smsRecord.urlReached;
-      delete smsRecord.requestRawResponse;
-      delete smsRecord.feedBackReceived;
-    })
-    ExcelService.exportAsExcelFile(this.smsRecords, "SMS_Records")
+    this.isLoading = true;
+    try {
+      // pageNo = -1 returns every matching record, download=true makes the API
+      // respond with a ready-made Excel file instead of JSON.
+      const filters = this.buildFilters();
+      filters.pageNo = -1;
+      filters.download = true;
+
+      const blob = await this.smsRecordsService.downloadSmsRecords(filters);
+      FileSaver.saveAs(blob, `SMS_Records_${new Date().getTime()}.xlsx`);
+    } catch (error) {
+      console.error('Error downloading SMS records:', error);
+      this.notificationService.error('Failed to download SMS records');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   getSmsStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {

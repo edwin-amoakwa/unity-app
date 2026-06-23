@@ -18,4 +18,9 @@ export class SmsRecordsService {
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.apiUrl}?${params}`));
   }
 
+  async downloadSmsRecords(param): Promise<Blob> {
+    let params = HttpUtils.toUrlParam(param);
+    return await firstValueFrom(this.http.get(`${this.apiUrl}?${params}`, { responseType: 'blob' }));
+  }
+
 }
