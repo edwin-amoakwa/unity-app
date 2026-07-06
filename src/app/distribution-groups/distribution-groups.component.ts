@@ -85,17 +85,6 @@ export class DistributionGroupsComponent implements OnInit {
     });
   }
 
-  countContactsInTextBox()
-  {
-    console.log("==countContactsInTextBox() called==");
-    console.log("==countContactsInTextBox() newFreeFormPhoneNos == ",this.newFreeFormPhoneNos);
-    const lines = this.newFreeFormPhoneNos.split(/\r?\n/).filter(line => line.trim() !== '');
-    console.log("==countContactsInTextBox() lines == ",lines);
-    // const length = lines.length > 0 ? lines.length - 1 : 0;
-    const length = lines.length;
-    // this.groupForm.controls['totalRecipient'].setValue(length);
-    this.selectedGroup.contactCount = length;
-  }
 
   async loadGroups(): Promise<void> {
     this.loading = true;
@@ -185,16 +174,13 @@ export class DistributionGroupsComponent implements OnInit {
     const confirm = await MessageBox.deleteConfirmDialog("Delete Group?","Are you sure you want to delete Group?");
     if (!confirm.value) return;
 
-    try {
+
       const response = await this.distributionGroupsService.deleteDistributionGroup(group.id);
       if (response.success) {
         CollectionUtil.remove(this.groups, group.id);
-      } else {
-        this.notificationService.error(response.message || 'Failed to delete group');
       }
-    } catch (error) {
-      this.notificationService.error('An error occurred while deleting the group');
-    }
+
+
   }
 
   openNewGroupDialog(): void {
