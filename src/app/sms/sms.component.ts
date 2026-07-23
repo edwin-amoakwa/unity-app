@@ -26,6 +26,7 @@ import { CoreModule } from '../core/core.module';
 import { FormView } from '../core/form-view';
 import { NotificationService } from '../core/notification.service';
 import {CollectionUtil, DateUtil, ObjectUtil} from '../core/system.utils';
+import {Pager} from '../core/pager';
 import { DistributionGroupsService } from '../distribution-groups/distribution-groups.service';
 import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
@@ -70,6 +71,15 @@ export class SmsComponent implements OnInit {
   smsMessages: any[] = [];
   isLoading: boolean = false;
 
+  pager: any = {
+    pageNo: 1,
+    pageSize: 10,
+    totalRecords: 0
+  };
+
+  // Index of the first row shown, used to keep the paginator in sync
+  first: number = 0;
+
   selectedSms: any = {};
   selectedTemplateSms: any = null;
 
@@ -96,30 +106,55 @@ export class SmsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.loadSmsMessages();
+    // The table is in lazy mode, so it fires onLazyLoad on init and loads the messages.
   }
 
-  async loadSmsMessages(filters?: { status?: string | null; fromDate?: Date | string | null; toDate?: Date | string | null; }) {
+  async loadSmsMessages(event?: any) {
     this.isLoading = true;
     try {
-      this.templateList = [];
+      const filters = this.buildFilters();
+
+      if (event) {
+        const pageParam = Pager.createPagerNg(event);
+        this.pager.pageNo = pageParam.pageNo;
+        this.pager.pageSize = pageParam.pageSize;
+        this.first = event.first ?? 0;
+      }
+      filters.pageNo = this.pager.pageNo;
+      filters.pageSize = this.pager.pageSize;
+      filters.totalRecords = this.pager.totalRecords;
+
       const response = await this.smsService.getSmsMessages(filters);
-      this.smsMessages = response.data;
+      this.smsMessages = response.data || [];
 
-
-      this.isLoading = false;
+      const pager: any = response.pager;
+      if (pager) {
+        this.pager.totalRecords = pager?.totalRecords ?? this.smsMessages.length;
+      }
     } catch (error) {
       console.error('Error loading SMS messages:', error);
-      this.isLoading = false;
       this.smsMessages = [];
+    } finally {
+      this.isLoading = false;
     }
   }
 
+  private buildFilters(): any {
+    const filters = Object.assign({}, this.filterSms);
+    filters.fromDateTime = DateUtil.toLocalDateTimeString(this.filterSms.fromDateTime);
+    filters.toDateTime = DateUtil.toLocalDateTimeString(this.filterSms.toDateTime);
+    return filters;
+  }
+
   searchSms() {
-    let formatted = Object.assign({}, this.filterSms);
-    formatted.fromDateTime = DateUtil.toLocalDateTimeString(formatted.fromDateTime);
-    formatted.toDateTime = DateUtil.toLocalDateTimeString(formatted.toDateTime);
-    this.loadSmsMessages(formatted);
+    this.resetToFirstPage();
+    this.loadSmsMessages();
+  }
+
+  private resetToFirstPage() {
+    this.pager.pageNo = 1;
+    this.pager.totalRecords = 0;
+    this.first = 0;
   }
 
   closeTemplateDialog()
@@ -202,7 +237,6 @@ export class SmsComponent implements OnInit {
           return
         }
 
-        CollectionUtil.add(this.smsMessages, response.data);
         if(response.data.templateSms)
         {
           CollectionUtil.add(this.templateList,response.data);
@@ -215,6 +249,7 @@ export class SmsComponent implements OnInit {
         }
 
         this.formView.resetToListView();
+        this.loadSmsMessages();
 
 
     } catch (error) {
@@ -256,7 +291,7 @@ export class SmsComponent implements OnInit {
            const response = await this.smsService.deleteSmsMessage(sms.id);
            if(response.success)
            {
-             CollectionUtil.remove(this.smsMessages, sms.id);
+             this.loadSmsMessages();
            }
 
           } catch (error) {
@@ -280,7 +315,7 @@ export class SmsComponent implements OnInit {
             const response = await this.smsService.sendSmsMessage(sms.id);
             if(response.success)
             {
-              CollectionUtil.add(this.smsMessages, response.data);
+              this.loadSmsMessages();
             }
 
           } catch (error) {

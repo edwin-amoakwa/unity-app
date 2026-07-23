@@ -79,8 +79,16 @@
       <p-table
         [value]="smsMessages"
         [loading]="isLoading"
+        [lazy]="true"
+        (onLazyLoad)="loadSmsMessages($event)"
         [paginator]="true"
-        [rows]="10"
+        [first]="first"
+        [rows]="pager.pageSize"
+        [totalRecords]="pager.totalRecords"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        paginatorDropdownAppendTo="body"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         styleClass="p-datatable-sm"
         [globalFilterFields]="[
           'senderId',
@@ -95,14 +103,13 @@
             <th>Sender ID</th>
             <th>Message</th>
             <!--          <th >Phone Numbers</th>-->
-            <th>Recipients</th>
-            <th>Pages</th>
-            <th>Cost</th>
+            <th class="text-end">Recipients</th>
+            <th class="text-end">Pages</th>
+            <th class="text-end">Cost</th>
             <th>Status</th>
             <!--          <th >Nature</th>-->
             <th>Scheduled</th>
-            <th style="width: 120px">Actions</th>
-            <th></th>
+            <th class="text-center" style="width: 160px">Actions</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-sms>
@@ -123,9 +130,9 @@
             <!--              {{ formatPhoneNumbers(sms.phoneNos) }}-->
             <!--            </div>-->
             <!--          </td>-->
-            <td>{{ sms.totalRecipient }}</td>
-            <td>{{ sms.pagesCount }}</td>
-            <td>{{ sms.actualCost.toFixed(2) }}</td>
+            <td class="text-end">{{ sms.totalRecipient | number }}</td>
+            <td class="text-end">{{ sms.pagesCount | number }}</td>
+            <td class="text-end">{{ sms.actualCost | number: "1.2-2" }}</td>
             <td>
               <p-tag
                 [value]="sms.smsStatus"
@@ -176,7 +183,7 @@
               }
             </td>
             <td>
-              <div class="flex gap-1">
+              <div class="d-flex align-items-center justify-content-center gap-1">
                 @if (sms.smsStatus === "Pending") {
                   <p-button
                     icon="pi pi-pencil"
@@ -210,22 +217,18 @@
                     (onClick)="deleteSms(sms)"
                   >
                   </p-button>
+                  <p-button
+                    icon="pi pi-send"
+                    size="small"
+                    severity="success"
+                    [text]="true"
+                    pTooltip="Initiate/Send"
+                    tooltipPosition="left"
+                    (onClick)="initiateSms(sms)"
+                  >
+                  </p-button>
                 }
               </div>
-            </td>
-            <td>
-              @if (sms.smsStatus === "Pending") {
-                <p-button
-                  icon="pi pi-send"
-                  size="small"
-                  severity="success"
-                  [text]="true"
-                  pTooltip="Initiate/Send"
-                  tooltipPosition="left"
-                  (onClick)="initiateSms(sms)"
-                >
-                </p-button>
-              }
             </td>
           </tr>
         </ng-template>

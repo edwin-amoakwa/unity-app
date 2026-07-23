@@ -15,27 +15,7 @@ export class SmsService {
   constructor(private http: HttpClient) {}
 
   async getSmsMessages(filters): Promise<ApiResponse<any[]>> {
-    let params: any = Object.assign({}, filters);
-
-    if (filters) {
-      const { status, fromDate, toDate } = filters;
-      if (status) {
-        params.status = status;
-      }
-      if (fromDate) {
-        // Send ISO string date-time to backend
-        const f = fromDate instanceof Date ? fromDate.toISOString() : fromDate;
-        params.fromDate = f;
-      }
-      if (toDate) {
-        const t = toDate instanceof Date ? toDate.toISOString() : toDate;
-        params.toDate = t;
-      }
-    }
-    const urlParams = HttpUtils.toUrlParam(params);
-    console.log(filters)
-    console.log(params)
-    console.log(urlParams);
+    const urlParams = HttpUtils.toUrlParam(Object.assign({}, filters));
     return await firstValueFrom(this.http.get<ApiResponse<any[]>>(`${this.apiUrl}?${urlParams}`));
   }
 
@@ -43,6 +23,8 @@ export class SmsService {
 
     let params:any = {};
     params.templateSms = true;
+    // pageNo = -1 tells the backend to skip pagination and return every template.
+    params.pageNo = -1;
     return this.getSmsMessages(params);
   }
 
