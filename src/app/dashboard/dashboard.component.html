@@ -83,7 +83,7 @@
   </div>
   <div class="credit-pill">
     <span class="credit-label">Credit balance</span>
-    <span class="credit-value mono">{{ summary.creditBalance | currency }}</span>
+    <span class="credit-value mono">{{ summary.creditBalance | currency: "GHS" : "symbol" : "1.4-4" }}</span>
   </div>
 </div>
 
@@ -259,7 +259,7 @@
               </div>
               <div class="stat-info">
                 <div class="stat-number">
-                  {{ summary.creditBalance | currency }}
+                  {{ summary.creditBalance | currency: "GHS" : "symbol" : "1.4-4" }}
                 </div>
                 <div class="stat-label">Credit Balance</div>
               </div>
