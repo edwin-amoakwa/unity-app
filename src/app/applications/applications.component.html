@@ -1,7 +1,9 @@
-<h1 class="page-title">Applications</h1>
-
-<button-toolbar>
+<app-page-header
+  title="Applications"
+  description="API applications that send messages on your behalf"
+>
   <button
+    page-actions
     pButton
     type="button"
     label="New Application"
@@ -10,9 +12,9 @@
     (click)="openCreateDialog()"
     pTooltip="Create new application"
   ></button>
-</button-toolbar>
+</app-page-header>
 
-<app-card title="Applications List" subtitle="Manage your applications">
+<app-card>
   <!-- List View -->
   @if (formView.listView) {
     <div>
@@ -138,102 +140,65 @@
   }
 
   <!-- Detail View -->
-  @if (formView.detailView) {
-    <div class="p-4">
-      <div class="row mb-4">
-        <div class="col-md-6">
-          <h3>Application Details</h3>
+  @if (formView.detailView && selectedApplication) {
+    <div class="app-detail">
+      <div class="detail-header">
+        <div>
+          <h3>{{ selectedApplication.appName }}</h3>
+          <div class="detail-tags">
+            <p-tag
+              [value]="selectedApplication.applicationTypeName"
+              [severity]="getApplicationTypeSeverity(selectedApplication.applicationType)"
+            ></p-tag>
+            <p-tag
+              [value]="selectedApplication.activeStatus ? 'Active' : 'Inactive'"
+              [severity]="selectedApplication.activeStatus ? 'success' : 'danger'"
+            ></p-tag>
+          </div>
         </div>
-        <div class="col-md-6 text-end">
-          <p-button
-            label="Back to List"
-            icon="pi pi-arrow-left"
-            severity="secondary"
-            (onClick)="formView.resetToListView()"
-          >
-          </p-button>
+        <p-button
+          label="Back to List"
+          icon="pi pi-arrow-left"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="formView.resetToListView()"
+        ></p-button>
+      </div>
+
+      <div class="detail-section">
+        <h4>Basic Information</h4>
+        <div class="detail-row">
+          <span class="detail-label">App Name</span>
+          <span>{{ selectedApplication.appName }}</span>
         </div>
       </div>
-      @if (selectedApplication) {
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card p-4">
-              <h4>Basic Information</h4>
-              <div class="field mb-3">
-                <label class="font-semibold">App Name:</label>
-                <p>{{ selectedApplication.appName }}</p>
-              </div>
-              <div class="field mb-3">
-                <label class="font-semibold">Type:</label>
-                <p-tag
-                  [value]="selectedApplication.applicationTypeName"
-                  [severity]="
-                    getApplicationTypeSeverity(
-                      selectedApplication.applicationType
-                    )
-                  "
-                >
-                </p-tag>
-              </div>
-              <div class="field mb-3">
-                <label class="font-semibold">Status:</label>
-                <p-tag
-                  [value]="
-                    selectedApplication.activeStatus ? 'Active' : 'Inactive'
-                  "
-                  [severity]="
-                    selectedApplication.activeStatus ? 'success' : 'danger'
-                  "
-                >
-                </p-tag>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card p-4">
-              <h4>API Configuration</h4>
-              <div class="field mb-3">
-                <label class="font-semibold">API Key:</label>
-                <div class="flex align-items-center gap-2">
-                  <span class="font-mono">{{
-                    selectedApplication.apiKey
-                  }}</span>
-                  <p-button
-                    label="Renew API Key"
-                    icon="pi pi-refresh"
-                    size="small"
-                    severity="warn"
-                    (onClick)="renewApiKey(selectedApplication)"
-                  >
-                  </p-button>
-                </div>
-              </div>
-              <div class="field mb-3">
-                <label class="font-semibold">Actions:</label>
-                <div class="flex gap-2">
-                  <p-button
-                    [label]="
-                      selectedApplication.activeStatus
-                        ? 'Disable App'
-                        : 'Enable App'
-                    "
-                    [icon]="
-                      selectedApplication.activeStatus
-                        ? 'pi pi-ban'
-                        : 'pi pi-check'
-                    "
-                    [severity]="
-                      selectedApplication.activeStatus ? 'danger' : 'success'
-                    "
-                    (onClick)="toggleApplicationStatus(selectedApplication)"
-                  >
-                  </p-button>
-                </div>
-              </div>
-            </div>
+
+      <div class="detail-section">
+        <h4>API Configuration</h4>
+        <div class="detail-row">
+          <span class="detail-label">API Key</span>
+          <div class="api-key">
+            <code>{{ selectedApplication.apiKey }}</code>
+            <p-button
+              label="Renew"
+              icon="pi pi-refresh"
+              size="small"
+              severity="warn"
+              [outlined]="true"
+              (onClick)="renewApiKey(selectedApplication)"
+            ></p-button>
           </div>
         </div>
-      }
+      </div>
+
+      <div class="detail-actions">
+        <p-button
+          [label]="selectedApplication.activeStatus ? 'Disable App' : 'Enable App'"
+          [icon]="selectedApplication.activeStatus ? 'pi pi-ban' : 'pi pi-check'"
+          [severity]="selectedApplication.activeStatus ? 'danger' : 'success'"
+          (onClick)="toggleApplicationStatus(selectedApplication)"
+        ></p-button>
+      </div>
     </div>
   }
 </app-card>

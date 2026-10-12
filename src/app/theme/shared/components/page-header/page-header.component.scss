@@ -1,0 +1,66 @@
+:host {
+  display: block;
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-header__heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.page-header__text {
+  min-width: 0;
+}
+
+.page-header__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+// keep the icon on the title line
+.page-header__icon {
+  flex: 0 0 auto;
+  line-height: 1.875rem;
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+.page-header__description {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: var(--muted);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  &:not(:has(> *)) {
+    display: none;
+  }
+}

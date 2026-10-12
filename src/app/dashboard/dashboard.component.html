@@ -1,453 +1,155 @@
-<!--<h1 class="page-title">Dashboard</h1>-->
-
-<!-- styles moved to dashboard.component.scss -->
-
 @if (merchant?.accountStatus == "PENDING") {
-  <div id="pending-account" class="row">
-    <div class="col-12">
-      <div class="pending-banner">
-        <div
-          class="d-flex flex-wrap justify-content-between align-items-center"
-        >
-          <div class="d-flex align-items-center mb-3 mb-md-0">
-            <span class="icon-wrap">
-              <!-- Inline SVG icon (shield-check) -->
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M12 3l7 3v6c0 5-3.5 9-7 9s-7-4-7-9V6l7-3z"
-                  stroke="white"
-                  stroke-opacity="0.85"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M9 12l2 2 4-4"
-                  stroke="white"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
-            <div>
-              <h5 style="margin: 0; font-weight: 700; letter-spacing: 0.2px">
-                Complete your account setup
-              </h5>
-              <p class="helper-text">
-                Finish a few quick steps to unlock all features.
-              </p>
-            </div>
-          </div>
-          <div class="cta">
-            <a class="btn-cta" routerLink="/merchant-profile"
-              >Complete Account Setup</a
-            >
-          </div>
-        </div>
-        <div class="meta mt-3">
-          <div>
-            <span class="item-label">Account Status:</span>
-            <span class="status-badge">
-              <span
-                style="
-                  display: inline-block;
-                  width: 8px;
-                  height: 8px;
-                  border-radius: 50%;
-                  background: #fde047;
-                "
-              ></span>
-              {{ merchant.accountStatus }}
-            </span>
-          </div>
-          <div>
-            <span class="item-label">Merchant:</span>
-            <strong>{{ merchant.merchantName }}</strong>
-          </div>
-        </div>
-      </div>
+  <div class="pending-banner" role="status">
+    <i class="pi pi-shield" aria-hidden="true"></i>
+    <div class="pending-text">
+      <strong>Your account is pending approval</strong>
+      <span>Finish your business profile so we can approve your account and unlock all features.</span>
     </div>
+    <a class="btn-outline" routerLink="/merchant-profile">Complete business profile</a>
   </div>
 }
 
-<div id="top" class="dash-header">
+<div class="dash-header">
   <div>
-    <h1 class="page-title" style="margin-bottom: 4px">{{ merchant?.merchantName }}</h1>
-    <p class="dash-subtitle">Daily summary for {{ currentDate | date }}</p>
+    <h1 class="page-title">SMS dashboard</h1>
+    <p class="dash-subtitle">{{ merchant?.merchantName }} · {{ currentDate | date: "EEEE, d MMM y" }}</p>
   </div>
-  <div class="credit-pill">
-    <span class="credit-label">Credit balance</span>
-    <span class="credit-value mono">{{ summary.creditBalance | currency: "GHS" : "symbol" : "1.4-4" }}</span>
-  </div>
-</div>
-
-<div class="stats-grid">
-  <div class="card-item total">
-    <span class="label">Total</span>
-    <span class="value mono">{{ smsStats.total | number }}</span>
-  </div>
-
-  <div class="card-item sent">
-    <span class="label">Sent</span>
-    <span class="value mono">{{ smsStats.sent | number }}</span>
-  </div>
-
-  <div class="card-item queued">
-    <span class="label">Queued</span>
-    <span class="value mono">{{ smsStats.queued | number }}</span>
-  </div>
-
-  <div class="card-item failed">
-    <span class="label">Failed</span>
-    <span class="value mono">{{ smsStats.failed | number }}</span>
-  </div>
-
-  <div class="card-item rejected">
-    <span class="label">Rejected</span>
-    <span class="value mono">{{ smsStats.rejected | number }}</span>
-  </div>
-</div>
-
-<div class="date-range-filter">
-  <label for="dateRangeSelect" class="form-label" style="margin: 0 8px 0 0"
-    >Date Range:</label
-  >
-  <p-select
-    inputId="dateRangeSelect"
-    [options]="dateRanges"
-    optionLabel="itemName"
-    optionValue="id"
-    [(ngModel)]="chartDataFilter.period"
-    (ngModelChange)="onFilterChange()"
-    placeholder="Select Range"
-  ></p-select>
-
-  <!-- Custom period inputs: only show when CUSTOM_PERIOD is selected -->
-  @if (chartDataFilter.period === "CUSTOM_PERIOD") {
-    <div
-      style="display: flex; align-items: center; gap: 8px; margin-left: 12px"
-    >
-      <label for="fromDate" style="color: #444; font-size: 14px">From:</label>
-      <input
-        id="fromDate"
-        type="date"
-        [(ngModel)]="chartDataFilter.fromDate"
-        (ngModelChange)="onFilterChange()"
-        style="
-          padding: 6px 10px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
-          background: #fff;
-        "
-      />
-      <label for="toDate" style="color: #444; font-size: 14px">To:</label>
-      <input
-        id="toDate"
-        type="date"
-        [(ngModel)]="chartDataFilter.toDate"
-        (ngModelChange)="onFilterChange()"
-        style="
-          padding: 6px 10px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
-          background: #fff;
-        "
-      />
-    </div>
+  @if (canSendSms) {
+    <a class="btn-primary-lg" routerLink="/send-sms">
+      <i class="pi pi-send" aria-hidden="true"></i> Send SMS
+    </a>
   }
+</div>
 
-  <div style="display: flex; align-items: center; gap: 8px; margin-left: 12px">
-    <button
-      type="button"
-      class="btn"
-      [style.background-color]="
-        chartDataFilter.smsStatus === 'SENT' ? '#1e9e57' : 'transparent'
-      "
-      [style.color]="chartDataFilter.smsStatus === 'SENT' ? '#fff' : '#1e9e57'"
-      [style.border-color]="'#1e9e57'"
-      (click)="chartDataFilter.smsStatus = 'SENT'; onFilterChange()"
-    >
-      SENT
-    </button>
-    <button
-      type="button"
-      class="btn"
-      [style.background-color]="
-        chartDataFilter.smsStatus === 'FAILED' ? '#d64545' : 'transparent'
-      "
-      [style.color]="
-        chartDataFilter.smsStatus === 'FAILED' ? '#fff' : '#d64545'
-      "
-      [style.border-color]="'#d64545'"
-      (click)="chartDataFilter.smsStatus = 'FAILED'; onFilterChange()"
-    >
-      FAILED
-    </button>
-    <button
-      type="button"
-      class="btn"
-      [style.background-color]="
-        chartDataFilter.smsStatus === 'REJECTED' ? '#d98a04' : 'transparent'
-      "
-      [style.color]="
-        chartDataFilter.smsStatus === 'REJECTED' ? '#fff' : '#d98a04'
-      "
-      [style.border-color]="'#d98a04'"
-      (click)="chartDataFilter.smsStatus = 'REJECTED'; onFilterChange()"
-    >
-      REJECTED
-    </button>
+<section class="balance-strip" aria-label="Credit balance">
+  <div class="balance-main">
+    <span class="balance-label"><i class="pi pi-wallet" aria-hidden="true"></i> Credit balance</span>
+    <span class="balance-amount mono"><small>GH₵</small>{{ summary.creditBalance ?? 0 | number: "1.2-2" }}</span>
+  </div>
+  <dl class="balance-facts">
+    <div>
+      <dt>Enough for about</dt>
+      <dd class="mono">{{ smsCovered | number }} SMS</dd>
+    </div>
+    <div>
+      <dt>Average price per SMS</dt>
+      <dd class="mono">
+        GH₵ {{ price.rate | number: "1.2-4" }}
+        @if (price.channelCount) {
+          <span class="balance-fact-note">across {{ price.channelCount }} {{ price.channelCount === 1 ? "network" : "networks" }}</span>
+        }
+      </dd>
+    </div>
+  </dl>
+  @if (canAddFunds) {
+    <a class="btn-topup" routerLink="/add-funds">
+      <i class="pi pi-plus" aria-hidden="true"></i> Top up balance
+    </a>
+  }
+</section>
+
+<div class="section-head">
+  <h2>Today's messages</h2>
+  <span class="section-note">Counts reset at midnight</span>
+</div>
+<div class="stats-grid">
+  <div class="stat stat-total">
+    <span class="stat-label"><span class="stat-icon"><i class="pi pi-envelope" aria-hidden="true"></i></span>Total</span>
+    <span class="stat-value mono">{{ smsStats.total ?? 0 | number }}</span>
+    <span class="stat-share">messages today</span>
+  </div>
+  <div class="stat stat-sent">
+    <span class="stat-label"><span class="stat-icon"><i class="pi pi-check" aria-hidden="true"></i></span>Sent</span>
+    <span class="stat-value mono">{{ smsStats.sent ?? 0 | number }}</span>
+    <span class="stat-share">{{ share(smsStats.sent) }}</span>
+  </div>
+  <div class="stat stat-queued">
+    <span class="stat-label"><span class="stat-icon"><i class="pi pi-clock" aria-hidden="true"></i></span>Queued</span>
+    <span class="stat-value mono">{{ smsStats.queued ?? 0 | number }}</span>
+    <span class="stat-share">{{ share(smsStats.queued) }}</span>
+  </div>
+  <div class="stat stat-failed">
+    <span class="stat-label"><span class="stat-icon"><i class="pi pi-times" aria-hidden="true"></i></span>Failed</span>
+    <span class="stat-value mono">{{ smsStats.failed ?? 0 | number }}</span>
+    <span class="stat-share">{{ share(smsStats.failed) }}</span>
+  </div>
+  <div class="stat stat-rejected">
+    <span class="stat-label"><span class="stat-icon"><i class="pi pi-ban" aria-hidden="true"></i></span>Rejected</span>
+    <span class="stat-value mono">{{ smsStats.rejected ?? 0 | number }}</span>
+    <span class="stat-share">{{ share(smsStats.rejected) }}</span>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-12">
-    <app-sent-sms-chart [dataFilter]="chartDataFilter" />
+<section class="panel chart-panel">
+  <div class="panel-head">
+    <div>
+      <h2>{{ statusLabel(chartDataFilter.smsStatus) }} messages over time</h2>
+      <p class="panel-sub">Hover the line for the exact count</p>
+    </div>
+    <div class="chart-controls">
+      <div class="seg" role="group" aria-label="Status shown">
+        @for (s of chartStatuses; track s.id) {
+          <button
+            type="button"
+            [class]="'seg-btn seg-' + s.id.toLowerCase()"
+            [attr.aria-pressed]="chartDataFilter.smsStatus === s.id"
+            (click)="setChartStatus(s.id)"
+          >
+            <span class="sw" aria-hidden="true"></span>{{ s.label }}
+          </button>
+        }
+      </div>
+      <p-select
+        inputId="dateRangeSelect"
+        ariaLabel="Date range"
+        [options]="dateRanges"
+        optionLabel="itemName"
+        optionValue="id"
+        [(ngModel)]="chartDataFilter.period"
+        (ngModelChange)="onFilterChange()"
+        placeholder="Date range"
+        styleClass="range-select"
+      ></p-select>
+    </div>
   </div>
-</div>
+  <app-sent-sms-chart [dataFilter]="chartDataFilter" />
+</section>
 
-@if (merchant?.accountStatus == "PENDING") {
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6">
-              <p>
-                <strong>Account Status:</strong>
-                <span class="badge bg-warning">{{
-                  merchant.accountStatus
-                }}</span>
-              </p>
-            </div>
-            <div class="col-md-6">
-              <p><strong>Merchant Name:</strong>{{ merchant.merchantName }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<section class="panel">
+  <div class="panel-head">
+    <h2>Latest messages</h2>
+    @if (canViewRecords) {
+      <a class="panel-link" routerLink="/sms-records">View all SMS records</a>
+    }
   </div>
-}
-
-@if (false) {
-  <div class="row">
-    <!-- Summary Section -->
-    <!--  @if (summary) {-->
-    <!--    <div class="col-12 mb-3">-->
-    <!--      <div class="card">-->
-    <!--        <div class="card-body">-->
-    <!--          <h4 class="card-title">Dashboard Summary</h4>-->
-    <!--          <pre>{{ summary | json }}</pre>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <!--  }-->
-    <div class="col-xl-4 col-md-6">
-      <div class="row">
-        <div class="stats-container">
-          <div class="stat-card card-purple">
-            <div class="card-content">
-              <div class="icon-container">
-                <i class="pi pi-wallet icon"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-number">
-                  {{ summary.creditBalance | currency: "GHS" : "symbol" : "1.4-4" }}
-                </div>
-                <div class="stat-label">Credit Balance</div>
-              </div>
-            </div>
-          </div>
-        </div>
+  @if (latestSms.length === 0) {
+    <p class="empty">No messages yet. Messages you send will appear here.</p>
+  }
+  @for (sms of latestSms; track sms.id) {
+    <article class="msg">
+      <div class="msg-meta">
+        <span class="msg-type">{{ sms.smsNatureLabel }} · {{ sms.smsMessageTypeLabel }}</span>
+        @if (sms.senderName) {
+          <span>{{ sms.senderName }}</span>
+        }
+        <span>{{ sms.valueDate | date: "d MMM y" }}</span>
+        @if (sms.totalRecipient) {
+          <span class="pill pill-muted">{{ sms.totalRecipient | number }} recipients</span>
+        }
       </div>
-    </div>
-    <div class="col-xl-4 col-md-6">
-      <div class="stat-card card-blue">
-        <div class="card-content">
-          <div class="icon-container">
-            <i class="pi pi-envelope icon"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">{{ summary.smsBalance | number }}</div>
-            <div class="stat-label">SMS Balance</div>
-          </div>
-        </div>
+      <p class="msg-text">{{ sms.messageText }}</p>
+      <div class="msg-counts">
+        <span class="pill pill-sent"><i class="pi pi-check" aria-hidden="true"></i>{{ sms.smsStats?.sent ?? 0 | number }} sent</span>
+        @if (sms.smsStats?.queued) {
+          <span class="pill pill-queued"><i class="pi pi-clock" aria-hidden="true"></i>{{ sms.smsStats.queued | number }} queued</span>
+        }
+        @if (sms.smsStats?.failed) {
+          <span class="pill pill-failed"><i class="pi pi-times" aria-hidden="true"></i>{{ sms.smsStats.failed | number }} failed</span>
+        }
+        @if (sms.smsStats?.rejected) {
+          <span class="pill pill-rejected"><i class="pi pi-ban" aria-hidden="true"></i>{{ sms.smsStats.rejected | number }} rejected</span>
+        }
       </div>
-    </div>
-    <div class="col-xl-4 col-md-12">
-      <div
-        class="card total-income-card overflow-hidden bg-primary-dark text-white"
-      >
-        <div class="card-body">
-          <div class="d-flex align-items-center">
-            <div class="avatar avatar-lg icon m-r-5">
-              <i class="text-white ti ti-layout-board-split f-24"></i>
-            </div>
-            <div class="ms-2">
-              <h4 class="text-white f-w-600 mb-1">
-                {{ summary.unitPrice | currency }}
-              </h4>
-              <p class="mb-0 opacity-50 text-sm">Unit Price</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br />
-      <div class="card total-income-card warning overflow-hidden">
-        <div class="card-body">
-          <div class="d-flex align-items-center">
-            <div class="avatar avatar-lg icon-warning m-r-5">
-              <i class="text-warning ti ti-layout-board-split f-24"></i>
-            </div>
-            <div class="ms-2">
-              <h4 class="f-w-600 mb-1">{{ totalSmsSent }}</h4>
-              <p class="mb-0 opacity-50 text-sm">Total SMS</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br />
-    </div>
-    <div class="col-xl-8 col-md-12">
-      <div class="row">
-        <div class="stats-container">
-          <div class="stat-card sent">
-            <div class="card-content">
-              <div class="icon-container">
-                <i class="pi pi-send icon"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-number">{{ smsStats.sent | number }}</div>
-                <div class="stat-label">Sent</div>
-              </div>
-            </div>
-          </div>
-          <div class="stat-card queued">
-            <div class="card-content">
-              <div class="icon-container">
-                <i class="pi pi-clock icon"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-number">{{ smsStats.queued | number }}</div>
-                <div class="stat-label">Queued</div>
-              </div>
-            </div>
-          </div>
-          <div class="stat-card failed">
-            <div class="card-content">
-              <div class="icon-container">
-                <i class="pi pi-times-circle icon"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-number">{{ smsStats.failed | number }}</div>
-                <div class="stat-label">Failed</div>
-              </div>
-            </div>
-          </div>
-          <div class="stat-card rejected">
-            <div class="card-content">
-              <div class="icon-container">
-                <i class="pi pi-ban icon"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-number">{{ smsStats.rejected | number }}</div>
-                <div class="stat-label">Rejected</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="rounded bg-light-secondary overflow-hidden mb-3">
-        <div class="px-3 pt-3">
-          <div class="row mb-1 align-items-start">
-            <div class="col">
-              <h5 class="text-secondary mb-0">Sent SMSs</h5>
-              <!--            <small class="text-muted">10% Profit</small>-->
-            </div>
-            <div class="col-auto">
-              <!--            <h4 class="mb-0">$1839.00</h4>-->
-            </div>
-          </div>
-        </div>
-        <app-sent-sms-chart />
-      </div>
-      <!--    <app-bar-chart />-->
-    </div>
-    <div class="col-xl-4 col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <h3>Monthly Summary</h3>
-          <monthly-sms-chart-chart />
-        </div>
-      </div>
-      <br />
-      <div class="card">
-        <div class="card-body">
-          <div class="row mb-3 align-items-center">
-            <div class="col">
-              <h3>Lastest SMS Sent</h3>
-            </div>
-            <div class="col-auto"></div>
-          </div>
-          <ul class="list-group list-group-flush">
-            @for (sms of latestSms; track sms) {
-              <li class="list-group-item px-0 {{ sms.space }}">
-                <strong>
-                  <i>{{ sms.smsNatureLabel }} {{ sms.smsMessageTypeLabel }}</i>
-                </strong>
-                <div class="row align-items-start">
-                  <div class="col">
-                    <div id="sms-message" class="mb-0 text-muted">
-                      {{ sms.messageText }}
-                    </div>
-                    <small class="{{ sms.color }}">{{ sms.valueDate }}</small>
-                  </div>
-                  <div class="col-auto">
-                    <div class="mb-0">
-                      <p-badge
-                        value="Sent: {{ sms.smsStats.sent }}"
-                        severity="success"
-                      />
-                      <p-badge
-                        value="Queued: {{ sms.smsStats.queued }}"
-                        severity="info"
-                      />
-                      <p-badge
-                        value="Failed: {{ sms.smsStats.failed }}"
-                        severity="warn"
-                      />
-                      <p-badge
-                        value="Rejected: {{ sms.smsStats.rejected }}"
-                        severity="contrast"
-                      />
-                      <span
-                        class="ms-2 align-top avatar avatar-xxs {{
-                          sms.bgColor
-                        }}"
-                      >
-                        <i class="{{ sms.icon }} {{ sms.color }}"></i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            }
-          </ul>
-          <!--        <div class="text-center">-->
-          <!--          <a href="javascript:" class="b-b-primary text-primary f-w-500">-->
-          <!--            View all-->
-          <!--            <i class="ti ti-chevron-right"></i>-->
-          <!--          </a>-->
-          <!--        </div>-->
-        </div>
-      </div>
-    </div>
-  </div>
-}
+    </article>
+  }
+</section>

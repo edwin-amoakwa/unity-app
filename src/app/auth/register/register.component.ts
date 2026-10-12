@@ -23,6 +23,7 @@ import {Textarea} from 'primeng/textarea';
   styleUrls: []
 })
 export class RegisterComponent implements OnInit, OnDestroy {
+  currentYear = new Date().getFullYear();
   registerForm!: FormGroup;
   isLoading = false;
   displayTerms = false;

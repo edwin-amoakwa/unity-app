@@ -2,74 +2,84 @@
 @import "app-common.css";
 @import "auth-shared.css";
 @import "auth-split.css";
+@import "dashboard-shared.css";
 
 /* Theme tokens — light */
 :root {
-  /* Brand */
-  --teal-50:  #e9f6f4;
-  --teal-100: #c9eae5;
-  --teal-200: #97d6cd;
-  --teal-300: #5cbbae;
-  --teal-400: #2e9c8d;
-  --teal-500: #0f7e6f;
-  --teal-600: #0b6557;
-  --teal-700: #094e44;
-  --teal-800: #073a33;
-  --teal-900: #08221f;
+  --navy-50:  #eef2f9;
+  --navy-100: #d5deee;
+  --navy-200: #abbcdb;
+  --navy-300: #7a93c0;
+  --navy-400: #4a6699;
+  --navy-500: #2a4577;
+  --navy-600: #1c3768;
+  --navy-700: #132d5c;
+  --navy-800: #0e2147;
+  --navy-900: #0a1833;
 
-  /* Neutral — warm Stone */
-  --stone-0:   #ffffff;
-  --stone-50:  #f7f6f3;
-  --stone-100: #efede8;
-  --stone-200: #e4e1da;
-  --stone-300: #cbc7bd;
-  --stone-400: #a8a39a;
-  --stone-500: #807b71;
-  --stone-600: #5c574e;
-  --stone-700: #403c35;
-  --stone-800: #2a2722;
-  --stone-900: #1a1815;
+  --green-50:  #eef8ec;
+  --green-100: #d6efd2;
+  --green-200: #addea6;
+  --green-300: #7fcb75;
+  --green-400: #5db955;
+  --green-500: #4ba445;
+  --green-600: #3a8c35;
+  --green-700: #2b7a20;
 
-  /* "Money" accent — muted Gold */
-  --gold-400: #d4af5a;
-  --gold-500: #b8862b;
-  --gold-600: #97681c;
+  --gray-0:   #ffffff;
+  --gray-50:  #f3f5f9;
+  --gray-100: #eaeef4;
+  --gray-200: #dfe4ee;
+  --gray-300: #c6cedc;
+  --gray-400: #98a2b8;
+  --gray-500: #6a7591;
+  --gray-600: #4a5672;
+  --gray-700: #36415c;
+  --gray-800: #212b44;
+  --gray-900: #0f1b33;
 
   /* Semantic — distinct from brand on purpose */
   --success:     #1e9e57;  --success-bg: #e7f6ed;  --success-text: #136b3a;
   --info:        #2e7cd6;  --info-bg:    #e8f1fc;  --info-text:    #1c5499;
   --warning:     #d98a04;  --warning-bg: #fcf3e0;  --warning-text: #8a5a05;
   --danger:      #d64545;  --danger-bg:  #fbeaea;  --danger-text:  #9b2c2c;
-  --neutral-bg:  #efede8;  --neutral-text: #403c35;
+  --neutral-bg:  var(--gray-100); --neutral-text: var(--gray-700);
 
   /* Semantic roles (legacy names preserved) */
-  --bg: var(--stone-50);
-  --surface: var(--stone-0);
-  --surface-2: var(--stone-50);
-  --text: var(--stone-900);
-  --text-soft: var(--stone-700);
-  --muted: var(--stone-500);
-  --primary: var(--teal-500);
-  --primary-hover: var(--teal-600);
-  --primary-active: var(--teal-700);
+  --bg: var(--gray-50);
+  --surface: var(--gray-0);
+  --surface-2: var(--gray-50);
+  --text: var(--gray-900);
+  --text-soft: var(--gray-700);
+  --muted: var(--gray-500);
+  --primary: var(--navy-700);
+  --primary-hover: var(--navy-800);
+  --primary-active: var(--navy-900);
   --primary-contrast: #ffffff;
-  --primary-soft: var(--teal-50);
-  --accent-gold: var(--gold-500);
+  --primary-soft: var(--navy-50);
+  --accent: var(--green-500);
+  --accent-text: var(--green-700);
+  --accent-soft: var(--green-50);
+  --accent-gold: var(--warning);
 
-  --sidebar-bg: var(--teal-900);
-  --sidebar-text: #c2d6d1;
-  --sidebar-text-strong: #f1f7f5;
-  --sidebar-accent: var(--teal-400);
-  --sidebar-active-bg: rgba(46, 156, 141, 0.16);
+  --sidebar-bg: var(--navy-700);
+  --sidebar-text: #c9d3e6;
+  --sidebar-text-strong: #ffffff;
+  --sidebar-muted: rgba(255, 255, 255, 0.5);
+  --sidebar-accent: #9bd894;
+  --sidebar-active-bg: rgba(255, 255, 255, 0.1);
 
-  --border: var(--stone-200);
-  --border-strong: var(--stone-300);
+  --border: var(--gray-200);
+  --border-strong: var(--gray-300);
 
-  --card-header-bg: var(--stone-0);
+  --card-header-bg: var(--gray-0);
   --card-header-shadow: none;
 
   /* Table header fill (dark-aware) */
-  --table-header-bg: var(--stone-100);
+  --table-header-bg: var(--gray-100);
+
+  --chart-grid: var(--gray-100);
+  --chart-axis: var(--gray-500);
 
   /* Spacing scale (4px base) */
   --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
@@ -82,14 +92,14 @@
   --radius-lg: 14px;
   --radius-pill: 999px;
 
-  /* Elevation — restrained, warm-tinted */
-  --shadow-sm: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.05);
-  --shadow-md: 0 2px 4px -1px rgba(16,24,40,.05), 0 12px 24px -8px rgba(16,24,40,.10);
-  --shadow-lg: 0 24px 48px -12px rgba(16,24,40,.18);
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(15,27,51,.05), 0 1px 3px rgba(15,27,51,.06);
+  --shadow-md: 0 2px 4px -1px rgba(15,27,51,.05), 0 12px 24px -8px rgba(15,27,51,.12);
+  --shadow-lg: 0 24px 48px -12px rgba(15,27,51,.2);
   --shadow: var(--shadow-sm); /* legacy alias */
 
   /* Focus ring */
-  --focus-ring: 0 0 0 3px rgba(15,126,111,.25);
+  --focus-ring: 0 0 0 3px rgba(75,164,69,.28);
 
   /* Typography */
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -108,42 +118,48 @@
    Tokens — Dark
    ---------------------------------------------------------------------------- */
 [data-theme="dark"] {
-  --bg: #0c1714;
-  --surface: #15201d;
-  --surface-2: #1b2723;
-  --text: #e8e6e0;
-  --text-soft: #cdd6d2;
-  --muted: #93a09b;
-  --primary: #2fb89e;
-  --primary-hover: #46c6ae;
-  --primary-active: #5cbbae;
-  --primary-contrast: #06241e;
-  --primary-soft: rgba(47,184,158,.14);
-  --accent-gold: var(--gold-400);
+  --bg: #0b1226;
+  --surface: #121b36;
+  --surface-2: #19243f;
+  --text: #e8ecf5;
+  --text-soft: #c5cddd;
+  --muted: #8691ab;
+  --primary: #4ba445;
+  --primary-hover: #5db955;
+  --primary-active: #7fcb75;
+  --primary-contrast: #0b1a10;
+  --primary-soft: rgba(75,164,69,.16);
+  --accent: #5db955;
+  --accent-text: #74c96b;
+  --accent-soft: rgba(75,164,69,.16);
 
-  --sidebar-bg: #0a1714;
-  --sidebar-text: #9fb3ad;
-  --sidebar-text-strong: #eef5f3;
-  --sidebar-accent: #2fb89e;
-  --sidebar-active-bg: rgba(47,184,158,.16);
+  --sidebar-bg: #0e1730;
+  --sidebar-text: #a9b3ca;
+  --sidebar-text-strong: #eef2f9;
+  --sidebar-muted: rgba(255, 255, 255, 0.45);
+  --sidebar-accent: #74c96b;
+  --sidebar-active-bg: rgba(255, 255, 255, 0.08);
 
-  --border: #243430;
-  --border-strong: #324743;
+  --border: #273352;
+  --border-strong: #34416a;
 
   --success-bg: rgba(30,158,87,.16);  --success-text: #6fd79b;
   --info-bg:    rgba(46,124,214,.16); --info-text:    #87b6f0;
   --warning-bg: rgba(217,138,4,.16);  --warning-text: #f0bd61;
   --danger-bg:  rgba(214,69,69,.16);  --danger-text:  #f0928f;
-  --neutral-bg: #1b2723;              --neutral-text: #cdd6d2;
+  --neutral-bg: #19243f;              --neutral-text: #c5cddd;
 
   --card-header-bg: var(--surface);
   --card-header-shadow: none;
   --table-header-bg: var(--surface-2);
 
+  --chart-grid: #1f2a47;
+  --chart-axis: #8691ab;
+
   --shadow-sm: 0 1px 2px rgba(0,0,0,.30), 0 1px 3px rgba(0,0,0,.36);
   --shadow-md: 0 2px 4px -1px rgba(0,0,0,.36), 0 12px 24px -8px rgba(0,0,0,.45);
   --shadow-lg: 0 24px 48px -12px rgba(0,0,0,.55);
-  --focus-ring: 0 0 0 3px rgba(47,184,158,.30);
+  --focus-ring: 0 0 0 3px rgba(93,185,85,.32);
 
   color-scheme: dark;
 }
@@ -334,7 +350,7 @@ input:focus, textarea:focus, select:focus {
 .badge.badge-danger  { background: var(--danger-bg);  color: var(--danger-text); }
 
 /* Selection */
-::selection { background: var(--teal-200); color: var(--stone-900); }
+::selection { background: var(--green-200); color: var(--gray-900); }
 
 /* ----------------------------------------------------------------------------
    PrimeNG Select sizing (kept from previous global)

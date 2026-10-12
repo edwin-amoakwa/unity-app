@@ -1,21 +1,20 @@
 // Angular Import
 import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 // project import
-import { Badge } from 'primeng/badge';
+import { SelectModule } from 'primeng/select';
 import { SentSmsChartComponent } from 'src/app/charts/sent-sms-chart/sent-sms-chart.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { MonthlySmsStatsChartComponent } from '../charts/monthly-sms-stats-chart/monthly-sms-stats-chart.component';
+import { averageSmsPrice, smsCapacity, SmsPriceEstimate } from '../core/sms-pricing';
 import { UserSession } from '../core/user-session';
-import { DashboardService } from './dashboard.service';
+import { MerchantService } from '../merchant.service';
 import { StaticDataService } from '../static-data.service';
-import { SelectModule } from 'primeng/select';
-import {RouterLink} from '@angular/router';
-import {MerchantService} from '../merchant.service';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [SentSmsChartComponent, SharedModule, MonthlySmsStatsChartComponent, Badge, SelectModule, RouterLink],
+  imports: [SentSmsChartComponent, SharedModule, SelectModule, RouterLink],
   templateUrl: './dashboard.component.html',
   standalone: true,
   styleUrls: ['./dashboard.component.scss']
@@ -28,15 +27,24 @@ export class DashboardComponent implements OnInit {
   user = UserSession.getUser();
   currentDate = new Date();
 
-  // Summary data from API
   summary: any = {};
-  smsStats:any = {};
-  latestSms:any[] = [];
+  smsStats: any = {};
+  latestSms: any[] = [];
 
-  totalSmsSent: number = 0;
+  price: SmsPriceEstimate = { rate: 0, channelCount: 0 };
+  smsCovered = 0;
 
+  canSendSms = UserSession.allowRoute('send-sms');
+  canAddFunds = UserSession.allowRoute('add-funds');
+  canViewRecords = UserSession.allowRoute('sms-records');
 
   dateRanges = StaticDataService.dateRanges();
+
+  chartStatuses = [
+    { id: 'SENT', label: 'Sent' },
+    { id: 'FAILED', label: 'Failed' },
+    { id: 'REJECTED', label: 'Rejected' }
+  ];
 
   chartDataFilter: {
     period: string;
@@ -53,33 +61,55 @@ export class DashboardComponent implements OnInit {
     this.chartDataFilter = { ...this.chartDataFilter };
   }
 
+  setChartStatus(status: string) {
+    this.chartDataFilter.smsStatus = status;
+    this.onFilterChange();
+  }
+
+  statusLabel(status?: string | null): string {
+    return this.chartStatuses.find((s) => s.id === status)?.label ?? 'Sent';
+  }
+
+  share(value?: number): string {
+    const total = this.smsStats?.total ?? 0;
+    if (!total) {
+      return '–';
+    }
+    return `${(((value ?? 0) / total) * 100).toFixed(1)}% of total`;
+  }
+
+  private async loadPricing() {
+    let priceList: any[] = [];
+    try {
+      priceList = (await this.merchantService.getPriceList()).data ?? [];
+    } catch (error) {
+      console.error('Error loading SMS price list:', error);
+    }
+    this.price = averageSmsPrice(priceList, this.summary?.unitPrice);
+    this.smsCovered = smsCapacity(this.summary?.creditBalance, this.price.rate);
+  }
+
   async ngOnInit() {
     try {
       const response = await this.dashboardService.getSummary();
-      this.summary = response.data;
+      this.summary = response.data ?? {};
+      await this.loadPricing();
 
       const smsStatsResponse = await this.dashboardService.getSmsStats();
-      this.smsStats = smsStatsResponse.data;
-
-      this.totalSmsSent = (Object.values(this.smsStats) as number[]).reduce((sum, value) => sum + value, 0)
+      this.smsStats = smsStatsResponse.data ?? {};
 
       const latestSmsResponse = await this.dashboardService.getLatestSms();
-      this.latestSms = latestSmsResponse.data;
+      this.latestSms = latestSmsResponse.data ?? [];
 
-      if(this.merchant?.accountStatus == 'PENDING')
-      {
-        const response = await this.merchantService.getMerchant(this.merchant.id);
-        this.merchant = response.data;
-        if(this.merchant.accountStatus != 'PENDING')
-        {
+      if (this.merchant?.accountStatus == 'PENDING') {
+        const merchantResponse = await this.merchantService.getMerchant(this.merchant.id);
+        this.merchant = merchantResponse.data;
+        if (this.merchant.accountStatus != 'PENDING') {
           localStorage.setItem(UserSession.merchant, JSON.stringify(this.merchant));
         }
       }
-
     } catch (error) {
       console.error('Error fetching dashboard summary:', error);
     }
   }
-
-
 }

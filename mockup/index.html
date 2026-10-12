@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcolinkPay Merchant Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: review bar on top switches between four real portal screens; the dashboard is an app shell with a navy brand sidebar. */
+:root {
+  --navy: #132D5C;
+  --navy-deep: #0E2147;
+  --green: #4BA445;
+  --green-ink: #2B7A20;
+  /* Roles: what the switch between palettes changes */
+  --panel: var(--navy);                 /* sidebar, sign-in brand panel */
+  --panel-ink: rgb(255 255 255 / .82);
+  --primary: var(--navy);               /* main buttons, balance card */
+  --primary-hover: var(--navy-deep);
+  --primary-ink: #FFFFFF;
+  --accent: var(--green);               /* active states, focus, ticks */
+  --accent-ink: var(--green-ink);       /* links and accent text on surfaces */
+  --accent-on-panel: #9BD894;           /* accent text on the dark panel */
+  --bg: #F3F5F9;
+  --surface: #FFFFFF;
+  --surface-2: #EEF2F7;
+  --line: #DFE4EE;
+  --ink: #0F1B33;
+  --ink-2: #4A5672;
+  --ink-3: #6A7591;
+  --focus: var(--accent);
+  --sent: #2B7A20;     --sent-bg: #E7F4E4;
+  --queued: #2257C5;   --queued-bg: #E6EEFC;
+  --failed: #C0302B;   --failed-bg: #FBE9E8;
+  --rejected: #A85A00; --rejected-bg: #FBF0DF;
+  --pending-bg: #FFF6DC; --pending-line: #F2D27A; --pending-ink: #6B4E00;
+  --grid: #E7EBF2;
+  --shadow: 0 1px 2px rgb(15 27 51 / .05), 0 8px 24px -12px rgb(15 27 51 / .18);
+  --logo-light: block; --logo-dark: none;
+  --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --navy-deep: #0A1430;
+    --primary: var(--green); --primary-hover: #5CB955; --primary-ink: #0B1A10;
+    --bg: #0B1226; --surface: #121B36; --surface-2: #19243F; --line: #273352;
+    --ink: #E8ECF5; --ink-2: #A9B3CA; --ink-3: #8691AB;
+    --green-ink: #74C96B;
+    --sent: #6CC463; --sent-bg: #16301F;
+    --queued: #7FA7F2; --queued-bg: #172647;
+    --failed: #F08A84; --failed-bg: #3A1B22;
+    --rejected: #E9A64E; --rejected-bg: #36260F;
+    --pending-bg: #2E2711; --pending-line: #6A5520; --pending-ink: #F2D88E;
+    --grid: #1F2A47;
+    --logo-light: none; --logo-dark: block;
+    --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px -12px rgb(0 0 0 / .6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --navy-deep: #0A1430;
+  --primary: var(--green); --primary-hover: #5CB955; --primary-ink: #0B1A10;
+  --bg: #0B1226; --surface: #121B36; --surface-2: #19243F; --line: #273352;
+  --ink: #E8ECF5; --ink-2: #A9B3CA; --ink-3: #8691AB;
+  --green-ink: #74C96B;
+  --sent: #6CC463; --sent-bg: #16301F;
+  --queued: #7FA7F2; --queued-bg: #172647;
+  --failed: #F08A84; --failed-bg: #3A1B22;
+  --rejected: #E9A64E; --rejected-bg: #36260F;
+  --pending-bg: #2E2711; --pending-line: #6A5520; --pending-ink: #F2D88E;
+  --grid: #1F2A47;
+  --logo-light: none; --logo-dark: block;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px -12px rgb(0 0 0 / .6);
+  color-scheme: dark;
+}
+
+/* Current portal palette (unity-app src/styles.css), for comparison */
+:root[data-palette="teal"] {
+  --panel: #08221F; --panel-ink: #C2D6D1;
+  --primary: #0F7E6F; --primary-hover: #0B6557; --primary-ink: #FFFFFF;
+  --accent: #0F7E6F; --accent-ink: #0B6557; --accent-on-panel: #5CBBAE;
+  --bg: #F7F6F3; --surface: #FFFFFF; --surface-2: #EFEDE8; --line: #E4E1DA;
+  --ink: #1A1815; --ink-2: #403C35; --ink-3: #807B71; --grid: #EFEDE8;
+  --sent: #136B3A; --sent-bg: #E7F6ED;
+  --queued: #1C5499; --queued-bg: #E8F1FC;
+  --failed: #9B2C2C; --failed-bg: #FBEAEA;
+  --rejected: #8A5A05; --rejected-bg: #FCF3E0;
+  --pending-bg: #FCF3E0; --pending-line: #EBCB8B; --pending-ink: #8A5A05;
+  --logo-light: block; --logo-dark: none;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="teal"]:not([data-theme="light"]) {
+    --panel: #0A1714; --panel-ink: #9FB3AD;
+    --primary: #2FB89E; --primary-hover: #46C6AE; --primary-ink: #06241E;
+    --accent: #2FB89E; --accent-ink: #46C6AE; --accent-on-panel: #2FB89E;
+    --bg: #0C1714; --surface: #15201D; --surface-2: #1B2723; --line: #243430;
+    --ink: #E8E6E0; --ink-2: #CDD6D2; --ink-3: #93A09B; --grid: #1F2C28;
+    --sent: #6FD79B; --sent-bg: rgb(30 158 87 / .16);
+    --queued: #87B6F0; --queued-bg: rgb(46 124 214 / .16);
+    --failed: #F0928F; --failed-bg: rgb(214 69 69 / .16);
+    --rejected: #F0BD61; --rejected-bg: rgb(217 138 4 / .16);
+    --pending-bg: rgb(217 138 4 / .14); --pending-line: #5C4512; --pending-ink: #F0BD61;
+    --logo-light: none; --logo-dark: block;
+    --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px -12px rgb(0 0 0 / .6);
+    color-scheme: dark;
+  }
+}
+:root[data-palette="teal"][data-theme="dark"] {
+  --panel: #0A1714; --panel-ink: #9FB3AD;
+  --primary: #2FB89E; --primary-hover: #46C6AE; --primary-ink: #06241E;
+  --accent: #2FB89E; --accent-ink: #46C6AE; --accent-on-panel: #2FB89E;
+  --bg: #0C1714; --surface: #15201D; --surface-2: #1B2723; --line: #243430;
+  --ink: #E8E6E0; --ink-2: #CDD6D2; --ink-3: #93A09B; --grid: #1F2C28;
+  --sent: #6FD79B; --sent-bg: rgb(30 158 87 / .16);
+  --queued: #87B6F0; --queued-bg: rgb(46 124 214 / .16);
+  --failed: #F0928F; --failed-bg: rgb(214 69 69 / .16);
+  --rejected: #F0BD61; --rejected-bg: rgb(217 138 4 / .16);
+  --pending-bg: rgb(217 138 4 / .14); --pending-line: #5C4512; --pending-ink: #F0BD61;
+  --logo-light: none; --logo-dark: block;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px -12px rgb(0 0 0 / .6);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--font); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--accent-ink); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.num { font-variant-numeric: tabular-nums; }
+svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+.lg-light { display: var(--logo-light); } .lg-dark { display: var(--logo-dark); }
+
+/* ---------- Review bar (not part of the product) ---------- */
+.review-bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+  padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.review-bar .tag { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.screens { display: flex; flex-wrap: wrap; gap: 4px; }
+.screens button {
+  border: 1px solid transparent; background: none; padding: 6px 12px; border-radius: 999px;
+  font-size: 14px; font-weight: 600; color: var(--ink-2); cursor: pointer;
+}
+.screens button:hover { background: var(--surface-2); }
+.screens button[aria-selected="true"] { background: var(--ink); color: var(--surface); }
+.review-bar .spacer { flex: 1; }
+.palette-switch { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.palette-switch .sw { width: 14px; height: 10px; border-radius: 3px; }
+.sw-brand { background: linear-gradient(90deg, #132D5C 50%, #4BA445 50%); }
+.sw-teal { background: linear-gradient(90deg, #08221F 50%, #0F7E6F 50%); }
+.sample { font-size: 12px; color: var(--ink-3); }
+
+.screen { display: none; }
+.screen.is-active { display: block; }
+
+/* ---------- Auth screens ---------- */
+.auth { display: grid; grid-template-columns: minmax(320px, 0.95fr) 1.05fr; min-height: calc(100vh - 54px); }
+.auth-brand {
+  position: relative; overflow: hidden; background: var(--panel); color: #fff;
+  padding: 40px clamp(24px, 4vw, 56px); display: flex; flex-direction: column; gap: 40px;
+}
+.auth-brand .logo svg { height: 34px; width: auto; display: block; }
+.auth-brand .copy { margin-top: auto; display: grid; gap: 16px; max-width: 30rem; position: relative; z-index: 1; }
+.auth-brand .kicker { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-on-panel); }
+.auth-brand h1 { font-size: clamp(2rem, 1.4rem + 2vw, 2.8rem); font-weight: 800; line-height: 1.08; }
+.auth-brand .lead { color: rgb(255 255 255 / .75); font-size: 1.05rem; }
+.auth-brand ul { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 12px; }
+.auth-brand li { display: flex; gap: 12px; align-items: flex-start; color: rgb(255 255 255 / .88); }
+.auth-brand li svg { color: var(--accent-on-panel); margin-top: 2px; }
+.auth-brand .soon-note { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: rgb(255 255 255 / .7); padding: 8px 12px; border: 1px solid rgb(255 255 255 / .18); border-radius: 999px; width: fit-content; }
+.auth-brand .soon-note b { color: #fff; font-weight: 600; }
+.auth-brand .foot { font-size: 13px; color: rgb(255 255 255 / .55); position: relative; z-index: 1; }
+.auth-brand .watermark { position: absolute; right: -90px; bottom: -70px; width: 420px; opacity: .08; pointer-events: none; }
+
+.auth-panel { display: grid; place-items: center; padding: 40px clamp(16px, 4vw, 56px); background: var(--bg); }
+.auth-card { width: min(100%, 420px); display: grid; gap: 28px; }
+.auth-card.wide { width: min(100%, 620px); }
+.auth-mini-logo { display: none; }
+.auth-head { display: grid; gap: 6px; }
+.auth-head h2 { font-size: 1.75rem; font-weight: 800; }
+.auth-head p { color: var(--ink-2); }
+
+.form { display: grid; gap: 18px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.span-2 { grid-column: 1 / -1; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-size: 13px; font-weight: 600; }
+.field .hint { font-size: 12.5px; color: var(--ink-3); }
+.control {
+  display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.control:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.control > svg { color: var(--ink-3); }
+.control input, .control select, .control textarea {
+  flex: 1; min-width: 0; border: 0; background: transparent; outline: none; padding: 11px 0; font-size: 15px;
+}
+.control textarea { resize: vertical; min-height: 64px; }
+.control.align-top { align-items: flex-start; } .control.align-top > svg { margin-top: 13px; }
+.control .prefix { font-weight: 600; color: var(--ink-2); padding-right: 10px; border-right: 1px solid var(--line); }
+.control .icon-btn { border: 0; background: none; padding: 6px; margin-right: -6px; color: var(--ink-3); cursor: pointer; border-radius: 6px; }
+.control .icon-btn:hover { color: var(--ink); }
+.row-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 14px; }
+.check { display: inline-flex; gap: 10px; align-items: flex-start; font-size: 14px; cursor: pointer; }
+.check input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--accent); flex: none; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid transparent;
+  font-weight: 700; font-size: 14.5px; cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.btn-primary { background: var(--primary); color: var(--primary-ink); }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.btn-secondary:hover { background: var(--surface-2); }
+.btn-block { width: 100%; min-height: 48px; font-size: 15px; }
+.switch-line { text-align: center; font-size: 14px; color: var(--ink-2); }
+.switch-line a, .link { font-weight: 600; color: var(--accent-ink); text-decoration: none; cursor: pointer; }
+.switch-line a:hover, .link:hover { text-decoration: underline; }
+
+.stepper { display: flex; gap: 10px; align-items: center; font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.stepper .s { display: inline-flex; align-items: center; gap: 8px; }
+.stepper .n { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--line); font-size: 12px; }
+.stepper .s.on { color: var(--ink); } .stepper .s.on .n { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.stepper .s.done .n { background: var(--accent); border-color: var(--accent); color: #fff; }
+.stepper .bar { flex: 0 0 32px; height: 2px; background: var(--line); }
+
+.pin { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.pin input {
+  width: 100%; min-width: 0; height: 56px; text-align: center; font-size: 22px; font-weight: 700;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; outline: none;
+}
+.pin input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.mail-chip { display: inline-flex; gap: 8px; align-items: center; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); font-weight: 600; font-size: 14px; width: fit-content; }
+
+@media (max-width: 860px) {
+  .auth { grid-template-columns: 1fr; min-height: 0; }
+  .auth-brand { display: none; }
+  .auth-mini-logo { display: block; }
+  .auth-mini-logo svg { height: 30px; width: auto; }
+}
+@media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } .pin { gap: 6px; } .pin input { height: 48px; } }
+
+/* ---------- App shell ---------- */
+.shell { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: calc(100vh - 54px); }
+.sidebar { background: var(--panel); color: var(--panel-ink); display: flex; flex-direction: column; padding: 22px 14px; gap: 22px;
+  position: sticky; top: calc(54px + env(safe-area-inset-top, 0px)); height: calc(100vh - 54px); overflow-y: auto; }
+.sidebar .logo { padding: 0 10px; } .sidebar .logo svg { height: 30px; width: auto; display: block; }
+.nav-group { display: grid; gap: 2px; }
+.nav-group h4 { margin: 0 0 6px; padding: 0 10px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgb(255 255 255 / .45); }
+.nav-item {
+  display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 8px;
+  color: inherit; text-decoration: none; font-size: 14.5px; font-weight: 500; cursor: pointer;
+}
+.nav-item:hover { background: rgb(255 255 255 / .07); color: #fff; }
+.nav-item.on { background: rgb(255 255 255 / .1); color: #fff; box-shadow: inset 3px 0 0 var(--accent-on-panel); }
+.nav-item.on svg { color: var(--accent-on-panel); }
+.nav-item.soon { cursor: default; color: rgb(255 255 255 / .5); }
+.nav-item.soon:hover { background: none; color: rgb(255 255 255 / .5); }
+.badge-soon { margin-left: auto; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--accent-on-panel) 18%, transparent); color: var(--accent-on-panel); }
+.sidebar .help { margin-top: auto; padding: 14px; border-radius: 12px; background: rgb(255 255 255 / .06); font-size: 13px; display: grid; gap: 4px; }
+.sidebar .help b { color: #fff; }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar {
+  display: flex; align-items: center; gap: 12px; padding: 12px clamp(16px, 3vw, 32px);
+  background: var(--surface); border-bottom: 1px solid var(--line); position: relative;
+}
+.topbar .menu-btn { display: none; }
+.topbar .crumbs { font-size: 14px; color: var(--ink-3); }
+.topbar .crumbs b { color: var(--ink); font-weight: 600; }
+.topbar .right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.icon-round { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); cursor: pointer; }
+.icon-round:hover { color: var(--ink); background: var(--surface-2); }
+.user-btn { display: flex; align-items: center; gap: 10px; padding: 4px 10px 4px 4px; border-radius: 10px; border: 1px solid transparent; background: none; cursor: pointer; }
+.user-btn:hover { background: var(--surface-2); }
+.avatar { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--accent); color: #fff; font-weight: 800; font-size: 13px; }
+.user-btn .who { text-align: left; line-height: 1.2; }
+.user-btn .who b { display: block; font-size: 14px; }
+.user-btn .who span { font-size: 12px; color: var(--ink-3); }
+.user-menu {
+  position: absolute; right: clamp(16px, 3vw, 32px); top: calc(100% - 4px); z-index: 20; width: 230px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 6px;
+}
+.user-menu a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; color: var(--ink); text-decoration: none; font-size: 14px; cursor: pointer; }
+.user-menu a:hover { background: var(--surface-2); }
+.user-menu hr { border: 0; border-top: 1px solid var(--line); margin: 6px 0; }
+.user-menu .out { color: var(--failed); }
+
+.content { padding: clamp(16px, 3vw, 32px); display: grid; gap: 22px; max-width: 1280px; width: 100%; }
+
+.pending {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; padding: 14px 18px;
+  background: var(--pending-bg); border: 1px solid var(--pending-line); border-radius: 12px; color: var(--pending-ink);
+}
+.pending .t { flex: 1 1 280px; display: grid; gap: 2px; }
+.pending .t b { font-size: 15px; }
+.pending .t span { font-size: 14px; }
+.pending .btn-secondary { border-color: var(--pending-line); background: transparent; color: var(--pending-ink); }
+
+.page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.page-head h1 { font-size: clamp(1.5rem, 1.2rem + 1vw, 1.9rem); font-weight: 800; }
+.page-head p { color: var(--ink-2); font-size: 14.5px; }
+.page-head .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.select { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.select select { border: 0; background: transparent; outline: none; font-weight: 600; font-size: 14px; cursor: pointer; padding-right: 4px; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+
+/* Balance strip: account-level, not tied to the date range */
+.balance {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 18px 40px; padding: 20px 24px;
+  background: var(--panel); border-color: var(--panel); color: #fff;
+}
+.balance .b-main { display: grid; gap: 4px; }
+.balance .lbl { font-size: 13px; font-weight: 600; color: rgb(255 255 255 / .7); display: flex; align-items: center; gap: 8px; }
+.balance .amt { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.balance .amt small { font-size: 1.05rem; font-weight: 600; color: rgb(255 255 255 / .7); margin-right: 4px; }
+.b-facts { display: flex; flex-wrap: wrap; gap: 14px 36px; margin: 0; flex: 1 1 auto; }
+.b-facts div { padding-left: 16px; border-left: 1px solid rgb(255 255 255 / .16); }
+.b-facts dt { font-size: 12.5px; color: rgb(255 255 255 / .6); }
+.b-facts dd { margin: 2px 0 0; font-weight: 700; font-size: 15px; }
+.btn-topup { background: var(--accent-on-panel); color: #0B1A10; margin-left: auto; }
+.btn-topup:hover { filter: brightness(1.06); }
+@media (max-width: 700px) { .btn-topup { margin-left: 0; width: 100%; } .b-facts div { padding-left: 0; border-left: 0; } }
+
+.section-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.section-head h2 { font-size: 1.2rem; font-weight: 800; }
+.section-head p { font-size: 14px; color: var(--ink-2); }
+
+.kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-top: -8px; }
+.kpi { padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.kpi .lbl { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.kpi .dot { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; }
+.kpi .dot svg { width: 15px; height: 15px; }
+.kpi .val { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.kpi .share { font-size: 12.5px; color: var(--ink-3); }
+.k-total .dot { background: var(--surface-2); color: var(--ink-2); }
+.k-sent .dot { background: var(--sent-bg); color: var(--sent); }
+.k-queued .dot { background: var(--queued-bg); color: var(--queued); }
+.k-failed .dot { background: var(--failed-bg); color: var(--failed); }
+.k-rejected .dot { background: var(--rejected-bg); color: var(--rejected); }
+@media (max-width: 1100px) { .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } .k-total { grid-column: 1 / -1; } }
+@media (max-width: 620px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Chart */
+.chart-card { padding: 18px 18px 12px; display: grid; gap: 14px; }
+.card-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.card-head h2 { font-size: 1.05rem; font-weight: 700; }
+.card-head p { font-size: 13px; color: var(--ink-3); }
+.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 10px; background: var(--surface-2); }
+.seg button { border: 0; background: none; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / .08); }
+.seg .sw { width: 8px; height: 8px; border-radius: 2px; }
+.chart-wrap { position: relative; }
+.chart-wrap svg { width: 100%; height: 260px; display: block; overflow: visible; }
+.chart-wrap .axis text { fill: var(--ink-3); font-size: 11px; font-family: var(--font); }
+.chart-wrap .gridline { stroke: var(--grid); stroke-width: 1; }
+.chart-wrap .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart-wrap .area { stroke: none; }
+.chart-wrap .pt { stroke: var(--surface); stroke-width: 2; }
+.chart-wrap .cross { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.chart-wrap .overlay { fill: transparent; cursor: crosshair; }
+.tip {
+  position: absolute; pointer-events: none; z-index: 5; min-width: 150px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow);
+  padding: 8px 10px; font-size: 13px; transform: translate(-50%, calc(-100% - 10px));
+}
+.tip b { display: block; font-size: 12px; color: var(--ink-3); font-weight: 600; margin-bottom: 2px; }
+.tip .v { font-weight: 800; font-size: 15px; }
+.chart-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.chart-table-wrap { max-height: 260px; overflow: auto; }
+.chart-table th, .chart-table td { text-align: right; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.chart-table th:first-child, .chart-table td:first-child { text-align: left; }
+.chart-table th { position: sticky; top: 0; background: var(--surface); font-size: 12px; color: var(--ink-3); font-weight: 600; }
+
+/* Bottom row */
+.split { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 1000px) { .split { grid-template-columns: 1fr; } }
+.list-card { padding: 18px; display: grid; gap: 6px; align-content: start; }
+.msg { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; padding: 14px 0; border-top: 1px solid var(--line); }
+.msg:first-of-type { border-top: 0; }
+.msg .meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 12.5px; color: var(--ink-3); }
+.msg .type { font-weight: 700; color: var(--ink-2); }
+.msg .text { grid-column: 1 / -1; font-size: 14.5px; overflow-wrap: anywhere; }
+.msg .counts { display: flex; flex-wrap: wrap; gap: 6px; grid-column: 1 / -1; }
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 600; }
+.pill svg { width: 12px; height: 12px; stroke-width: 2.4; }
+.p-sent { background: var(--sent-bg); color: var(--sent); }
+.p-queued { background: var(--queued-bg); color: var(--queued); }
+.p-failed { background: var(--failed-bg); color: var(--failed); }
+.p-rejected { background: var(--rejected-bg); color: var(--rejected); }
+.p-muted { background: var(--surface-2); color: var(--ink-2); }
+.sid { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.sid:first-of-type { border-top: 0; }
+.sid b { font-family: ui-monospace, Menlo, monospace; font-size: 14px; letter-spacing: .02em; }
+.sid span.d { display: block; font-size: 12.5px; color: var(--ink-3); }
+.p-pending { background: var(--pending-bg); color: var(--pending-ink); }
+.quick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.quick a { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); color: var(--ink); text-decoration: none; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.quick a:hover { background: var(--line); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: fixed; inset: 0 auto 0 0; height: auto; width: 260px; z-index: 50; transform: translateX(-100%); transition: transform .2s; padding-top: calc(22px + env(safe-area-inset-top, 0px)); }
+  .shell.nav-open .sidebar { transform: none; box-shadow: 0 0 0 100vmax rgb(0 0 0 / .4); }
+  .topbar .menu-btn { display: grid; }
+  .user-btn .who { display: none; }
+}
+
+/* ---------- Review notes ---------- */
+.notes { max-width: 980px; margin: 0 auto; padding: 32px 16px 80px; display: grid; gap: 32px; }
+.notes header { display: grid; gap: 10px; }
+.notes h1 { font-size: clamp(1.8rem, 1.3rem + 2vw, 2.4rem); font-weight: 800; }
+.notes .lede { color: var(--ink-2); max-width: 70ch; font-size: 1.05rem; }
+.notes section { display: grid; gap: 14px; }
+.notes h2 { font-size: 1.2rem; font-weight: 800; padding-top: 14px; border-top: 1px solid var(--ink); }
+.issue { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 4px 18px; padding: 14px 0; border-top: 1px solid var(--line); }
+.issue:first-of-type { border-top: 0; }
+.issue .where { font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
+.issue h3 { font-size: 1rem; font-weight: 700; }
+.issue p { color: var(--ink-2); font-size: 14.5px; grid-column: 2; }
+.issue code, .notes code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .issue { grid-template-columns: 1fr; } .issue p { grid-column: 1; } }
+.notes ol, .notes ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; color: var(--ink-2); }
+.notes li b { color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+
+<!-- Hidden SVG sprite: brand and icons -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-dash" viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM14 8h6V4h-6zM4 20h6v-3H4z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m4 12 16-8-6 16-2.5-6.5z M11.5 13.5 20 4"/></symbol>
+  <symbol id="i-template" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></symbol>
+  <symbol id="i-group" viewBox="0 0 24 24"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm-6 9c.5-3 3-5 6-5s5.5 2 6 5M16 4.5a3.5 3.5 0 0 1 0 6.5M18 15c1.8.6 3 2.3 3.3 5"/></symbol>
+  <symbol id="i-records" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+  <symbol id="i-id" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h6M16 10h2"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7h15v12H4zM4 7l11-3v3M15 13h4"/></symbol>
+  <symbol id="i-price" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8zM7.5 8.5h.01"/></symbol>
+  <symbol id="i-pay" viewBox="0 0 24 24"><path d="M8 3h8v18H8zM11 17h2M3 10h3M18 10h3M3 14h3M18 14h3"/></symbol>
+  <symbol id="i-apps" viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 10c.6-3.8 3.5-6 7-6s6.4 2.2 7 6"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l2 2H4zM10 21h4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 10c.6-3.8 3.5-6 7-6s6.4 2.2 7 6"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><path d="M4 21V5l8-2v18M12 8h8v13M8 8h.01M8 12h.01M8 16h.01M16 12h.01M16 16h.01M2 21h20"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><path d="M15 9a4 4 0 1 1-1.2 2.8L4 21H2v-3l9.2-9.2M17 7h.01"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path d="M6 11V8a6 6 0 1 1 12 0v3M5 11h14v10H5z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><path d="M3 5h18v14H3zM3 6l9 7 9-7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M8 2h8v20H8zM11 18h2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></symbol>
+  <symbol id="i-sum" viewBox="0 0 24 24"><path d="M18 5H6l6 7-6 7h12"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path d="M4 5h16v15H4zM4 10h16M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/></symbol>
+</svg>
+
+<nav class="review-bar" aria-label="Mockup screens">
+  <span class="tag">Portal mockup</span>
+  <div class="screens" role="tablist">
+    <button role="tab" aria-selected="true" data-go="login">Sign in</button>
+    <button role="tab" aria-selected="false" data-go="register">Create account</button>
+    <button role="tab" aria-selected="false" data-go="verify">Verify email</button>
+    <button role="tab" aria-selected="false" data-go="dashboard">Dashboard</button>
+    <button role="tab" aria-selected="false" data-go="notes">Review notes</button>
+  </div>
+  <span class="spacer"></span>
+  <div class="palette-switch" role="group" aria-label="Colour palette">
+    <span>Palette</span>
+    <div class="seg">
+      <button type="button" aria-pressed="true" data-palette-set="brand"><span class="sw sw-brand"></span>Brand</button>
+      <button type="button" aria-pressed="false" data-palette-set="teal"><span class="sw sw-teal"></span>Current teal</button>
+    </div>
+  </div>
+  <span class="sample">All names and figures are sample data</span>
+</nav>
+
+<!-- ================= SIGN IN ================= -->
+<section class="screen is-active" id="s-login" aria-label="Sign in screen">
+  <div class="auth">
+    <aside class="auth-brand">
+      <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#FFFFFF" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#FFFFFF" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></div>
+      <div class="copy">
+        <span class="kicker">Merchant portal</span>
+        <h1>Reach every customer by SMS.</h1>
+        <p class="lead">Send bulk messages under your own name, top up your balance and track every message from one place.</p>
+        <ul>
+          <li><svg class="i"><use href="#i-check"/></svg>Bulk SMS to MTN, Telecel and AirtelTigo</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Your business name as the sender ID</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Delivery reports for every message</li>
+        </ul>
+        <span class="soon-note"><svg class="i"><use href="#i-pay"/></svg><span><b>Coming soon:</b> mobile money payments</span></span>
+      </div>
+      <p class="foot">© 2026 EcolinkPay · Accra, Ghana</p>
+      <div class="watermark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100.00 86.40" aria-hidden="true" focusable="false"><path fill="#FFFFFF" d="M0 20 0 26.8 17.27 26.8 46.77 15 29.63 8.15ZM50 0 32.87 6.85 50 13.71 67.13 6.85ZM100 20 70.37 8.15 53.23 15 82.73 26.8 100 26.8ZM0 42 100 42 100 29.2 82.27 29.2 50 16.29 17.73 29.2 0 29.2ZM100 66.4 100 59.6 82.73 59.6 53.23 71.4 70.37 78.25ZM50 86.4 67.13 79.55 50 72.69 32.87 79.55ZM0 66.4 29.63 78.25 46.77 71.4 17.27 59.6 0 59.6ZM100 44.4 0 44.4 0 57.2 17.73 57.2 50 70.11 82.27 57.2 100 57.2Z"/></svg></div>
+    </aside>
+    <main class="auth-panel">
+      <div class="auth-card">
+        <div class="auth-mini-logo"><span class="lg-light"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#132D5C" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#132D5C" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></span><span class="lg-dark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#FFFFFF" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#FFFFFF" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></span></div>
+        <header class="auth-head">
+          <h2>Welcome back</h2>
+          <p>Sign in to your EcolinkPay merchant portal.</p>
+        </header>
+        <form class="form" data-fake-submit="dashboard">
+          <div class="field">
+            <label for="login-user">Username</label>
+            <div class="control"><svg class="i"><use href="#i-user"/></svg><input id="login-user" autocomplete="username" value="kente.admin"></div>
+          </div>
+          <div class="field">
+            <label for="login-pass">Password</label>
+            <div class="control">
+              <svg class="i"><use href="#i-lock"/></svg>
+              <input id="login-pass" type="password" autocomplete="current-password" value="sample-password">
+              <button type="button" class="icon-btn" data-toggle-pass="login-pass" aria-label="Show password"><svg class="i"><use href="#i-eye"/></svg></button>
+            </div>
+          </div>
+          <div class="row-between">
+            <label class="check"><input type="checkbox" id="login-remember" checked> Keep me signed in</label>
+            <a class="link" data-go="login">Forgot password?</a>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+          <p class="switch-line">New to EcolinkPay? <a data-go="register">Create a merchant account</a></p>
+        </form>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ================= REGISTER ================= -->
+<section class="screen" id="s-register" aria-label="Create account screen">
+  <div class="auth">
+    <aside class="auth-brand">
+      <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#FFFFFF" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#FFFFFF" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></div>
+      <div class="copy">
+        <span class="kicker">Get started</span>
+        <h1>Set up your business in minutes.</h1>
+        <p class="lead">Create your account, verify your email, then request a sender ID and top up to start sending.</p>
+        <ul>
+          <li><svg class="i"><use href="#i-check"/></svg>No setup fee. Pay only for the SMS you send</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Top up with mobile money</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Local support in Accra</li>
+        </ul>
+      </div>
+      <p class="foot">© 2026 EcolinkPay · Accra, Ghana</p>
+      <div class="watermark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100.00 86.40" aria-hidden="true" focusable="false"><path fill="#FFFFFF" d="M0 20 0 26.8 17.27 26.8 46.77 15 29.63 8.15ZM50 0 32.87 6.85 50 13.71 67.13 6.85ZM100 20 70.37 8.15 53.23 15 82.73 26.8 100 26.8ZM0 42 100 42 100 29.2 82.27 29.2 50 16.29 17.73 29.2 0 29.2ZM100 66.4 100 59.6 82.73 59.6 53.23 71.4 70.37 78.25ZM50 86.4 67.13 79.55 50 72.69 32.87 79.55ZM0 66.4 29.63 78.25 46.77 71.4 17.27 59.6 0 59.6ZM100 44.4 0 44.4 0 57.2 17.73 57.2 50 70.11 82.27 57.2 100 57.2Z"/></svg></div>
+    </aside>
+    <main class="auth-panel">
+      <div class="auth-card wide">
+        <div class="auth-mini-logo"><span class="lg-light"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#132D5C" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#132D5C" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></span><span class="lg-dark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#FFFFFF" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#FFFFFF" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></span></div>
+        <div class="stepper" aria-label="Step 1 of 2">
+          <span class="s on"><span class="n">1</span>Company details</span><span class="bar"></span>
+          <span class="s"><span class="n">2</span>Verify email</span>
+        </div>
+        <header class="auth-head">
+          <h2>Create your merchant account</h2>
+          <p>Tell us about your business. You can add documents and sender IDs after signing in.</p>
+        </header>
+        <form class="form" data-fake-submit="verify">
+          <div class="grid-2">
+            <div class="field">
+              <label for="reg-company">Company name</label>
+              <div class="control"><svg class="i"><use href="#i-building"/></svg><input id="reg-company" autocomplete="organization" value="Kente &amp; Co. Ltd"></div>
+            </div>
+            <div class="field">
+              <label for="reg-contact">Contact person</label>
+              <div class="control"><svg class="i"><use href="#i-user"/></svg><input id="reg-contact" autocomplete="name" value="Ama Mensah"></div>
+            </div>
+            <div class="field">
+              <label for="reg-industry">Industry</label>
+              <div class="control">
+                <select id="reg-industry">
+                  <option>Retail &amp; e-commerce</option><option>Education</option><option>Religious organisation</option>
+                  <option>Financial services</option><option>Health</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="reg-country">Country</label>
+              <div class="control"><select id="reg-country"><option>Ghana</option></select></div>
+            </div>
+            <div class="field">
+              <label for="reg-mobile">Mobile number</label>
+              <div class="control"><span class="prefix">+233</span><input id="reg-mobile" type="tel" inputmode="numeric" autocomplete="tel-national" value="24 123 4567"></div>
+            </div>
+            <div class="field">
+              <label for="reg-email">Work email</label>
+              <div class="control"><svg class="i"><use href="#i-mail"/></svg><input id="reg-email" type="email" autocomplete="email" value="ama@kenteco.com.gh"></div>
+              <span class="hint">We'll send a verification PIN here.</span>
+            </div>
+            <div class="field span-2">
+              <label for="reg-address">Billing address</label>
+              <div class="control align-top"><svg class="i"><use href="#i-pin"/></svg><textarea id="reg-address" rows="2">No. 14 Oxford Street, Osu, Accra</textarea></div>
+            </div>
+            <div class="field span-2">
+              <label for="reg-pass">Password</label>
+              <div class="control">
+                <svg class="i"><use href="#i-lock"/></svg>
+                <input id="reg-pass" type="password" autocomplete="new-password" value="sample-password">
+                <button type="button" class="icon-btn" data-toggle-pass="reg-pass" aria-label="Show password"><svg class="i"><use href="#i-eye"/></svg></button>
+              </div>
+              <span class="hint">At least 8 characters.</span>
+            </div>
+            <label class="check span-2"><input type="checkbox" id="reg-terms" checked> <span>I agree to the <a class="link">Terms &amp; Conditions</a> and <a class="link">Privacy Policy</a>.</span></label>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Create account</button>
+          <p class="switch-line">Already have an account? <a data-go="login">Sign in</a></p>
+        </form>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ================= VERIFY ================= -->
+<section class="screen" id="s-verify" aria-label="Verify email screen">
+  <div class="auth">
+    <aside class="auth-brand">
+      <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#FFFFFF" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#FFFFFF" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></div>
+      <div class="copy">
+        <span class="kicker">Almost there</span>
+        <h1>Check your inbox.</h1>
+        <p class="lead">Verifying your email keeps your account secure and makes sure top-up receipts and delivery reports reach you.</p>
+      </div>
+      <p class="foot">© 2026 EcolinkPay · Accra, Ghana</p>
+      <div class="watermark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100.00 86.40" aria-hidden="true" focusable="false"><path fill="#FFFFFF" d="M0 20 0 26.8 17.27 26.8 46.77 15 29.63 8.15ZM50 0 32.87 6.85 50 13.71 67.13 6.85ZM100 20 70.37 8.15 53.23 15 82.73 26.8 100 26.8ZM0 42 100 42 100 29.2 82.27 29.2 50 16.29 17.73 29.2 0 29.2ZM100 66.4 100 59.6 82.73 59.6 53.23 71.4 70.37 78.25ZM50 86.4 67.13 79.55 50 72.69 32.87 79.55ZM0 66.4 29.63 78.25 46.77 71.4 17.27 59.6 0 59.6ZM100 44.4 0 44.4 0 57.2 17.73 57.2 50 70.11 82.27 57.2 100 57.2Z"/></svg></div>
+    </aside>
+    <main class="auth-panel">
+      <div class="auth-card">
+        <div class="auth-mini-logo"><span class="lg-light"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#132D5C" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#132D5C" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></span><span class="lg-dark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#FFFFFF" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#FFFFFF" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></span></div>
+        <div class="stepper" aria-label="Step 2 of 2">
+          <span class="s done"><span class="n"><svg class="i" style="width:14px;height:14px"><use href="#i-check"/></svg></span>Company details</span><span class="bar"></span>
+          <span class="s on"><span class="n">2</span>Verify email</span>
+        </div>
+        <header class="auth-head">
+          <h2>Verify your email</h2>
+          <p>Enter the 6-digit PIN we sent to</p>
+          <span class="mail-chip"><svg class="i"><use href="#i-mail"/></svg>ama@kenteco.com.gh</span>
+        </header>
+        <form class="form" data-fake-submit="dashboard">
+          <div class="pin" role="group" aria-label="Verification PIN">
+            <input id="pin-1" inputmode="numeric" maxlength="1" aria-label="Digit 1" value="4">
+            <input id="pin-2" inputmode="numeric" maxlength="1" aria-label="Digit 2" value="8">
+            <input id="pin-3" inputmode="numeric" maxlength="1" aria-label="Digit 3" value="2">
+            <input id="pin-4" inputmode="numeric" maxlength="1" aria-label="Digit 4">
+            <input id="pin-5" inputmode="numeric" maxlength="1" aria-label="Digit 5">
+            <input id="pin-6" inputmode="numeric" maxlength="1" aria-label="Digit 6">
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Verify and continue</button>
+          <div class="row-between">
+            <span style="color:var(--ink-3)">Didn't get it? You can resend in 0:42</span>
+            <a class="link" data-go="register">Change email</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ================= DASHBOARD ================= -->
+<section class="screen" id="s-dashboard" aria-label="Dashboard screen">
+  <div class="shell" data-shell>
+    <aside class="sidebar" aria-label="Portal navigation">
+      <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 465.77 100.00" role="img" aria-label="EcolinkPay" focusable="false"><path fill="#FFFFFF" d="M0 23.15 0 31.02 19.99 31.02 54.13 17.36 34.3 9.43ZM57.87 0 38.04 7.93 57.87 15.87 77.7 7.93ZM115.74 76.85 115.74 68.98 95.75 68.98 61.61 82.64 81.44 90.57ZM57.87 100 77.7 92.07 57.87 84.13 38.04 92.07Z"/><path fill="#4BA445" d="M115.74 23.15 81.44 9.43 61.61 17.36 95.75 31.02 115.74 31.02ZM0 48.61 115.74 48.61 115.74 33.8 95.22 33.8 57.87 18.86 20.52 33.8 0 33.8ZM0 76.85 34.3 90.57 54.13 82.64 19.99 68.98 0 68.98ZM115.74 51.39 0 51.39 0 66.2 20.52 66.2 57.87 81.14 95.22 66.2 115.74 66.2Z"/><path fill="#FFFFFF" d="M147.83 73.09V26.91H178.89V35.27H157.44V45.75H177.65V54.12H157.44V64.72H178.89V73.09ZM199.04 73.84Q193.96 73.84 189.9 71.51Q185.84 69.19 183.45 65.16Q181.06 61.13 181.06 56.11Q181.06 51.08 183.42 47.09Q185.78 43.09 189.87 40.79Q193.96 38.5 199.04 38.5Q202.83 38.5 206.05 39.8Q209.27 41.1 211.57 43.43Q213.86 45.75 214.85 48.91L206.79 52.39Q205.93 49.84 203.85 48.36Q201.77 46.87 199.04 46.87Q196.63 46.87 194.74 48.05Q192.84 49.22 191.76 51.33Q190.67 53.44 190.67 56.17Q190.67 58.9 191.76 61Q192.84 63.11 194.74 64.29Q196.63 65.47 199.04 65.47Q201.83 65.47 203.88 63.98Q205.93 62.49 206.79 59.95L214.85 63.48Q213.92 66.46 211.63 68.82Q209.34 71.17 206.11 72.51Q202.89 73.84 199.04 73.84ZM235.87 73.84Q230.85 73.84 226.73 71.55Q222.6 69.25 220.16 65.25Q217.71 61.25 217.71 56.17Q217.71 51.02 220.16 47.05Q222.6 43.09 226.73 40.79Q230.85 38.5 235.87 38.5Q240.89 38.5 244.99 40.79Q249.08 43.09 251.53 47.05Q253.98 51.02 253.98 56.17Q253.98 61.25 251.53 65.25Q249.08 69.25 244.99 71.55Q240.89 73.84 235.87 73.84ZM235.87 65.47Q238.41 65.47 240.31 64.29Q242.2 63.11 243.28 61Q244.37 58.9 244.37 56.17Q244.37 53.44 243.28 51.36Q242.2 49.29 240.31 48.08Q238.41 46.87 235.87 46.87Q233.33 46.87 231.41 48.08Q229.49 49.29 228.4 51.36Q227.32 53.44 227.32 56.17Q227.32 58.9 228.4 61Q229.49 63.11 231.41 64.29Q233.33 65.47 235.87 65.47ZM258.19 73.09V26.16H267.49V73.09ZM273.07 73.09V39.24H282.37V73.09ZM273.07 36.2V26.91H282.37V36.2ZM287.95 73.09V39.24H296.63V45.94L296.14 44.45Q297.31 41.41 299.95 39.96Q302.58 38.5 306.12 38.5Q309.96 38.5 312.85 40.11Q315.73 41.72 317.34 44.61Q318.95 47.49 318.95 51.33V73.09H309.65V53.32Q309.65 51.33 308.88 49.91Q308.1 48.48 306.71 47.67Q305.31 46.87 303.45 46.87Q301.65 46.87 300.23 47.67Q298.8 48.48 298.03 49.91Q297.25 51.33 297.25 53.32V73.09ZM323.85 73.09V26.16H333.15V56.23L329.68 55.11L344.62 39.24H356.09L343.81 52.88L356.03 73.09H345.49L335.26 55.92L340.65 54.56L330.3 65.84L333.15 60.45V73.09Z"/><path fill="#4BA445" d="M362.79 73.09V26.91H379.59Q384.24 26.91 387.8 28.61Q391.37 30.31 393.35 33.57Q395.34 36.82 395.34 41.35Q395.34 45.81 393.32 49.04Q391.31 52.26 387.77 54Q384.24 55.73 379.59 55.73H370.1V73.09ZM370.1 49.22H379.77Q382.25 49.22 384.11 48.23Q385.97 47.24 387.03 45.47Q388.08 43.71 388.08 41.29Q388.08 38.87 387.03 37.1Q385.97 35.34 384.11 34.38Q382.25 33.41 379.77 33.41H370.1ZM409.41 73.84Q406 73.84 403.43 72.63Q400.85 71.42 399.43 69.28Q398 67.14 398 64.23Q398 61.5 399.21 59.33Q400.42 57.16 402.96 55.67Q405.5 54.19 409.35 53.56L421 51.64V57.16L410.71 58.96Q407.92 59.45 406.62 60.73Q405.32 62 405.32 63.98Q405.32 65.9 406.78 67.11Q408.23 68.32 410.53 68.32Q413.38 68.32 415.52 67.08Q417.66 65.84 418.83 63.76Q420.01 61.69 420.01 59.14V50.53Q420.01 48.05 418.18 46.47Q416.35 44.88 413.32 44.88Q410.53 44.88 408.45 46.34Q406.37 47.8 405.38 50.09L399.55 47.18Q400.48 44.7 402.59 42.81Q404.7 40.92 407.52 39.86Q410.34 38.81 413.5 38.81Q417.47 38.81 420.54 40.3Q423.61 41.78 425.31 44.42Q427.02 47.05 427.02 50.53V73.09H420.32V67.02L421.75 67.2Q420.57 69.25 418.74 70.74Q416.91 72.23 414.59 73.03Q412.26 73.84 409.41 73.84ZM437.56 86.73Q436.32 86.73 435.11 86.52Q433.9 86.3 432.91 85.87V79.85Q433.65 80.04 434.71 80.19Q435.76 80.35 436.75 80.35Q439.67 80.35 441.06 79.08Q442.46 77.81 443.57 75.2L445.8 70.12L445.68 76.01L431.17 39.55H438.67L449.4 67.52H446.86L457.52 39.55H465.09L450.27 76.75Q449.09 79.73 447.32 81.99Q445.56 84.25 443.17 85.5Q440.78 86.73 437.56 86.73Z"/></svg></div>
+      <nav class="nav-group" aria-label="Overview">
+        <a class="nav-item on" aria-current="page"><svg class="i"><use href="#i-dash"/></svg>Dashboard</a>
+      </nav>
+      <nav class="nav-group" aria-label="Messaging">
+        <h4>Messaging</h4>
+        <a class="nav-item"><svg class="i"><use href="#i-send"/></svg>Send SMS</a>
+        <a class="nav-item"><svg class="i"><use href="#i-template"/></svg>SMS templates</a>
+        <a class="nav-item"><svg class="i"><use href="#i-group"/></svg>Contact groups</a>
+        <a class="nav-item"><svg class="i"><use href="#i-records"/></svg>SMS records</a>
+        <a class="nav-item"><svg class="i"><use href="#i-id"/></svg>Sender IDs</a>
+      </nav>
+      <nav class="nav-group" aria-label="Billing">
+        <h4>Billing</h4>
+        <a class="nav-item"><svg class="i"><use href="#i-wallet"/></svg>Top up balance</a>
+        <a class="nav-item"><svg class="i"><use href="#i-price"/></svg>Price list</a>
+        <span class="nav-item soon" aria-disabled="true"><svg class="i"><use href="#i-pay"/></svg>Payments<span class="badge-soon">Soon</span></span>
+      </nav>
+      <nav class="nav-group" aria-label="Settings">
+        <h4>Settings</h4>
+        <a class="nav-item"><svg class="i"><use href="#i-apps"/></svg>API applications</a>
+        <a class="nav-item"><svg class="i"><use href="#i-users"/></svg>Team members</a>
+        <a class="nav-item"><svg class="i"><use href="#i-bell"/></svg>Notifications</a>
+      </nav>
+      <div class="help"><b>Need help?</b><span>Call +233 54 287 2725</span></div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-round menu-btn" type="button" data-nav-open aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
+        <span class="crumbs"><b>Dashboard</b></span>
+        <div class="right">
+          <button class="icon-round" type="button" data-theme-toggle aria-label="Switch light or dark theme"><svg class="i"><use href="#i-moon"/></svg></button>
+          <button class="user-btn" type="button" data-user-toggle aria-haspopup="menu" aria-expanded="false">
+            <span class="avatar">AM</span>
+            <span class="who"><b>Ama Mensah</b><span>Kente &amp; Co. Ltd</span></span>
+          </button>
+        </div>
+        <div class="user-menu" role="menu" hidden data-user-menu>
+          <a role="menuitem"><svg class="i"><use href="#i-user"/></svg>My profile</a>
+          <a role="menuitem"><svg class="i"><use href="#i-building"/></svg>Business profile</a>
+          <a role="menuitem"><svg class="i"><use href="#i-key"/></svg>Change password</a>
+          <hr>
+          <a role="menuitem" class="out" data-go="login"><svg class="i"><use href="#i-logout"/></svg>Sign out</a>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="pending" data-pending>
+          <svg class="i" style="width:22px;height:22px"><use href="#i-shield"/></svg>
+          <div class="t">
+            <b>Your account is pending approval</b>
+            <span>Finish your business profile so we can approve your account and unlock all features.</span>
+          </div>
+          <a class="btn btn-secondary">Complete business profile</a>
+        </div>
+
+        <div class="page-head">
+          <div>
+            <h1>Good morning, Ama</h1>
+            <p>Kente &amp; Co. Ltd · Friday, 16 Oct 2026</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary"><svg class="i"><use href="#i-send"/></svg>Send SMS</a>
+          </div>
+        </div>
+
+        <div class="card balance" aria-label="Credit balance">
+          <div class="b-main">
+            <span class="lbl"><svg class="i"><use href="#i-wallet"/></svg>Credit balance</span>
+            <span class="amt num"><small>GH₵</small>1,284.50</span>
+          </div>
+          <dl class="b-facts">
+            <div><dt>Enough for about</dt><dd class="num">42,816 SMS</dd></div>
+            <div><dt>Price per SMS</dt><dd class="num">GH₵ 0.03</dd></div>
+            <div><dt>Last top-up</dt><dd class="num">GH₵ 500.00 · 9 Oct</dd></div>
+          </dl>
+          <a class="btn btn-topup"><svg class="i"><use href="#i-plus"/></svg>Top up balance</a>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h2>SMS activity</h2>
+            <p data-period-label>This week, Mon 12 – Fri 16 Oct 2026</p>
+          </div>
+          <label class="select"><svg class="i"><use href="#i-cal"/></svg><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Date range</span>
+            <select id="range" data-range>
+              <option value="TODAY">Today</option>
+              <option value="YESTERDAY">Yesterday</option>
+              <option value="THIS_WEEK" selected>This week</option>
+              <option value="LAST_WEEK">Last week</option>
+              <option value="THIS_MONTH">This month</option>
+              <option value="LAST_MONTH">Last month</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="kpis">
+          <div class="card kpi k-total"><span class="lbl"><span class="dot"><svg class="i"><use href="#i-sum"/></svg></span>Total</span><span class="val num" data-k="total">–</span><span class="share" data-k-share="total">messages in period</span></div>
+          <div class="card kpi k-sent"><span class="lbl"><span class="dot"><svg class="i"><use href="#i-check"/></svg></span>Sent</span><span class="val num" data-k="sent">–</span><span class="share num" data-k-share="sent">–</span></div>
+          <div class="card kpi k-queued"><span class="lbl"><span class="dot"><svg class="i"><use href="#i-clock"/></svg></span>Queued</span><span class="val num" data-k="queued">–</span><span class="share num" data-k-share="queued">–</span></div>
+          <div class="card kpi k-failed"><span class="lbl"><span class="dot"><svg class="i"><use href="#i-x"/></svg></span>Failed</span><span class="val num" data-k="failed">–</span><span class="share num" data-k-share="failed">–</span></div>
+          <div class="card kpi k-rejected"><span class="lbl"><span class="dot"><svg class="i"><use href="#i-ban"/></svg></span>Rejected</span><span class="val num" data-k="rejected">–</span><span class="share num" data-k-share="rejected">–</span></div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="card-head">
+            <div>
+              <h2 data-chart-title>Sent messages by day</h2>
+              <p data-chart-sub>Hover the line for the exact count</p>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <div class="seg" role="group" aria-label="Status shown">
+                <button type="button" aria-pressed="true" data-status="sent"><span class="sw" style="background:var(--sent)"></span>Sent</button>
+                <button type="button" aria-pressed="false" data-status="failed"><span class="sw" style="background:var(--failed)"></span>Failed</button>
+                <button type="button" aria-pressed="false" data-status="rejected"><span class="sw" style="background:var(--rejected)"></span>Rejected</button>
+              </div>
+              <div class="seg" role="group" aria-label="View">
+                <button type="button" aria-pressed="true" data-view="chart">Chart</button>
+                <button type="button" aria-pressed="false" data-view="table">Table</button>
+              </div>
+            </div>
+          </div>
+          <div class="chart-wrap" data-chart-wrap>
+            <svg data-chart role="img" aria-label="Line chart of messages by day"></svg>
+            <div class="tip" hidden data-tip></div>
+          </div>
+          <div class="chart-table-wrap" hidden data-table-wrap>
+            <table class="chart-table num" data-table></table>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="card list-card">
+            <div class="card-head"><h2>Latest messages</h2><a class="link" style="font-size:14px">View all SMS records</a></div>
+            <div class="msg">
+              <div class="meta"><span class="type">Bulk · Promotional</span><span>KENTE&amp;CO</span><span>Today, 09:14</span></div>
+              <span class="pill p-muted">2,400 recipients</span>
+              <p class="text">Our October sale starts Friday! 20% off all kente stoles at our Osu shop and online. Show this SMS at the till.</p>
+              <div class="counts">
+                <span class="pill p-sent"><svg class="i"><use href="#i-check"/></svg>2,281 sent</span>
+                <span class="pill p-queued"><svg class="i"><use href="#i-clock"/></svg>64 queued</span>
+                <span class="pill p-failed"><svg class="i"><use href="#i-x"/></svg>38 failed</span>
+                <span class="pill p-rejected"><svg class="i"><use href="#i-ban"/></svg>17 rejected</span>
+              </div>
+            </div>
+            <div class="msg">
+              <div class="meta"><span class="type">API · Transactional</span><span>KENTE&amp;CO</span><span>Today, 08:52</span></div>
+              <span class="pill p-muted">1 recipient</span>
+              <p class="text">Your order ORD-1042 has been dispatched and will arrive within 2 days. Track it at kenteco.com.gh/t/1042</p>
+              <div class="counts"><span class="pill p-sent"><svg class="i"><use href="#i-check"/></svg>1 sent</span></div>
+            </div>
+            <div class="msg">
+              <div class="meta"><span class="type">Group · Reminder</span><span>KENTESALES</span><span>Yesterday, 16:30</span></div>
+              <span class="pill p-muted">312 recipients</span>
+              <p class="text">Reminder: your layaway balance is due on 15 Oct. Visit any branch or call 030 290 1122 to pay.</p>
+              <div class="counts">
+                <span class="pill p-sent"><svg class="i"><use href="#i-check"/></svg>305 sent</span>
+                <span class="pill p-failed"><svg class="i"><use href="#i-x"/></svg>7 failed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card list-card">
+            <div class="card-head"><h2>Sender IDs</h2><a class="link" style="font-size:14px">Manage</a></div>
+            <div class="sid"><div><b>KENTE&amp;CO</b><span class="d">Approved 2 Sep 2026</span></div><span class="pill p-sent"><svg class="i"><use href="#i-check"/></svg>Approved</span></div>
+            <div class="sid"><div><b>KENTESALES</b><span class="d">Approved 18 Sep 2026</span></div><span class="pill p-sent"><svg class="i"><use href="#i-check"/></svg>Approved</span></div>
+            <div class="sid"><div><b>KENTEOSU</b><span class="d">Requested 14 Oct 2026</span></div><span class="pill p-pending"><svg class="i"><use href="#i-clock"/></svg>In review</span></div>
+            <div class="quick">
+              <a><svg class="i"><use href="#i-plus"/></svg>Request sender ID</a>
+              <a><svg class="i"><use href="#i-group"/></svg>Import contacts</a>
+              <a><svg class="i"><use href="#i-template"/></svg>New template</a>
+              <a><svg class="i"><use href="#i-apps"/></svg>Get API keys</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REVIEW NOTES ================= -->
+<section class="screen" id="s-notes" aria-label="Review notes">
+  <div class="notes">
+    <header>
+      <h1>Merchant portal review</h1>
+      <p class="lead">This review covers the current unity-app (Angular 21 on the Berry admin template) and what the mockup changes. The mockup keeps every feature and data field the app has today, and gives it the EcolinkPay brand.</p>
+    </header>
+
+    <section>
+      <h2>What the app does today</h2>
+      <ul>
+        <li><b>Sign in</b> with username and password, plus a password reset flow.</li>
+        <li><b>Registration</b>: company name, contact person, industry, country, mobile, email, billing address, password, terms. Then a PIN sent by email to verify.</li>
+        <li><b>Dashboard</b>: an account-pending banner, credit balance, SMS counts (total, sent, queued, failed, rejected), a date-range filter, a chart filtered by status, and the latest SMS.</li>
+        <li><b>Other pages</b>: send SMS, SMS templates, contact groups, SMS records, sender IDs, add funds (top up), price list, API applications, users, notification settings, user and merchant profile, change password.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Issues found</h2>
+      <div class="issue"><span class="where">Branding</span><h3>The portal doesn't look like EcolinkPay</h3><p>It's called "Ecolink-MMS" in the sidebar, "Ecolink MMS" on the sign-in page and uses a paper-plane icon as its logo. The website now links to it as "Merchant login", so it should carry the same logo, colours and font.</p></div>
+      <div class="issue"><span class="where">dashboard.component.html</span><h3>The pending-account notice appears twice</h3><p>Pending merchants see the yellow banner at the top and a second "Account Status: PENDING" card below the chart.</p></div>
+      <div class="issue"><span class="where">dashboard.component.html</span><h3>A large hidden block is still in the page</h3><p>The old dashboard sits inside <code>@if (false)</code>, about 150 lines, along with commented-out code. It never renders and makes the file hard to work on.</p></div>
+      <div class="issue"><span class="where">dashboard.component.html</span><h3>Colours and spacing are written inline</h3><p>Ten inline <code>style=""</code> attributes and hard-coded colours (<code>#1e9e57</code>, <code>#d64545</code>, <code>#d98a04</code>) bypass the theme, so dark mode and future brand changes miss them.</p></div>
+      <div class="issue"><span class="where">Dashboard</span><h3>Balance shows four decimal places</h3><p><code>currency: "GHS" : "symbol" : "1.4-4"</code> renders GH₵1,284.5000. Show the balance to two decimals and keep four only for the per-SMS unit price.</p></div>
+      <div class="issue"><span class="where">admin-layout</span><h3>Menu icons repeat and the list is flat</h3><p>SMS Templates and SMS Records share the same icon, as do Price List, User Profile and Merchant Profile. Twelve items in one list with no grouping are hard to scan.</p></div>
+      <div class="issue"><span class="where">admin-layout</span><h3>Two menu items skip the permission check</h3><p>SMS Templates and Price List are shown without <code>allow(...)</code>, unlike every other item. Check whether that's intended.</p></div>
+      <div class="issue"><span class="where">Dashboard</span><h3>The credit balance is the only money figure, and it's small</h3><p>Merchants mostly need to know whether they can send. The mockup makes the balance the first card and converts it into an approximate number of SMS, using the existing <code>smsBalance</code> and <code>unitPrice</code> fields.</p></div>
+    </section>
+
+    <section>
+      <h2>What the mockup changes</h2>
+      <ul>
+        <li><b>Brand</b>: EcolinkPay logo, navy sidebar, green accents, Plus Jakarta Sans. Light and dark themes both use brand tokens.</li>
+        <li><b>Sign in and registration</b>: brand panel on the left, explaining what the portal is for. "Keep me signed in" is new. Registration shows a two-step indicator, a +233 prefix on the mobile number, a password hint and a 6-box PIN entry. Confirm the PIN length the backend sends.</li>
+        <li><b>Navigation</b> grouped into Messaging, Billing and Settings with plain names ("Top up balance", "Contact groups", "Team members"). <b>Payments</b> is in the menu marked "Soon", so the slot is ready when you add it.</li>
+        <li><b>Dashboard</b>: one pending banner; the credit balance in its own strip at the top (how many SMS it covers, price per SMS, last top-up), kept apart from the SMS figures because it doesn't change with the date range; an "SMS activity" section where the date range controls the status cards and a line chart that switches between Sent, Failed and Rejected and has a table view; latest messages show recipients and per-status counts; a new <b>Sender IDs</b> card shows approval status with quick actions.</li>
+        <li><b>Palette switch</b> (top bar): <b>Brand</b> is the proposed navy and green. <b>Current teal</b> repaints the same screens with the colours from the app's <code>styles.css</code> today, so you can compare. Either way, the app already keeps its colours in variables, so switching is mostly a matter of changing values in that one file.</li>
+        <li><b>Status colours</b> are consistent everywhere (sent green, queued blue, failed red, rejected amber) and always come with an icon and a label.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>New on the dashboard: needs backend data</h2>
+      <ul>
+        <li>The Sender IDs card needs the merchant's sender IDs and their status on the dashboard. The data already exists on the Sender IDs page.</li>
+        <li>"Last top-up" on the balance strip. The data is already on the Add Funds page (top-up history).</li>
+        <li>Recipient counts on the latest messages. The app shows per-status counts today, so total recipients is their sum.</li>
+        <li>"Resend PIN" with a countdown on the verify step.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>How to build it in the Angular app</h2>
+      <ol>
+        <li>Add the brand tokens (colours, radius, font) as CSS variables in <code>styles.scss</code>, with a dark set under the existing theme toggle.</li>
+        <li>Create a PrimeNG preset with <code>definePreset</code> from <code>@primeuix/themes</code>, using Ecolink Navy as primary and Ecolink Green as accent, so selects, dialogs and tables match.</li>
+        <li>Copy the logo SVGs and the Plus Jakarta Sans web font from the website's <code>brand/</code> folder into <code>src/assets</code>.</li>
+        <li>Rebuild the shared layout first (sidebar, topbar, user menu). Every page benefits at once.</li>
+        <li>Then sign in, registration and dashboard, removing the hidden <code>@if (false)</code> block and the inline styles.</li>
+      </ol>
+    </section>
+  </div>
+</section>
+
+<script>
+(() => {
+  // ---------- Screen switching ----------
+  const tabs = [...document.querySelectorAll('.screens [data-go]')];
+  function go(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.toggle('is-active', s.id === 's-' + name));
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.go === name)));
+    try { localStorage.setItem('portal-screen', name); } catch (e) {}
+    window.scrollTo(0, 0);
+    if (name === 'dashboard') render();
+  }
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-go]');
+    if (a) { e.preventDefault(); go(a.dataset.go); }
+  });
+  document.querySelectorAll('[data-fake-submit]').forEach(f => f.addEventListener('submit', e => { e.preventDefault(); go(f.dataset.fakeSubmit); }));
+  document.querySelectorAll('[data-toggle-pass]').forEach(b => b.addEventListener('click', () => {
+    const i = document.getElementById(b.dataset.togglePass);
+    const show = i.type === 'password'; i.type = show ? 'text' : 'password';
+    b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  }));
+  // PIN boxes: auto-advance
+  const pins = [...document.querySelectorAll('.pin input')];
+  pins.forEach((p, i) => p.addEventListener('input', () => { p.value = p.value.replace(/\D/g, '').slice(0, 1); if (p.value && pins[i + 1]) pins[i + 1].focus(); }));
+
+  // ---------- Palette switch (Brand vs the portal's current teal) ----------
+  function setPalette(name) {
+    if (name === 'teal') document.documentElement.dataset.palette = 'teal';
+    else delete document.documentElement.dataset.palette;
+    document.querySelectorAll('[data-palette-set]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.paletteSet === name)));
+    try { localStorage.setItem('portal-palette', name); } catch (e) {}
+    if (document.getElementById('s-dashboard').classList.contains('is-active')) render();
+  }
+  document.querySelectorAll('[data-palette-set]').forEach(b => b.addEventListener('click', () => setPalette(b.dataset.paletteSet)));
+
+  // ---------- Theme toggle (mirrors the app's light/dark switch) ----------
+  document.querySelector('[data-theme-toggle]').addEventListener('click', () => {
+    const r = document.documentElement;
+    const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    r.dataset.theme = dark ? 'light' : 'dark';
+  });
+
+  // ---------- User menu & mobile nav ----------
+  const um = document.querySelector('[data-user-menu]'), ub = document.querySelector('[data-user-toggle]');
+  ub.addEventListener('click', e => { e.stopPropagation(); um.hidden = !um.hidden; ub.setAttribute('aria-expanded', String(!um.hidden)); });
+  document.addEventListener('click', e => { if (!um.hidden && !um.contains(e.target)) { um.hidden = true; ub.setAttribute('aria-expanded', 'false'); } });
+  const shell = document.querySelector('[data-shell]');
+  document.querySelector('[data-nav-open]').addEventListener('click', e => { e.stopPropagation(); shell.classList.add('nav-open'); });
+  document.addEventListener('click', e => { if (shell.classList.contains('nav-open') && !e.target.closest('.sidebar')) shell.classList.remove('nav-open'); });
+
+  // ---------- Sample data (deterministic) ----------
+  function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+  const fmtDay = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  const fmtWk = d => d.toLocaleDateString('en-GB', { weekday: 'short' });
+  function days(start, n) { return Array.from({ length: n }, (_, i) => new Date(start.getFullYear(), start.getMonth(), start.getDate() + i)); }
+  function bucket(r, scale, isLive) {
+    const sent = Math.round(scale * (0.55 + r() * 0.9));
+    return { sent, failed: Math.round(sent * (0.012 + r() * 0.03)), rejected: Math.round(sent * (0.004 + r() * 0.014)), queued: isLive ? Math.round(sent * 0.04) : 0 };
+  }
+  const PERIODS = {
+    TODAY:      () => { const r = rng(11); return { unit: 'hour', label: 'Today, Fri 16 Oct 2026', rows: Array.from({ length: 11 }, (_, h) => ({ x: String(h).padStart(2, '0') + ':00', ...bucket(r, h < 7 ? 20 : 180, h === 10) })) }; },
+    YESTERDAY:  () => { const r = rng(23); return { unit: 'hour', label: 'Yesterday, Thu 15 Oct 2026', rows: Array.from({ length: 24 }, (_, h) => ({ x: String(h).padStart(2, '0') + ':00', ...bucket(r, h < 7 || h > 21 ? 15 : 120, false) })) }; },
+    THIS_WEEK:  () => { const r = rng(5);  return { unit: 'day', label: 'This week, Mon 12 – Fri 16 Oct 2026', rows: days(new Date(2026, 9, 12), 5).map((d, i) => ({ x: fmtWk(d), full: fmtWk(d) + ' ' + fmtDay(d), ...bucket(r, 1700, i === 4) })) }; },
+    LAST_WEEK:  () => { const r = rng(7);  return { unit: 'day', label: 'Last week, 5–11 Oct 2026', rows: days(new Date(2026, 9, 5), 7).map(d => ({ x: fmtWk(d), full: fmtWk(d) + ' ' + fmtDay(d), ...bucket(r, 1500, false) })) }; },
+    THIS_MONTH: () => { const r = rng(13); return { unit: 'day', label: 'This month, 1–16 Oct 2026', rows: days(new Date(2026, 9, 1), 16).map((d, i) => ({ x: String(d.getDate()), full: fmtWk(d) + ' ' + fmtDay(d), ...bucket(r, 1600, i === 15) })) }; },
+    LAST_MONTH: () => { const r = rng(17); return { unit: 'day', label: 'Last month, September 2026', rows: days(new Date(2026, 8, 1), 30).map(d => ({ x: String(d.getDate()), full: fmtWk(d) + ' ' + fmtDay(d), ...bucket(r, 1400, false) })) }; },
+  };
+  const LABEL = { sent: 'Sent', failed: 'Failed', rejected: 'Rejected', queued: 'Queued' };
+  let status = 'sent', view = 'chart';
+  const nf = new Intl.NumberFormat('en-GB');
+
+  function render() {
+    const period = document.querySelector('[data-range]').value;
+    const data = PERIODS[period]();
+    document.querySelector('[data-period-label]').textContent = data.label;
+    // KPI cards
+    const tot = { sent: 0, queued: 0, failed: 0, rejected: 0 };
+    data.rows.forEach(r => { for (const k in tot) tot[k] += r[k]; });
+    const total = tot.sent + tot.queued + tot.failed + tot.rejected;
+    document.querySelector('[data-k="total"]').textContent = nf.format(total);
+    for (const k in tot) {
+      document.querySelector(`[data-k="${k}"]`).textContent = nf.format(tot[k]);
+      document.querySelector(`[data-k-share="${k}"]`).textContent = total ? (tot[k] / total * 100).toFixed(1) + '% of total' : '–';
+    }
+    document.querySelector('[data-chart-title]').textContent = `${LABEL[status]} messages by ${data.unit}`;
+    drawChart(data);
+    drawTable(data);
+  }
+
+  function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v || 1))); return Math.ceil(v / p / (v / p > 5 ? 2 : 1)) * p * (v / p > 5 ? 2 : 1); }
+
+  function drawChart(data) {
+    document.querySelector('[data-tip]').hidden = true;
+    const svg = document.querySelector('[data-chart]');
+    const W = svg.clientWidth || 800, H = 260, m = { t: 14, r: 16, b: 26, l: 46 };
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const vals = data.rows.map(r => r[status]);
+    const max = niceMax(Math.max(...vals, 1) * 1.08);
+    const iw = W - m.l - m.r, ih = H - m.t - m.b, n = vals.length;
+    const x = i => m.l + (n === 1 ? iw / 2 : (i / (n - 1)) * iw);
+    const y = v => m.t + ih - (v / max) * ih;
+    const color = `var(--${status})`;
+    let g = '<g class="axis">';
+    for (let i = 0; i <= 4; i++) {
+      const v = max * i / 4, yy = y(v);
+      g += `<line class="gridline" x1="${m.l}" x2="${W - m.r}" y1="${yy}" y2="${yy}"/>`;
+      g += `<text x="${m.l - 8}" y="${yy + 4}" text-anchor="end">${nf.format(Math.round(v))}</text>`;
+    }
+    const every = Math.ceil(n / Math.max(1, Math.floor(iw / 44)));
+    data.rows.forEach((r, i) => {
+      if (i % every === 0 || i === n - 1 && (n - 1) % every > every / 2) {
+        const anchor = i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle';
+        g += `<text x="${x(i)}" y="${H - 8}" text-anchor="${anchor}">${r.x}</text>`;
+      }
+    });
+    g += '</g>';
+    const pts = vals.map((v, i) => [x(i), y(v)]);
+    const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    const area = `${line} L${x(n - 1).toFixed(1)},${m.t + ih} L${x(0).toFixed(1)},${m.t + ih} Z`;
+    g += `<path class="area" d="${area}" fill="${color}" fill-opacity=".1"/>`;
+    g += `<line x1="${m.l}" x2="${W - m.r}" y1="${m.t + ih}" y2="${m.t + ih}" stroke="var(--line)" stroke-width="1"/>`;
+    g += `<path class="line" d="${line}" stroke="${color}"/>`;
+    if (n <= 16) pts.forEach(p => { g += `<circle class="pt" cx="${p[0]}" cy="${p[1]}" r="4" fill="${color}"/>`; });
+    g += `<line class="cross" data-cross y1="${m.t}" y2="${m.t + ih}" x1="-10" x2="-10" visibility="hidden"/>`;
+    g += `<circle class="pt" data-hot r="5.5" fill="${color}" cx="-10" cy="-10" visibility="hidden"/>`;
+    g += `<rect class="overlay" x="${m.l - 10}" y="${m.t}" width="${iw + 20}" height="${ih}"/>`;
+    svg.innerHTML = g;
+    svg.setAttribute('aria-label', `${LABEL[status]} messages by ${data.unit}, ${data.label}`);
+
+    const tip = document.querySelector('[data-tip]'), wrap = document.querySelector('[data-chart-wrap]');
+    const cross = svg.querySelector('[data-cross]'), hot = svg.querySelector('[data-hot]'), ov = svg.querySelector('.overlay');
+    const show = i => {
+      const r = data.rows[i], px = x(i), py = y(r[status]);
+      cross.setAttribute('x1', px); cross.setAttribute('x2', px); cross.setAttribute('visibility', 'visible');
+      hot.setAttribute('cx', px); hot.setAttribute('cy', py); hot.setAttribute('visibility', 'visible');
+      const sx = wrap.clientWidth / W, sy = svg.clientHeight / H;
+      tip.innerHTML = `<b>${r.full || r.x}</b><span class="v num">${nf.format(r[status])}</span> ${LABEL[status].toLowerCase()}`;
+      tip.style.left = Math.min(Math.max(px * sx, 80), wrap.clientWidth - 80) + 'px';
+      tip.style.top = (py * sy) + 'px';
+      tip.hidden = false;
+    };
+    const hide = () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); hot.setAttribute('visibility', 'hidden'); };
+    ov.addEventListener('mousemove', e => {
+      const rect = svg.getBoundingClientRect();
+      const vx = (e.clientX - rect.left) * (W / rect.width);
+      const i = Math.max(0, Math.min(n - 1, Math.round(n === 1 ? 0 : (vx - m.l) / iw * (n - 1))));
+      show(i);
+    });
+    ov.addEventListener('mouseleave', hide);
+  }
+
+  function drawTable(data) {
+    const head = `<thead><tr><th>${data.unit === 'hour' ? 'Hour' : 'Day'}</th><th>Sent</th><th>Queued</th><th>Failed</th><th>Rejected</th></tr></thead>`;
+    const body = data.rows.map(r => `<tr><td>${r.full || r.x}</td><td>${nf.format(r.sent)}</td><td>${nf.format(r.queued)}</td><td>${nf.format(r.failed)}</td><td>${nf.format(r.rejected)}</td></tr>`).join('');
+    document.querySelector('[data-table]').innerHTML = head + '<tbody>' + body + '</tbody>';
+  }
+
+  document.querySelector('[data-range]').addEventListener('change', render);
+  document.querySelectorAll('[data-status]').forEach(b => b.addEventListener('click', () => {
+    status = b.dataset.status;
+    document.querySelectorAll('[data-status]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    render();
+  }));
+  document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => {
+    view = b.dataset.view;
+    document.querySelectorAll('[data-view]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    document.querySelector('[data-chart-wrap]').hidden = view !== 'chart';
+    document.querySelector('[data-table-wrap]').hidden = view !== 'table';
+  }));
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (document.getElementById('s-dashboard').classList.contains('is-active')) render(); }, 120); });
+
+  let start = 'login';
+  try { start = localStorage.getItem('portal-screen') || 'login'; } catch (e) {}
+  if (!document.getElementById('s-' + start)) start = 'login';
+  let pal = 'brand';
+  try { pal = localStorage.getItem('portal-palette') || 'brand'; } catch (e) {}
+  setPalette(pal);
+  go(start);
+})();
+</script>
+
+</body>
+</html>

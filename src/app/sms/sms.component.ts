@@ -30,7 +30,6 @@ import {Pager} from '../core/pager';
 import { DistributionGroupsService } from '../distribution-groups/distribution-groups.service';
 import { MessageBox } from '../message-helper';
 import { StaticDataService } from '../static-data.service';
-import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { SmsService } from './sms.service';
 import {GenericFormValidator} from '../core/generic-form-validator';
 
@@ -39,7 +38,6 @@ import {GenericFormValidator} from '../core/generic-form-validator';
   standalone: true,
   imports: [
     CoreModule,
-    ButtonToolbarComponent,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,

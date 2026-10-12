@@ -1,23 +1,26 @@
 <div class="login-split">
   <aside class="login-brand">
-    <div class="brand-top">
-      <span class="brand-mark"><i class="pi pi-send" aria-hidden="true"></i></span>
-      <span class="brand-name">Ecolink <em>MMS</em></span>
-    </div>
+    <img class="brand-logo" src="assets/images/brand/logo-reversed.svg" alt="EcolinkPay" />
 
     <div class="brand-copy">
-      <h1>Merchant SMS portal</h1>
-      <p>Send and track SMS for your business.</p>
+      <span class="brand-kicker">Get started</span>
+      <h1>Set up your business in minutes.</h1>
+      <p>Create your account and verify your email. Then request a sender ID and top up your balance to start sending.</p>
+      <ul class="brand-points">
+        <li><i class="pi pi-check" aria-hidden="true"></i><span>No setup fee. Pay only for what you send</span></li>
+        <li><i class="pi pi-check" aria-hidden="true"></i><span>Top up your balance with mobile money</span></li>
+        <li><i class="pi pi-check" aria-hidden="true"></i><span>Local support in Accra</span></li>
+      </ul>
     </div>
 
-    <div class="brand-foot">© 2026 Ecolink</div>
+    <div class="brand-foot">© {{ currentYear }} EcolinkPay · Accra, Ghana</div>
+    <img class="brand-watermark" src="assets/images/brand/mark-white.svg" alt="" aria-hidden="true" />
   </aside>
 
   <main class="login-panel">
     <div class="login-card wide">
-      <span class="brand-mini">
-        <i class="pi pi-send" aria-hidden="true"></i> Ecolink <em>MMS</em>
-      </span>
+      <img class="brand-mini-logo" src="assets/images/brand/logo-color.svg" alt="EcolinkPay" />
+      <img class="brand-mini-logo on-dark" src="assets/images/brand/logo-reversed.svg" alt="EcolinkPay" />
 
       <!-- Step 1: Registration form -->
       @if (currentStep === 'form') {

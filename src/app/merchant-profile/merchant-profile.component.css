@@ -107,8 +107,8 @@
 :host ::ng-deep .login-form .p-inputtext:focus,
 :host ::ng-deep .login-form .p-password input:focus {
   outline: none;
-  border-color: #0f7e6f;
-  box-shadow: 0 0 0 3px rgba(15,126,111,0.18);
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
 }
 
 /* Checkbox */
@@ -122,7 +122,7 @@
   border-radius: 10px;
 }
 .checkbox-label { color: #374151; font-size: 14px; }
-.checkbox-label a { color: #0b6557; font-weight: 600; }
+.checkbox-label a { color: var(--accent-text); font-weight: 600; }
 .checkbox-label a:hover { text-decoration: underline; }
 
 /* Errors */
@@ -136,7 +136,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #0f7e6f 0%, #094e44 100%);
+  background: var(--sidebar-bg);
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -155,7 +155,7 @@
 
 /* Footer */
 .login-footer { display: flex; justify-content: center; margin-top: 6px; }
-.forgot-password { color: #0b6557; font-weight: 600; }
+.forgot-password { color: var(--accent-text); font-weight: 600; }
 .forgot-password:hover { text-decoration: underline; }
 
 /* Dialog terms content spacing */
@@ -163,7 +163,7 @@
 
 /* Business document link */
 .doc-link {
-  color: #0f7e6f;
+  color: var(--primary);
   font-weight: 600;
   text-decoration: none;
   padding: 4px 6px;
@@ -172,14 +172,14 @@
 }
 .doc-link:hover {
   color: #094e44;
-  background-color: rgba(15, 126, 111, 0.12);
+  background-color: rgba(19, 45, 92, 0.12);
 }
 .doc-link:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(15,126,111,0.25);
+  box-shadow: var(--focus-ring);
 }
 .doc-link-icon {
-  color: #0f7e6f;
+  color: var(--primary);
 }
 
 /* Responsive */

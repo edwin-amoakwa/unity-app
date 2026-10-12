@@ -21,11 +21,11 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { NotificationService } from '../core/notification.service';
 import { CollectionUtil } from '../core/system.utils';
 import { StaticDataService } from '../static-data.service';
-import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { UserService } from './user.service';
 import { Password } from 'primeng/password';
 
+import { PageHeaderComponent } from '../theme/shared/components/page-header/page-header.component';
 // Permissions model interfaces
 interface PermissionAction {
   name: string;
@@ -44,6 +44,7 @@ interface PermissionPage {
   selector: 'app-users',
   standalone: true,
   imports: [
+    PageHeaderComponent,
     ReactiveFormsModule,
     FormsModule,
     ButtonModule,
@@ -54,7 +55,6 @@ interface PermissionPage {
     DialogModule,
     ToastModule,
     ToggleSwitchModule,
-    ButtonToolbarComponent,
     CardComponent,
     Password,
   ],

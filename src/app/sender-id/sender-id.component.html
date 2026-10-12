@@ -1,7 +1,9 @@
-<h1 class="page-title">Sender IDs</h1>
-
-<button-toolbar>
+<app-page-header
+  title="Sender IDs"
+  description="Register the names your messages are sent from"
+>
   <button
+    page-actions
     pButton
     type="button"
     label="New Sender ID"
@@ -10,7 +12,7 @@
     (click)="openCreate()"
     pTooltip="Create new sender ID"
   ></button>
-</button-toolbar>
+</app-page-header>
 
 <div class="row">
   <!-- Create Sender ID Form -->
@@ -153,7 +155,7 @@
   <!-- Sender IDs List Table -->
   @if (formView.listView) {
     <div class="col-sm-12">
-      <app-card title="Sender IDs List">
+      <app-card>
         <p-table
           [value]="senderIds"
           dataKey="id"

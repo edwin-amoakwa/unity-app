@@ -1,14 +1,16 @@
-<h1 class="page-title">Users</h1>
-
-<button-toolbar>
+<app-page-header
+  title="Users"
+  description="Manage who has access to this account"
+>
   <p-button
+    page-actions
     label="New User"
     icon="pi pi-plus"
     (onClick)="openNewUserDialog()"
     styleClass="p-button-primary"
   >
   </p-button>
-</button-toolbar>
+</app-page-header>
 
 <app-card>
   <p-table

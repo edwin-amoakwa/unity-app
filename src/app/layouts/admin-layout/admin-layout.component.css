@@ -1,5 +1,5 @@
 /* ============================================================================
-   Canopy — App shell (sidebar + topbar)
+   EcolinkPay — App shell (sidebar + topbar)
    ============================================================================ */
 .app-shell { min-height: 100vh; }
 
@@ -28,20 +28,8 @@
   padding: 0 var(--space-5);
   border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
-.topbar-brand-container .brand {
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: -0.01em;
-}
-.topbar-brand-container .brand-eco { color: #fff; font-weight: 800; }
-.topbar-brand-container .brand-mms {
-  color: var(--sidebar-text-strong);
-  font-weight: 700;
-  background: var(--sidebar-active-bg);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  margin-left: 6px;
-}
+.topbar-logo { display: block; height: 30px; width: auto; }
+.topbar-logo.on-surface { display: none; }
 
 .topbar .hamburger {
   background: transparent;
@@ -88,8 +76,17 @@
 }
 .user:hover { border-color: var(--border-strong); background: var(--surface-2); }
 .user:focus-visible { outline: none; box-shadow: var(--focus-ring); }
-.user img { width: 30px; height: 30px; border-radius: 50%; }
-.user .name { font-weight: 600; font-size: 0.875rem; }
+.user .avatar {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  font-weight: 800; font-size: 0.75rem; letter-spacing: 0.02em;
+}
+.user .who { display: flex; flex-direction: column; line-height: 1.2; }
+.user .name { font-weight: 600; font-size: 0.875rem; color: var(--text); }
+.user .org { font-size: 0.75rem; color: var(--muted); }
+.user .caret { font-size: 0.7rem; color: var(--muted); }
+@media (max-width: 640px) { .user .who { display: none; } }
 
 /* ----------------------------------- Sidebar ----------------------------------- */
 .sidebar {
@@ -114,8 +111,7 @@
   padding: 0 var(--space-5);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
-.sidebar .logo { color: var(--sidebar-accent); font-size: 1.2rem; }
-.sidebar .brand { font-weight: 800; color: var(--sidebar-text-strong); letter-spacing: -0.01em; }
+.sidebar .sidebar-logo { display: block; height: 30px; width: auto; }
 .sidebar .close-btn {
   margin-left: auto;
   background: transparent;
@@ -133,6 +129,16 @@
   overflow-y: auto;
   height: calc(100vh - 64px);
 }
+.menu-group {
+  display: block;
+  padding: var(--space-4) 0.75rem 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sidebar-muted);
+}
+.menu-group:first-child { padding-top: 0; }
 .menu-item {
   position: relative;
   display: flex;
@@ -166,7 +172,7 @@
 /* ----------------------------------- Overlay / content ----------------------------------- */
 .overlay {
   position: fixed; inset: 0;
-  background: rgba(8, 23, 20, 0.55);
+  background: rgba(10, 24, 51, 0.55);
   opacity: 0; visibility: hidden;
   transition: opacity var(--dur-2) var(--ease);
   z-index: 999;
@@ -190,8 +196,11 @@
   .sidebar.open { transform: translateX(0); }
   .sidebar .close-btn { display: inline-flex; }
   .topbar-brand-container { width: auto; background: transparent; border-right: none; padding-left: 0; }
-  .topbar-brand-container .brand-eco { color: var(--text); }
-  .topbar-brand-container .brand-mms { color: var(--primary); background: var(--primary-soft); }
+  .topbar-logo { height: 26px; }
+  .topbar-logo.on-panel { display: none; }
+  .topbar-logo.on-surface { display: block; }
+  :host-context([data-theme="dark"]) .topbar-logo.on-panel { display: block; }
+  :host-context([data-theme="dark"]) .topbar-logo.on-surface { display: none; }
 }
 
 .muted { color: var(--muted); }
@@ -221,3 +230,5 @@
 }
 .user-menu .user-menu-item i { width: 1rem; color: var(--muted); }
 .user-menu .user-menu-item:hover { background: var(--surface-2); color: var(--text); }
+.user-menu .user-menu-sep { border: 0; border-top: 1px solid var(--border); margin: var(--space-2) 0; opacity: 1; }
+.user-menu .logout, .user-menu .logout i { color: var(--danger-text); }

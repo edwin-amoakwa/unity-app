@@ -1,7 +1,9 @@
-<h1 class="page-title">SMS Campaign</h1>
-
-<button-toolbar>
+<app-page-header
+  title="SMS Campaign"
+  description="Create and send messages to contacts and groups"
+>
   <p-button
+    page-actions
     label="Create SMS"
     icon="pi pi-plus"
     (onClick)="createNewMessage()"
@@ -9,15 +11,16 @@
   >
   </p-button>
   <p-button
+    page-actions
     label="From Template"
     icon="pi pi-plus"
     (onClick)="createFromTemplateDialog()"
     class="p-button-sm"
   >
   </p-button>
-</button-toolbar>
+</app-page-header>
 
-<app-card title="SMS List">
+<app-card>
   @if (formView.listView) {
     <div class="card-body">
       <!-- Filters -->

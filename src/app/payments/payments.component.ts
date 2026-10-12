@@ -20,14 +20,15 @@ import { NotificationService } from '../core/notification.service';
 import { PaymentService } from './payment.service';
 import { FormView } from '../core/form-view';
 import { CardComponent } from '../theme/shared/components/card/card.component';
-import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { ConfigService } from '../config.service';
 import {CollectionUtil} from '../core/system.utils';
 
+import { PageHeaderComponent } from '../theme/shared/components/page-header/page-header.component';
 @Component({
   selector: 'app-payments',
   standalone: true,
   imports: [
+    PageHeaderComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -42,7 +43,6 @@ import {CollectionUtil} from '../core/system.utils';
     ToastModule,
     Tooltip,
     CardComponent,
-    ButtonToolbarComponent,
     SelectButtonModule
   ],
   providers: [MessageService],

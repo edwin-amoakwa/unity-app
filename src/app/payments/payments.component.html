@@ -1,7 +1,9 @@
-<h1 class="page-title">Add Funds</h1>
-
-<button-toolbar>
+<app-page-header
+  title="Add Funds"
+  description="Top up your account balance and view past payments"
+>
   <button
+    page-actions
     pButton
     type="button"
     label="Top Up Balance"
@@ -9,7 +11,7 @@
     class="p-button-primary"
     (click)="openCreate()"
   ></button>
-</button-toolbar>
+</app-page-header>
 
 @if (formView.createView) {
   <div class="col-sm-12 mb-4">

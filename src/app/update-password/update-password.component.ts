@@ -18,10 +18,12 @@ import { ToastModule } from 'primeng/toast';
 import { UserService } from '../users/user.service';
 import { NotificationService } from '../core/notification.service';
 
+import { PageHeaderComponent } from '../theme/shared/components/page-header/page-header.component';
 @Component({
   selector: 'app-update-password',
   standalone: true,
   imports: [
+    PageHeaderComponent,
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,

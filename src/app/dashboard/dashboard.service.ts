@@ -19,7 +19,6 @@ export class DashboardService {
   async getSmsChart(dataFilter?: any): Promise<ApiResponse<any>> {
 
     let params = HttpUtils.toUrlParam(dataFilter);
-    console.log(params, dataFilter);
     return await firstValueFrom(
       this.http.get<ApiResponse<any>>(`${this.apiUrl}/sent-sms?${params}`)
     );

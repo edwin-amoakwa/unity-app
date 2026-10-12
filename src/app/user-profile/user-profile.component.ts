@@ -7,9 +7,10 @@ import { UserSession } from '../core/user-session';
 import { SmsRecordsComponent } from '../sms-records/sms-records.component';
 import { SmsChannelPriceComponent } from '../sms-channel-price/sms-channel-price.component';
 
+import { PageHeaderComponent } from '../theme/shared/components/page-header/page-header.component';
 @Component({
   selector: 'app-account-profile',
-  imports: [CardComponent, SmsChannelPriceComponent],
+  imports: [PageHeaderComponent, CardComponent, SmsChannelPriceComponent],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
 })

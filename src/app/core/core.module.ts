@@ -61,6 +61,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 // bootstrap import
 import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import {CardComponent} from '../theme/shared/components/card/card.component';
+import { PageHeaderComponent } from '../theme/shared/components/page-header/page-header.component';
 import {TagModule} from 'primeng/tag';
 
 
@@ -125,6 +126,7 @@ import {TagModule} from 'primeng/tag';
     ConfirmDialogModule,
     SelectModule,
     CardComponent,
+    PageHeaderComponent,
     NgbDropdownModule,
     NgbDropdownModule,
     NgbNavModule,
@@ -192,6 +194,7 @@ import {TagModule} from 'primeng/tag';
 
 
     CardComponent,
+    PageHeaderComponent,
     NgbDropdownModule,
     NgbNavModule,
     NgbModule,

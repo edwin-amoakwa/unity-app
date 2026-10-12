@@ -13,7 +13,6 @@ import { CollectionUtil } from '../core/system.utils';
 import { CardComponent } from '../theme/shared/components/card/card.component';
 import { ApplicationType } from '../unity.model';
 import { ApplicationService } from './application.service';
-import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import {CoreModule} from '../core/core.module';
 import { ApplicationFormComponent } from './application-form/application-form.component';
 
@@ -23,7 +22,6 @@ import { ApplicationFormComponent } from './application-form/application-form.co
   imports: [
     CoreModule,
     Tag,
-    ButtonToolbarComponent,
     ApplicationFormComponent
   ],
   providers: [ConfirmationService],

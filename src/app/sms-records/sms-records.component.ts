@@ -23,10 +23,12 @@ import * as FileSaver from 'file-saver';
 
 
 
+import { PageHeaderComponent } from '../theme/shared/components/page-header/page-header.component';
 @Component({
   selector: 'app-sms-records',
   standalone: true,
   imports: [
+    PageHeaderComponent,
     CommonModule,
     FormsModule,
     CardComponent,

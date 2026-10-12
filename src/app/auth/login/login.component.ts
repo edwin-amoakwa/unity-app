@@ -20,6 +20,7 @@ import { MessageBox } from '../../message-helper';
   styleUrls: [],
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  currentYear = new Date().getFullYear();
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(UntypedFormBuilder);

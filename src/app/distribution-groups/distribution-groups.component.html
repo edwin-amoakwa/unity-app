@@ -1,4 +1,18 @@
-<h1 class="page-title">Group Contacts</h1>
+<app-page-header
+  title="Group Contacts"
+  description="Organise contacts into groups for bulk messaging"
+>
+  @if (formView.listView) {
+    <p-button
+      page-actions
+      label="New Group"
+      icon="pi pi-plus"
+      (onClick)="openNewGroupDialog()"
+      styleClass="p-button-primary"
+    >
+    </p-button>
+  }
+</app-page-header>
 
 @if (formView.listView) {
   <div>
@@ -6,15 +20,6 @@
       Contacts should be added with the country code, e.g.
       {{ merchant.countryCallingCode }}
     </label>
-    <button-toolbar>
-      <p-button
-        label="New Group"
-        icon="pi pi-plus"
-        (onClick)="openNewGroupDialog()"
-        styleClass="p-button-primary"
-      >
-      </p-button>
-    </button-toolbar>
     <p-table
       [value]="groups"
       [loading]="loading"

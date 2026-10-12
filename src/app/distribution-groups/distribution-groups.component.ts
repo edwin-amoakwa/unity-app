@@ -24,10 +24,12 @@ import {FormView} from '../core/form-view';
 import {CardComponent} from '../theme/shared/components/card/card.component';
 import {UserSession} from '../core/user-session';
 
+import { PageHeaderComponent } from '../theme/shared/components/page-header/page-header.component';
 @Component({
   selector: 'app-distribution-groups',
   standalone: true,
   imports: [
+    PageHeaderComponent,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,

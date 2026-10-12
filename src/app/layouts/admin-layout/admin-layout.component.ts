@@ -60,7 +60,14 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
       this.sidebarOpen = false;
     }
 
-    this.user.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.user.accountName)}&background=6ee7ff&color=0b1020&size=64`;
+    this.user.initials = this.getInitials(this.user.accountName);
+  }
+
+  getInitials(name: string): string {
+    const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+    const first = parts[0]?.[0] ?? '';
+    const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+    return (first + last).toUpperCase() || '?';
   }
 
   getFirstName(name: string): string {

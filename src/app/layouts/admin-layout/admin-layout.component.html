@@ -1,8 +1,7 @@
 <div class="app-shell" [class.sidebar-open]="sidebarOpen">
-  <aside class="sidebar" [class.open]="sidebarOpen">
+  <aside class="sidebar" [class.open]="sidebarOpen" aria-label="Portal navigation">
     <div class="sidebar-header">
-      <i class="pi pi-th-large logo" aria-hidden="true"></i>
-      <span class="brand">Ecolink-MMS</span>
+      <img class="sidebar-logo" src="assets/images/brand/logo-reversed.svg" alt="EcolinkPay" />
       <button
         class="close-btn"
         (click)="toggleSidebar()"
@@ -11,7 +10,9 @@
         <i class="pi pi-times" aria-hidden="true"></i>
       </button>
     </div>
+
     <nav class="menu" #menuNav>
+      <span class="menu-group">SMS</span>
       @if (allow("/dashboard")) {
         <a
           class="menu-item"
@@ -19,48 +20,8 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-          <i class="pi pi-home" aria-hidden="true"></i>
-          <span>Dashboard</span>
-        </a>
-      }
-
-      @if (allow("/applications")) {
-        <a
-          class="menu-item"
-          routerLink="/applications"
-          routerLinkActive="active"
-        >
-          <i class="pi pi-briefcase" aria-hidden="true"></i>
-          <span>Applications</span>
-        </a>
-      }
-
-      @if (allow("/sender-id")) {
-        <a class="menu-item" routerLink="/sender-id" routerLinkActive="active">
-          <i class="pi pi-id-card" aria-hidden="true"></i>
-          <span>Sender IDs</span>
-        </a>
-      }
-      @if (allow("/add-funds")) {
-        <a class="menu-item" routerLink="/add-funds" routerLinkActive="active">
-          <i class="pi pi-wallet" aria-hidden="true"></i>
-          <span>Add Funds</span>
-        </a>
-      }
-
-      <!--      <a class="menu-item" routerLink="/providers" routerLinkActive="active">-->
-      <!--        <i class="pi pi-users" aria-hidden="true"></i>-->
-      <!--        <span>Providers</span>-->
-      <!--      </a>-->
-
-      @if (allow("/group-contacts")) {
-        <a
-          class="menu-item"
-          routerLink="/group-contacts"
-          routerLinkActive="active"
-        >
-          <i class="pi pi-address-book" aria-hidden="true"></i>
-          <span>Group Contacts</span>
+          <i class="pi pi-chart-line" aria-hidden="true"></i>
+          <span>SMS dashboard</span>
         </a>
       }
       @if (allow("/send-sms")) {
@@ -69,51 +30,64 @@
           <span>Send SMS</span>
         </a>
       }
-
-      <a
-        class="menu-item"
-        routerLink="/sms-templates"
-        routerLinkActive="active"
-      >
-        <i class="pi pi-inbox" aria-hidden="true"></i>
-        <span>SMS Templates</span>
+      <a class="menu-item" routerLink="/sms-templates" routerLinkActive="active">
+        <i class="pi pi-file-edit" aria-hidden="true"></i>
+        <span>SMS templates</span>
+      </a>
+      @if (allow("/group-contacts")) {
+        <a class="menu-item" routerLink="/group-contacts" routerLinkActive="active">
+          <i class="pi pi-users" aria-hidden="true"></i>
+          <span>Contact groups</span>
+        </a>
+      }
+      @if (allow("/sms-records")) {
+        <a class="menu-item" routerLink="/sms-records" routerLinkActive="active">
+          <i class="pi pi-list" aria-hidden="true"></i>
+          <span>SMS records</span>
+        </a>
+      }
+      @if (allow("/sender-id")) {
+        <a class="menu-item" routerLink="/sender-id" routerLinkActive="active">
+          <i class="pi pi-id-card" aria-hidden="true"></i>
+          <span>Sender IDs</span>
+        </a>
+      }
+      <a class="menu-item" routerLink="/sms-channel-price" routerLinkActive="active">
+        <i class="pi pi-tag" aria-hidden="true"></i>
+        <span>Price list</span>
       </a>
 
-      @if (allow("/sms-records")) {
-        <a
-          class="menu-item"
-          routerLink="/sms-records"
-          routerLinkActive="active"
-        >
-          <i class="pi pi-inbox" aria-hidden="true"></i>
-          <span>SMS Records</span>
+      @if (allow("/add-funds")) {
+        <span class="menu-group">Payments</span>
+        <a class="menu-item" routerLink="/payments-dashboard" routerLinkActive="active">
+          <i class="pi pi-chart-bar" aria-hidden="true"></i>
+          <span>Payments dashboard</span>
+        </a>
+        <a class="menu-item" routerLink="/add-funds" routerLinkActive="active">
+          <i class="pi pi-wallet" aria-hidden="true"></i>
+          <span>Add funds</span>
         </a>
       }
 
+      @if (allow("/applications") || allow("/users") || allow("/notification-settings")) {
+        <span class="menu-group">Settings</span>
+      }
+      @if (allow("/applications")) {
+        <a class="menu-item" routerLink="/applications" routerLinkActive="active">
+          <i class="pi pi-code" aria-hidden="true"></i>
+          <span>API applications</span>
+        </a>
+      }
       @if (allow("/users")) {
         <a class="menu-item" routerLink="/users" routerLinkActive="active">
           <i class="pi pi-user" aria-hidden="true"></i>
           <span>Users</span>
         </a>
       }
-
-      <a
-        class="menu-item"
-        routerLink="/sms-channel-price"
-        routerLinkActive="active"
-      >
-        <i class="pi pi-user" aria-hidden="true"></i>
-        <span>Price List</span>
-      </a>
-
       @if (allow("/notification-settings")) {
-        <a
-          class="menu-item"
-          routerLink="/notification-settings"
-          routerLinkActive="active"
-        >
+        <a class="menu-item" routerLink="/notification-settings" routerLinkActive="active">
           <i class="pi pi-bell" aria-hidden="true"></i>
-          <span>Notification Settings</span>
+          <span>Notification settings</span>
         </a>
       }
     </nav>
@@ -133,13 +107,10 @@
     >
       <i class="pi pi-bars" aria-hidden="true"></i>
     </button>
+
     <div class="topbar-brand-container">
-      <div class="topbar-brand">
-        <span class="brand"
-          ><span class="brand-eco">Ecolink</span>
-          <span class="brand-mms">MMS</span></span
-        >
-      </div>
+      <img class="topbar-logo on-panel" src="assets/images/brand/logo-reversed.svg" alt="EcolinkPay" />
+      <img class="topbar-logo on-surface" src="assets/images/brand/logo-color.svg" alt="EcolinkPay" />
     </div>
 
     <div class="topbar-actions">
@@ -156,6 +127,7 @@
           aria-hidden="true"
         ></i>
       </button>
+
       <div
         class="user"
         (click)="toggleUserMenu($event)"
@@ -164,10 +136,16 @@
         aria-haspopup="true"
         [attr.aria-expanded]="showUserMenu"
       >
-        <img [src]="user.avatar" [alt]="user.memberName" />
-        <!--        <img src="https://i.pravatar.cc/40" alt="User avatar">-->
-        <span class="name">{{ user.name }}</span>
+        <span class="avatar" aria-hidden="true">{{ user.initials }}</span>
+        <span class="who">
+          <span class="name">{{ user.accountName }}</span>
+          @if (merchant?.merchantName) {
+            <span class="org">{{ merchant.merchantName }}</span>
+          }
+        </span>
+        <i class="pi pi-chevron-down caret" aria-hidden="true"></i>
       </div>
+
       @if (showUserMenu) {
         <div class="user-menu" (click)="$event.stopPropagation()">
           <a
@@ -177,7 +155,7 @@
             (click)="showUserMenu = false"
           >
             <i class="pi pi-user" aria-hidden="true"></i>
-            <span>User Profile</span>
+            <span>User profile</span>
           </a>
           <a
             class="user-menu-item"
@@ -185,8 +163,8 @@
             routerLinkActive="active"
             (click)="showUserMenu = false"
           >
-            <i class="pi pi-user" aria-hidden="true"></i>
-            <span>Merchant Profile</span>
+            <i class="pi pi-building" aria-hidden="true"></i>
+            <span>Business profile</span>
           </a>
           <a
             class="user-menu-item"
@@ -195,11 +173,12 @@
             (click)="showUserMenu = false"
           >
             <i class="pi pi-key" aria-hidden="true"></i>
-            <span>Update Password</span>
+            <span>Change password</span>
           </a>
-          <a class="user-menu-item" href="#" (click)="logout()">
+          <hr class="user-menu-sep" />
+          <a class="user-menu-item logout" href="#" (click)="logout()">
             <i class="pi pi-sign-out" aria-hidden="true"></i>
-            <span>Log Out</span>
+            <span>Log out</span>
           </a>
         </div>
       }

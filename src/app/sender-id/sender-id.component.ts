@@ -26,14 +26,14 @@ import { ConfigService } from '../config.service';
 import { NotificationService } from '../core/notification.service';
 import { MessageBox } from '../message-helper';
 import { FormView } from '../core/form-view';
-import { ButtonToolbarComponent } from '../theme/shared/components/button-toolbar/button-toolbar.component';
 import { Select } from 'primeng/select';
 
+import { PageHeaderComponent } from '../theme/shared/components/page-header/page-header.component';
 @Component({
   selector: 'app-sender-id',
   imports: [
+    PageHeaderComponent,
     CardComponent,
-    ButtonToolbarComponent,
     ReactiveFormsModule,
     TableModule,
     ButtonModule,

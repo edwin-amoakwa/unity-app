@@ -1,0 +1,131 @@
+<div class="dash-header">
+  <div>
+    <h1 class="page-title">Payments dashboard</h1>
+    <p class="dash-subtitle">{{ merchant?.merchantName }} · {{ currentDate | date: "EEEE, d MMM y" }}</p>
+  </div>
+  @if (canAddFunds) {
+    <a class="btn-primary-lg" routerLink="/add-funds">
+      <i class="pi pi-plus" aria-hidden="true"></i> Add funds
+    </a>
+  }
+</div>
+
+@if (!canAddFunds) {
+  <section class="panel">
+    <p class="empty">You don't have access to payments. Ask an administrator on your account to give you access to Add funds.</p>
+  </section>
+} @else {
+  <section class="balance-strip" aria-label="Credit balance">
+    <div class="balance-main">
+      <span class="balance-label"><i class="pi pi-wallet" aria-hidden="true"></i> Credit balance</span>
+      <span class="balance-amount mono"><small>GH₵</small>{{ summary.creditBalance ?? 0 | number: "1.2-2" }}</span>
+    </div>
+    <dl class="balance-facts">
+      <div>
+        <dt>Enough for about</dt>
+        <dd class="mono">{{ smsCovered | number }} SMS</dd>
+      </div>
+      <div>
+        <dt>Average price per SMS</dt>
+        <dd class="mono">
+          GH₵ {{ price.rate | number: "1.2-4" }}
+          @if (price.channelCount) {
+            <span class="balance-fact-note">across {{ price.channelCount }} {{ price.channelCount === 1 ? "network" : "networks" }}</span>
+          }
+        </dd>
+      </div>
+      <div>
+        <dt>Last approved top-up</dt>
+        <dd class="mono">
+          @if (lastApproved) {
+            GH₵ {{ lastApproved.amount | number: "1.2-2" }} · {{ lastApproved.createdDate | date: "d MMM y" }}
+          } @else {
+            None yet
+          }
+        </dd>
+      </div>
+    </dl>
+    <a class="btn-topup" routerLink="/add-funds">
+      <i class="pi pi-plus" aria-hidden="true"></i> Top up balance
+    </a>
+  </section>
+
+  @if (error) {
+    <div class="form-alert" role="alert">
+      <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+      <span>{{ error }}</span>
+    </div>
+  }
+
+  <div class="section-head">
+    <h2>Top-ups</h2>
+    <span class="section-note">All amounts in Ghana cedis, before tax</span>
+  </div>
+  <div class="stats-grid cols-4">
+    <div class="stat stat-approved">
+      <span class="stat-label"><span class="stat-icon"><i class="pi pi-calendar" aria-hidden="true"></i></span>Approved this month</span>
+      <span class="stat-value mono">GH₵ {{ approvedThisMonth.amount | number: "1.2-2" }}</span>
+      <span class="stat-share">{{ approvedThisMonth.count }} {{ approvedThisMonth.count === 1 ? "top-up" : "top-ups" }}</span>
+    </div>
+    <div class="stat stat-total">
+      <span class="stat-label"><span class="stat-icon"><i class="pi pi-check-circle" aria-hidden="true"></i></span>Approved in total</span>
+      <span class="stat-value mono">GH₵ {{ approved.amount | number: "1.2-2" }}</span>
+      <span class="stat-share">{{ approved.count }} {{ approved.count === 1 ? "top-up" : "top-ups" }}</span>
+    </div>
+    <div class="stat stat-pending">
+      <span class="stat-label"><span class="stat-icon"><i class="pi pi-clock" aria-hidden="true"></i></span>Pending approval</span>
+      <span class="stat-value mono">GH₵ {{ pending.amount | number: "1.2-2" }}</span>
+      <span class="stat-share">{{ pending.count }} {{ pending.count === 1 ? "top-up" : "top-ups" }}</span>
+    </div>
+    <div class="stat stat-failed">
+      <span class="stat-label"><span class="stat-icon"><i class="pi pi-times" aria-hidden="true"></i></span>Rejected</span>
+      <span class="stat-value mono">GH₵ {{ rejected.amount | number: "1.2-2" }}</span>
+      <span class="stat-share">{{ rejected.count }} {{ rejected.count === 1 ? "top-up" : "top-ups" }}</span>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Recent top-ups</h2>
+      <a class="panel-link" routerLink="/add-funds">View all in Add funds</a>
+    </div>
+    @if (loading) {
+      <p class="empty">Loading payments…</p>
+    } @else if (recent.length === 0) {
+      <p class="empty">No top-ups yet. Use Add funds to top up your balance.</p>
+    } @else {
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Channel</th>
+              <th scope="col">Mobile number</th>
+              <th scope="col" class="num">Amount</th>
+              <th scope="col" class="num">Tax</th>
+              <th scope="col" class="num">Credit</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (payment of recent; track payment.id) {
+              <tr>
+                <td>{{ payment.createdDate | date: "d MMM y, HH:mm" }}</td>
+                <td>{{ payment.paymentChannelName || "–" }}</td>
+                <td>{{ payment.mobileNo || "–" }}</td>
+                <td class="num">{{ payment.amount | number: "1.2-2" }}</td>
+                <td class="num">{{ payment.taxAmount | number: "1.2-2" }}</td>
+                <td class="num">{{ payment.creditAmount | number: "1.2-2" }}</td>
+                <td>
+                  <span [class]="'pill ' + statusClass(payment)">
+                    <i [class]="'pi ' + statusIcon(payment)" aria-hidden="true"></i>{{ statusLabel(payment) }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+}

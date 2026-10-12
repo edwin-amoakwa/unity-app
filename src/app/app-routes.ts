@@ -31,6 +31,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'payments-dashboard', loadComponent: () => import('./payments-dashboard/payments-dashboard.component').then(m => m.PaymentsDashboardComponent) },
       { path: 'sender-id', component: SenderIdComponent },
       { path: 'add-funds', component: PaymentsComponent },
 
